@@ -31,11 +31,14 @@ const GRIDHEIGHT = HEIGHT / GRIDROWS;
 
 const Index = () => {
   const [app, setApp] = useState<PIXI.Application>();
+  const [maskApp, setMaskApp] = useState<PIXI.Application>();
   // 背景条纹容器
   const bgContainer = useRef<PIXI.Container>(new PIXI.Container());
   // 方格容器
   const rectContainer = useRef<PIXI.Container>(new PIXI.Container());
-  // 方格容器
+  // 遮罩容器
+  const maskContainer = useRef<PIXI.Container>(new PIXI.Container());
+  // 路径容器
   const routeContainer = useRef<PIXI.Container>(new PIXI.Container());
   const mainPosition = useRef<{ x: number; y: number }>({
     x: 12,
@@ -45,6 +48,7 @@ const Index = () => {
     x: 12,
     y: 0,
   });
+  const [refresh, setRefresh] = useState<number>(0);
 
   useEffect(() => {
     let _app = new PIXI.Application({
@@ -57,6 +61,16 @@ const Index = () => {
       view: document.getElementById('mainCanvas') as HTMLCanvasElement,
     });
     setApp(_app);
+    let _maskApp = new PIXI.Application({
+      width: WIDTH,
+      height: HEIGHT,
+      antialias: true,
+      transparent: true,
+      resolution: 1,
+      backgroundColor: 0x000000,
+      view: document.getElementById('maskCanvas') as HTMLCanvasElement,
+    });
+    setMaskApp(_maskApp);
     document.addEventListener('keydown', characterMove);
     // _app!.renderer.plugins.interaction.removeAllListeners();
     // // 点击事件生成障碍物，再次点击障碍物将障碍物消掉，也可以生成开始点和结束点
@@ -87,36 +101,9 @@ const Index = () => {
     globalStore.bgLayout[mainPosition.current.y][mainPosition.current.x] =
       BgLayoutItemType.main;
     globalStore.bgLayout[endRect.y][endRect.x] = BgLayoutItemType.end;
-    initLine();
-    drawStartEnd();
-    drawObstacleArr();
-  }, [app]);
-
-  /**
-   * 绘制起点和终点
-   */
-  const drawStartEnd = () => {
-    createRect({
-      position: translatePosition({
-        width: WIDTH,
-        height: HEIGHT,
-        itemRows: GRIDROWS,
-        rows: mainPosition.current.y,
-        columns: mainPosition.current.x,
-      }),
-      type: BgLayoutItemType.main,
-    });
-    createRect({
-      position: translatePosition({
-        width: WIDTH,
-        height: HEIGHT,
-        itemRows: GRIDROWS,
-        rows: endRect.y,
-        columns: endRect.x,
-      }),
-      type: BgLayoutItemType.end,
-    });
-  };
+    // initLine();
+    drawLayout();
+  }, [app, refresh]);
 
   /**
    * 初始化网格
@@ -173,8 +160,11 @@ const Index = () => {
       case BgLayoutItemType.obstacle:
         rectangle.beginFill(0xcccccc);
         break;
-      default:
+      case BgLayoutItemType.empty:
         rectangle.beginFill(0x000000);
+        break;
+      default:
+        rectangle.beginFill(0xcccccc);
         break;
     }
     rectangle.drawRect(
@@ -192,19 +182,21 @@ const Index = () => {
   };
 
   /**
-   * 绘制障碍物
+   * 绘制画布
    */
-  const drawObstacleArr = () => {
-    globalStore.obstacleArr.forEach((item) => {
-      createRect({
-        position: translatePosition({
-          width: WIDTH,
-          height: HEIGHT,
-          itemRows: GRIDROWS,
-          rows: item[1],
-          columns: item[0],
-        }),
-        type: BgLayoutItemType.obstacle,
+  const drawLayout = () => {
+    globalStore.bgLayout.forEach((items, y) => {
+      items.forEach((item: BgLayoutItemType, x) => {
+        createRect({
+          position: translatePosition({
+            width: WIDTH,
+            height: HEIGHT,
+            itemRows: GRIDROWS,
+            rows: y,
+            columns: x,
+          }),
+          type: item,
+        });
       });
     });
   };
@@ -247,34 +239,35 @@ const Index = () => {
     globalStore.bgLayout[mainPosition.current.y][mainPosition.current.x] =
       BgLayoutItemType.route;
     globalStore.bgLayout[nextStep.y][nextStep.x] = BgLayoutItemType.main;
-    createRect({
-      position: translatePosition({
-        width: WIDTH,
-        height: HEIGHT,
-        itemRows: GRIDROWS,
-        rows: nextStep.y,
-        columns: nextStep.x,
-      }),
-      type: BgLayoutItemType.main,
-    });
-    createRect({
-      position: translatePosition({
-        width: WIDTH,
-        height: HEIGHT,
-        itemRows: GRIDROWS,
-        rows: mainPosition.current.y,
-        columns: mainPosition.current.x,
-      }),
-      type: BgLayoutItemType.route,
-    });
+    setRefresh(Math.random());
+    // createRect({
+    //   position: translatePosition({
+    //     width: WIDTH,
+    //     height: HEIGHT,
+    //     itemRows: GRIDROWS,
+    //     rows: nextStep.y,
+    //     columns: nextStep.x,
+    //   }),
+    //   type: BgLayoutItemType.main,
+    // });
+    // createRect({
+    //   position: translatePosition({
+    //     width: WIDTH,
+    //     height: HEIGHT,
+    //     itemRows: GRIDROWS,
+    //     rows: mainPosition.current.y,
+    //     columns: mainPosition.current.x,
+    //   }),
+    //   type: BgLayoutItemType.route,
+    // });
     mainPosition.current = { ...nextStep };
   };
 
   return (
-    <div>
+    <div className={styles.indexMain}>
       <div className={styles.main}>
-        {globalStore.count}
         <canvas id="mainCanvas"></canvas>
+        <canvas id="maskCanvas" className={styles.maskCanvas}></canvas>
       </div>
     </div>
   );
