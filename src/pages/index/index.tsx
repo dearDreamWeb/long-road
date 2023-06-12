@@ -31,13 +31,10 @@ const GRIDHEIGHT = HEIGHT / GRIDROWS;
 
 const Index = () => {
   const [app, setApp] = useState<PIXI.Application>();
-  const [maskApp, setMaskApp] = useState<PIXI.Application>();
   // 背景条纹容器
   const bgContainer = useRef<PIXI.Container>(new PIXI.Container());
   // 方格容器
   const rectContainer = useRef<PIXI.Container>(new PIXI.Container());
-  // 遮罩容器
-  const maskContainer = useRef<PIXI.Container>(new PIXI.Container());
   // 路径容器
   const routeContainer = useRef<PIXI.Container>(new PIXI.Container());
   const mainPosition = useRef<{ x: number; y: number }>({
@@ -61,16 +58,6 @@ const Index = () => {
       view: document.getElementById('mainCanvas') as HTMLCanvasElement,
     });
     setApp(_app);
-    let _maskApp = new PIXI.Application({
-      width: WIDTH,
-      height: HEIGHT,
-      antialias: true,
-      transparent: true,
-      resolution: 1,
-      backgroundColor: 0x000000,
-      view: document.getElementById('maskCanvas') as HTMLCanvasElement,
-    });
-    setMaskApp(_maskApp);
     document.addEventListener('keydown', characterMove);
     // _app!.renderer.plugins.interaction.removeAllListeners();
     // // 点击事件生成障碍物，再次点击障碍物将障碍物消掉，也可以生成开始点和结束点
@@ -101,7 +88,7 @@ const Index = () => {
     globalStore.bgLayout[mainPosition.current.y][mainPosition.current.x] =
       BgLayoutItemType.main;
     globalStore.bgLayout[endRect.y][endRect.x] = BgLayoutItemType.end;
-    // initLine();
+    initLine();
     drawLayout();
   }, [app, refresh]);
 
@@ -185,18 +172,35 @@ const Index = () => {
    * 绘制画布
    */
   const drawLayout = () => {
+    const { x: mainX, y: mainY } = mainPosition.current;
     globalStore.bgLayout.forEach((items, y) => {
       items.forEach((item: BgLayoutItemType, x) => {
-        createRect({
-          position: translatePosition({
-            width: WIDTH,
-            height: HEIGHT,
-            itemRows: GRIDROWS,
-            rows: y,
-            columns: x,
-          }),
-          type: item,
-        });
+        if (
+          Math.abs(mainX - x) < globalStore.viewDistance &&
+          Math.abs(mainY - y) < globalStore.viewDistance
+        ) {
+          createRect({
+            position: translatePosition({
+              width: WIDTH,
+              height: HEIGHT,
+              itemRows: GRIDROWS,
+              rows: y,
+              columns: x,
+            }),
+            type: item,
+          });
+        } else {
+          createRect({
+            position: translatePosition({
+              width: WIDTH,
+              height: HEIGHT,
+              itemRows: GRIDROWS,
+              rows: y,
+              columns: x,
+            }),
+            type: BgLayoutItemType.empty,
+          });
+        }
       });
     });
   };
@@ -267,7 +271,6 @@ const Index = () => {
     <div className={styles.indexMain}>
       <div className={styles.main}>
         <canvas id="mainCanvas"></canvas>
-        <canvas id="maskCanvas" className={styles.maskCanvas}></canvas>
       </div>
     </div>
   );

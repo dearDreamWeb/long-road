@@ -158,6 +158,7 @@ class GlobalStore {
   GRIDROWS = 25;
   GRIDWIDTH = this.WIDTH / this.GRIDROWS;
   GRIDHEIGHT = this.HEIGHT / this.GRIDROWS;
+  viewDistance = 5;
   count = 1;
   // 二维数组
   bgLayout: BgLayoutItemType[][] = [[]];
