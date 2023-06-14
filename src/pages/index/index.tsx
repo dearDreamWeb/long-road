@@ -5,18 +5,7 @@ import * as PIXI from 'pixi.js';
 import globalStore from '@/store/store';
 import { observer } from 'mobx-react';
 import classNames from 'classnames';
-
-// 决斗，输了路径去除回到原点，赢了获取开墙道具；保护道具；回到原点陷阱
-export enum BgLayoutItemType {
-  empty = 0, // 可以走
-  obstacle = 1, // 障碍物
-  main = 2, //主角
-  end = 3, // 终点
-  route = 4, // 走过的路径
-  duel = 5, // 决斗
-  protect = 6, // 保护卡
-  backTo = 7, // 回到原点
-}
+import { BgLayoutItemType } from '@/typings';
 
 interface RectGraphics extends PIXI.Graphics {
   rectType: BgLayoutItemType;
@@ -47,6 +36,7 @@ const Index = () => {
     y: 0,
   });
   const [refresh, setRefresh] = useState<number>(0);
+  const [flash, setFlash] = useState(0);
 
   useEffect(() => {
     let _app = new PIXI.Application({
@@ -151,6 +141,9 @@ const Index = () => {
       case BgLayoutItemType.empty:
         rectangle.beginFill(0x000000);
         break;
+      case BgLayoutItemType.duel:
+        rectangle.beginFill(0x1e6700);
+        break;
       default:
         rectangle.beginFill(0xcccccc);
         break;
@@ -206,6 +199,12 @@ const Index = () => {
     });
   };
 
+  useEffect(() => {
+    setTimeout(() => {
+      setFlash(0);
+    }, 1000);
+  }, [flash]);
+
   /**
    * 移动主角
    * @param e
@@ -241,9 +240,13 @@ const Index = () => {
     if (!globalStore.isCanWalk(nextStep.x, nextStep.y)) {
       return;
     }
+    const rectType = globalStore.bgLayout[nextStep.y][nextStep.x];
     globalStore.bgLayout[mainPosition.current.y][mainPosition.current.x] =
       BgLayoutItemType.route;
     globalStore.bgLayout[nextStep.y][nextStep.x] = BgLayoutItemType.main;
+    if (rectType === BgLayoutItemType.duel) {
+      setFlash(Math.random());
+    }
     setRefresh(Math.random());
     // createRect({
     //   position: translatePosition({
@@ -275,6 +278,9 @@ const Index = () => {
       </button>
       <div className={styles.main}>
         <canvas id="mainCanvas"></canvas>
+        <div
+          className={`${styles.flashBox} ${flash ? styles.flash : ''}`}
+        ></div>
       </div>
     </div>
   );

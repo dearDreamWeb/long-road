@@ -1,5 +1,5 @@
 import { makeAutoObservable } from 'mobx';
-import { BgLayoutItemType } from '@/pages/index';
+import { BgLayoutItemType } from '@/typings';
 
 const obstacleArr = [
   [5, 0],
@@ -132,25 +132,29 @@ const obstacleArr = [
   [3, 20],
   [7, 20],
   [10, 20],
-  [13, 20],
+  [14, 20],
   [18, 20],
   [21, 20],
-  [15, 21],
   [18, 21],
   [19, 21],
   [20, 21],
   [21, 21],
   [22, 21],
+  [9, 22],
   [15, 22],
   [18, 22],
   [21, 22],
   [23, 22],
   [24, 22],
-  [15, 23],
+  [10, 23],
+  [11, 23],
+  [12, 23],
+  [13, 23],
+  [14, 23],
   [20, 23],
-  [15, 24],
   [18, 24],
 ];
+const duelArr = [[13, 24]];
 
 class GlobalStore {
   WIDTH = 700;
@@ -166,6 +170,8 @@ class GlobalStore {
   bgLayout: BgLayoutItemType[][] = [[]];
   // 障碍物
   obstacleArr: number[][] = obstacleArr;
+  // 决斗
+  duelArr: number[][] = duelArr;
 
   constructor() {
     makeAutoObservable(this);
@@ -179,7 +185,10 @@ class GlobalStore {
     }
 
     this.obstacleArr.forEach((item) => {
-      obstacleAll[item[1]][item[0]] = 1;
+      obstacleAll[item[1]][item[0]] = BgLayoutItemType.obstacle;
+    });
+    this.duelArr.forEach((item) => {
+      obstacleAll[item[1]][item[0]] = BgLayoutItemType.duel;
     });
     this.bgLayout = obstacleAll;
   }
