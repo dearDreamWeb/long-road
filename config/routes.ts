@@ -7,5 +7,10 @@ const routes: RouteConfig[] = [
     path: '/',
     component: lazy(() => import('@/pages/index/index')),
   },
+  {
+    exact: true,
+    path: '/warning',
+    component: lazy(() => import('@/pages/warning/warning')),
+  },
 ];
 export default routes;

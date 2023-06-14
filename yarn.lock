@@ -1443,6 +1443,11 @@ dir-glob@^3.0.1:
   dependencies:
     path-type "^4.0.0"
 
+disable-devtool@^0.3.4:
+  version "0.3.4"
+  resolved "https://registry.npmjs.org/disable-devtool/-/disable-devtool-0.3.4.tgz#5a3c8dcfe4a3a06a208d42b45e629491ee045210"
+  integrity sha512-yz453sOPJ6/DBTyEjQ2TnHDljaVmLV07bC6R5OIuUZuE7X8QgdHQf+PYZObxqv47xBbumiiaHnJq8gQkbux1fA==
+
 doctrine@^2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/doctrine/-/doctrine-2.1.0.tgz#5cd01fc101621b42c4cd7f5d1a66243716d3f39d"

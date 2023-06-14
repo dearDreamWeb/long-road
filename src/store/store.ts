@@ -158,8 +158,10 @@ class GlobalStore {
   GRIDROWS = 25;
   GRIDWIDTH = this.WIDTH / this.GRIDROWS;
   GRIDHEIGHT = this.HEIGHT / this.GRIDROWS;
+  // 关卡
+  leave = 1;
+  // 视野距离
   viewDistance = 5;
-  count = 1;
   // 二维数组
   bgLayout: BgLayoutItemType[][] = [[]];
   // 障碍物
