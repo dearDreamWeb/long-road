@@ -3,11 +3,11 @@ module.exports = {
   plugins: ['stylelint-order'],
   overrides: [
     {
-      files: ['**/*.{less,css}'], // css 相关文件由 postcss-less 处理
+      files: ['**/*.{less,css}', '*.module.less'], // css 相关文件由 postcss-less 处理
       customSyntax: 'postcss-less',
     },
   ],
-
+  ignoreFiles: ['src/tailwindCss/*'],
   rules: {
     'selector-class-pattern': [null, 'kebab-case'],
     // 颜色指定大写

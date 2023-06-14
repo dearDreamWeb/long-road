@@ -7,12 +7,14 @@
     "dev": "vite --host",
     "build": "rm -rf ./dist && tsc && vite build",
     "preview": "vite preview",
+    "tailwind": "npx tailwindcss -i ./src/tailwindCss/input.css -o ./src/tailwindCss/output.css --watch",
     "lint": "npx --no -- lint-staged",
     "prepare": "husky install",
     "fix": "eslint src/**/*.*  --fix",
     "lint:style": "stylelint \"src/**/*.(less|scss|css)\" --fix"
   },
   "dependencies": {
+    "classnames": "^2.3.2",
     "disable-devtool": "^0.3.4",
     "eslint": "^8.25.0",
     "less": "^4.1.3",
@@ -35,6 +37,7 @@
     "@typescript-eslint/parser": "^5.39.0",
     "@vitejs/plugin-react": "^2.1.0",
     "commitlint": "^17.2.0",
+    "daisyui": "^3.1.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-react": "^7.31.8",
@@ -49,6 +52,7 @@
     "stylelint-config-prettier": "^9.0.3",
     "stylelint-config-standard": "^29.0.0",
     "stylelint-order": "^5.0.0",
+    "tailwindcss": "^3.3.2",
     "typescript": "^4.6.4",
     "vite": "^3.1.0"
   },
@@ -71,5 +75,8 @@
       "pre-commit": "echo 'git commit trigger husky pre-commit hook' ",
       "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
     }
+  },
+  "volta": {
+    "node": "16.20.0"
   }
 }

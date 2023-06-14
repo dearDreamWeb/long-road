@@ -4,6 +4,7 @@ import { createLine, translatePosition, clickPosition } from '@/utils';
 import * as PIXI from 'pixi.js';
 import globalStore from '@/store/store';
 import { observer } from 'mobx-react';
+import classNames from 'classnames';
 
 // 决斗，输了路径去除回到原点，赢了获取开墙道具；保护道具；回到原点陷阱
 export enum BgLayoutItemType {
@@ -269,6 +270,9 @@ const Index = () => {
 
   return (
     <div className={styles.indexMain}>
+      <button className={classNames('btn btn-primary', styles.testBtn)}>
+        Button
+      </button>
       <div className={styles.main}>
         <canvas id="mainCanvas"></canvas>
       </div>
