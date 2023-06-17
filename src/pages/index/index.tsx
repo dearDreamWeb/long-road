@@ -5,7 +5,8 @@ import * as PIXI from 'pixi.js';
 import globalStore from '@/store/store';
 import { observer } from 'mobx-react';
 import classNames from 'classnames';
-import { BgLayoutItemType } from '@/typings';
+import { BgLayoutItemType, Status } from '@/typings';
+import Modal from '@/components/modal/modal';
 
 interface RectGraphics extends PIXI.Graphics {
   rectType: BgLayoutItemType;
@@ -211,6 +212,9 @@ const Index = () => {
    * @returns
    */
   const characterMove = (e: KeyboardEvent) => {
+    if (globalStore.status === Status.stop) {
+      return;
+    }
     let nextStep = { ...mainPosition.current };
     let arr: number[][] = [];
     switch (e.key) {
@@ -245,6 +249,7 @@ const Index = () => {
       BgLayoutItemType.route;
     globalStore.bgLayout[nextStep.y][nextStep.x] = BgLayoutItemType.main;
     if (rectType === BgLayoutItemType.duel) {
+      globalStore.status = Status.stop;
       setFlash(Math.random());
     }
     setRefresh(Math.random());
@@ -270,10 +275,13 @@ const Index = () => {
     // });
     mainPosition.current = { ...nextStep };
   };
-
+  const [open, setOpen] = useState(false);
   return (
     <div className={styles.indexMain}>
-      <button className={classNames('btn btn-primary', styles.testBtn)}>
+      <button
+        className={classNames('btn btn-primary', styles.testBtn)}
+        onClick={() => setOpen(!open)}
+      >
         Button
       </button>
       <div className={styles.main}>
@@ -282,6 +290,12 @@ const Index = () => {
           className={`${styles.flashBox} ${flash ? styles.flash : ''}`}
         ></div>
       </div>
+      <Modal isOpen={open}>
+        <div>
+          111<p>3333</p>
+          <button onClick={() => setOpen(false)}>关闭</button>
+        </div>
+      </Modal>
     </div>
   );
 };

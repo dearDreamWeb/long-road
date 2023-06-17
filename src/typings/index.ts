@@ -9,3 +9,8 @@ export enum BgLayoutItemType {
   protect = 6, // 保护卡
   backTo = 7, // 回到原点
 }
+
+export enum Status {
+  normal = 0,
+  stop = 1,
+}

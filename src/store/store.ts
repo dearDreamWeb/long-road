@@ -1,5 +1,5 @@
 import { makeAutoObservable } from 'mobx';
-import { BgLayoutItemType } from '@/typings';
+import { BgLayoutItemType, Status } from '@/typings';
 
 const obstacleArr = [
   [5, 0],
@@ -166,6 +166,8 @@ class GlobalStore {
   leave = 1;
   // 视野距离
   viewDistance = 5;
+  // 游戏状态
+  status: Status = 0;
   // 二维数组
   bgLayout: BgLayoutItemType[][] = [[]];
   // 障碍物

@@ -29,11 +29,18 @@ td {
   box-sizing: border-box;
 }
 
+html,
 body {
   font-size: 14px;
-  font-family: Verdana, Arial, Helvetica, sans-serif;
-  color: #555555;
+  font-family: ZpixLocal, sans-serif;
+  font-weight: bold;
+  color: #333333;
+  // color: #68F9CB;
   background: #FFFFFF;
+  text-rendering: optimizelegibility;
+  -webkit-font-smoothing: none;
+  -moz-osx-font-smoothing: none;
+  font-feature-settings: "tnum";
 }
 
 td,
@@ -99,4 +106,10 @@ html {
 
 .clearfix {
   zoom: 1;
+}
+
+@font-face {
+  font-family: ZpixLocal;
+  // src: url(zpix.woff2);
+  src: url("./assets/fonts/zpix-split.woff");
 }
