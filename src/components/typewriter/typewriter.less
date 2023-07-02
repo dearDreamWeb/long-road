@@ -1,0 +1,24 @@
+.typeWriterBox {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+
+  .rect {
+    display: inline-block;
+    margin-left: 4px;
+    width: 2px;
+    height: 12px;
+    background-color: #3C3C3C;
+    animation: flashing 1s ease-in-out infinite;
+  }
+
+  @keyframes flashing {
+    0% {
+      opacity: 1;
+    }
+
+    100% {
+      opacity: 0;
+    }
+  }
+}

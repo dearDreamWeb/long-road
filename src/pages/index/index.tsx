@@ -7,6 +7,7 @@ import { observer } from 'mobx-react';
 import classNames from 'classnames';
 import { BgLayoutItemType, Status } from '@/typings';
 import Modal from '@/components/modal/modal';
+import Typewriter from '@/components/typewriter/typewriter';
 
 interface RectGraphics extends PIXI.Graphics {
   rectType: BgLayoutItemType;
@@ -292,7 +293,7 @@ const Index = () => {
       </div>
       <Modal isOpen={open}>
         <div>
-          111<p>3333</p>
+          <Typewriter text="这个是石头剪刀布游戏"></Typewriter>
           <button onClick={() => setOpen(false)}>关闭</button>
         </div>
       </Modal>
