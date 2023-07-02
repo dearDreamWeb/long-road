@@ -36,7 +36,6 @@ const Index = () => {
     x: 12,
     y: 0,
   });
-  const [refresh, setRefresh] = useState<number>(0);
   const [flash, setFlash] = useState(0);
 
   useEffect(() => {
@@ -82,7 +81,7 @@ const Index = () => {
     globalStore.bgLayout[endRect.y][endRect.x] = BgLayoutItemType.end;
     initLine();
     drawLayout();
-  }, [app, refresh]);
+  }, [app, globalStore.bgLayout]);
 
   /**
    * 初始化网格
@@ -248,11 +247,12 @@ const Index = () => {
     globalStore.bgLayout[mainPosition.current.y][mainPosition.current.x] =
       BgLayoutItemType.route;
     globalStore.bgLayout[nextStep.y][nextStep.x] = BgLayoutItemType.main;
+    globalStore.bgLayout = JSON.parse(JSON.stringify(globalStore.bgLayout));
+
     if (rectType === BgLayoutItemType.duel) {
       globalStore.status = Status.stop;
       setFlash(Math.random());
     }
-    setRefresh(Math.random());
     // createRect({
     //   position: translatePosition({
     //     width: WIDTH,
