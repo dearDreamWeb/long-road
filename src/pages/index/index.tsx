@@ -6,37 +6,13 @@ import globalStore from '@/store/store';
 import { observer, useObserver, Observer } from 'mobx-react';
 import classNames from 'classnames';
 import { BgLayoutItemType, Status } from '@/typings';
-import Modal from '@/components/modal/modal';
-import Typewriter from '@/components/typewriter/typewriter';
-import rock1 from '@/assets/images/rock-game-1.png';
-import rock2 from '@/assets/images/rock-game-2.png';
-import rock3 from '@/assets/images/rock-game-3.png';
+import RockGame from '@/components/rockGame/rockGame';
 
 interface RectGraphics extends PIXI.Graphics {
   rectType: BgLayoutItemType;
   paramX: number;
   paramY: number;
 }
-
-interface RockListItem {
-  key: string;
-  img: string;
-}
-
-const rockList: RockListItem[] = [
-  {
-    key: '0',
-    img: rock1,
-  },
-  {
-    key: '1',
-    img: rock2,
-  },
-  {
-    key: '2',
-    img: rock3,
-  },
-];
 
 const WIDTH = 700;
 const HEIGHT = 700;
@@ -62,7 +38,6 @@ const Index = () => {
   });
   const [flash, setFlash] = useState(0);
   const [open, setOpen] = useState(false);
-  const [selectedList, setSelectedList] = useState<RockListItem[]>([]);
 
   useEffect(() => {
     let _app = new PIXI.Application({
@@ -305,21 +280,11 @@ const Index = () => {
     mainPosition.current = { ...nextStep };
   };
 
-  const selectedRock = (data: RockListItem) => {
-    setSelectedList((preData) => {
-      if (preData.length > 2) {
-        return preData;
-      }
-      return [...preData, data];
-    });
-  };
-
-  console.log(1111, selectedList);
   return (
     <div className={styles.indexMain}>
       <button
         className={classNames('btn btn-primary', styles.testBtn)}
-        onClick={() => setOpen(!open)}
+        onClick={() => setOpen(true)}
       >
         Button
       </button>
@@ -329,46 +294,7 @@ const Index = () => {
           className={`${styles.flashBox} ${flash ? styles.flash : ''}`}
         ></div>
       </div>
-      <div className={styles.gameMain}>
-        <div className={styles.imgListBox}>
-          {rockList.map((item) => (
-            <div
-              key={item.key}
-              className={styles.imgListItem}
-              style={{
-                backgroundImage: `url(${item.img})`,
-              }}
-              onClick={() => selectedRock(item)}
-            ></div>
-          ))}
-        </div>
-        <div className={styles.resultBox}>
-          {['一', '二', '三'].map((item, index) => (
-            <div key={index} className={styles.resultItemBox}>
-              <title>{`第${item}局`}选择</title>
-              <div
-                className={styles.resultItemImg}
-                style={{
-                  backgroundImage: `url('${
-                    selectedList[index] ? selectedList[index].img : ''
-                  }')`,
-                }}
-              ></div>
-            </div>
-          ))}
-        </div>
-      </div>
-      <Modal isOpen={open} className={styles.modalBox} width={600} height={600}>
-        <div className={styles.gameBox}>
-          <h1 className="title-1">决斗吧，骚年</h1>
-          <p>规则：</p>
-          <Typewriter text="选择每一轮的石头剪刀布，三局两胜!"></Typewriter>
-
-          <button className="btn btn-primary" onClick={() => setOpen(false)}>
-            投降
-          </button>
-        </div>
-      </Modal>
+      <RockGame isOpen={open} onChange={(value) => setOpen(value)} />
     </div>
   );
 };

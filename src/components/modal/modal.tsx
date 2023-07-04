@@ -1,5 +1,5 @@
 import { useEffect, PropsWithChildren, useState } from 'react';
-import ReactDOM from 'react-dom/client';
+import { createPortal } from 'react-dom';
 import { randomHash } from '@/utils';
 import './modal.less';
 import classnames from 'classnames';
@@ -17,28 +17,15 @@ export default function Modal(props: ModalProps) {
     ...(width ? { width: `${width}px` } : {}),
     ...(height ? { height: `${height}px` } : {}),
   };
-  const [domId, setDomId] = useState('');
-  useEffect(() => {
-    if (!isOpen) {
-      const existDom = document.getElementById(`${domId}`);
-      if (existDom) {
-        existDom.remove();
-      }
-      return;
-    }
-    const id = `modal-${randomHash()}`;
-    setDomId(id);
-    const dom = document.createElement('div');
-    dom.id = id;
-    document.body.appendChild(dom);
-    ReactDOM.createRoot(document.getElementById(id) as HTMLElement).render(
-      <div className={classnames(['modal-wrap', className || ''])}>
-        <div className="modal-main" style={styles}>
-          {props.children}
-        </div>
-      </div>
-    );
-  }, [isOpen]);
 
-  return null;
+  return isOpen
+    ? createPortal(
+        <div className={classnames(['modal-wrap', className || ''])}>
+          <div className="modal-main" style={styles}>
+            {props.children}
+          </div>
+        </div>,
+        document.body
+      )
+    : null;
 }
