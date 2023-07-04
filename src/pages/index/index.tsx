@@ -313,9 +313,8 @@ const Index = () => {
       return [...preData, data];
     });
   };
-  useEffect(() => {
-    console.log(1111, selectedList);
-  }, [selectedList]);
+
+  console.log(1111, selectedList);
   return (
     <div className={styles.indexMain}>
       <button
@@ -330,38 +329,41 @@ const Index = () => {
           className={`${styles.flashBox} ${flash ? styles.flash : ''}`}
         ></div>
       </div>
+      <div className={styles.gameMain}>
+        <div className={styles.imgListBox}>
+          {rockList.map((item) => (
+            <div
+              key={item.key}
+              className={styles.imgListItem}
+              style={{
+                backgroundImage: `url(${item.img})`,
+              }}
+              onClick={() => selectedRock(item)}
+            ></div>
+          ))}
+        </div>
+        <div className={styles.resultBox}>
+          {['一', '二', '三'].map((item, index) => (
+            <div key={index} className={styles.resultItemBox}>
+              <title>{`第${item}局`}选择</title>
+              <div
+                className={styles.resultItemImg}
+                style={{
+                  backgroundImage: `url('${
+                    selectedList[index] ? selectedList[index].img : ''
+                  }')`,
+                }}
+              ></div>
+            </div>
+          ))}
+        </div>
+      </div>
       <Modal isOpen={open} className={styles.modalBox} width={600} height={600}>
         <div className={styles.gameBox}>
           <h1 className="title-1">决斗吧，骚年</h1>
           <p>规则：</p>
           <Typewriter text="选择每一轮的石头剪刀布，三局两胜!"></Typewriter>
-          <div className={styles.gameMain}>
-            <div className={styles.imgListBox}>
-              {rockList.map((item) => (
-                <img
-                  key={item.key}
-                  src={item.img}
-                  width={100}
-                  onClick={() => selectedRock(item)}
-                />
-              ))}
-            </div>
-            <div className={styles.resultBox}>
-              {['一', '二', '三'].map((item, index) => (
-                <div key={index} className={styles.resultItemBox}>
-                  <title>{`第${item}局`}选择</title>
-                  <div
-                    className={styles.resultItemImg}
-                    style={{
-                      backgroundImage: `url('${
-                        selectedList[index] ? selectedList[index].img : ''
-                      }')`,
-                    }}
-                  ></div>
-                </div>
-              ))}
-            </div>
-          </div>
+
           <button className="btn btn-primary" onClick={() => setOpen(false)}>
             投降
           </button>
