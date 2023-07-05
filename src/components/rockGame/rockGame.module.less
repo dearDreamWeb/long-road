@@ -22,44 +22,103 @@
         align-items: center;
       }
     }
+  }
 
-    .imgListBox {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      margin: 12px 0;
+  .imgListBox {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 12px 0;
 
-      .imgListItem {
-        width: 100px;
-        height: 100px;
+    .imgListItem {
+      width: 100px;
+      height: 100px;
+      background-repeat: no-repeat;
+      background-size: 100% 100%;
+      cursor: pointer;
+      transition: transform .25s ease-in;
+
+      &:hover {
+        transform: scale(1.2);
+      }
+    }
+  }
+
+  .resultBox {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+
+    title {
+      margin-bottom: 4px;
+    }
+
+    .resultItemBox {
+      .resultItemImg {
+        border: 1px solid #FFFFFF;
+        width: 80px;
+        height: 80px;
         background-repeat: no-repeat;
         background-size: 100% 100%;
-        cursor: pointer;
-        transition: transform .25s ease-in;
+      }
+    }
+  }
 
-        &:hover {
-          transform: scale(1.2);
-        }
+  .operationBox {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+
+    & :nth-child(n) {
+      margin: 0 12px;
+    }
+  }
+
+  .resultMain {
+    display: flex;
+    flex-direction: column;
+    margin: 36px 0 0;
+
+    .result0,
+    .result1,
+    .result2 {
+      margin: 12px 0;
+      font-size: 40px;
+      text-align: center;
+    }
+
+    .heroName,
+    .roleName {
+      margin: 8px 0;
+      font-size: 24px;
+      text-align: center;
+    }
+
+    .resultImgBox {
+      position: absolute;
+      top: 0;
+      left: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      width: 100vw;
+      height: 100vh;
+      background: rgb(0 0 0 / 80%);
+      animation: slider-hide 3.2s ease-in-out forwards;
+
+      p {
+        font-size: 32px;
       }
     }
 
-    .resultBox {
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-
-      title {
-        margin-bottom: 4px;
+    @keyframes slider-hide {
+      0% {
+        opacity: 1;
       }
 
-      .resultItemBox {
-        .resultItemImg {
-          border: 1px solid #FFFFFF;
-          width: 80px;
-          height: 80px;
-          background-repeat: no-repeat;
-          background-size: 100% 100%;
-        }
+      100% {
+        opacity: 0;
       }
     }
   }
