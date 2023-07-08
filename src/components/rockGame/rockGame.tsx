@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import Modal from '../modal/modal';
 import Typewriter from '../typewriter/typewriter';
 import styles from './rockGame.module.less';
+import globalStore from '@/store/store';
+import { GameResultStatus } from '@/typings';
 import rock1 from '@/assets/images/rock-game-1.png';
 import rock2 from '@/assets/images/rock-game-2.png';
 import rock3 from '@/assets/images/rock-game-3.png';
@@ -72,7 +74,6 @@ const ruleHandler = (key: string, key1: string): ResultType => {
       }
       break;
   }
-  console.log(key, typeof key, key1, typeof key1, result);
   return result;
 };
 
@@ -96,6 +97,20 @@ const RockGame = (props: RockGameProps) => {
       return;
     }
     setSelectedList([...selectedList, data]);
+  };
+
+  useEffect(() => {
+    if (isOpen) {
+      return;
+    }
+    init();
+  }, [isOpen]);
+
+  const init = () => {
+    setSelectedList([]);
+    setGameOpponentList([]);
+    setResult(0);
+    setThinking(true);
   };
 
   const goBackHandler = () => {
@@ -130,6 +145,15 @@ const RockGame = (props: RockGameProps) => {
     setResult(grade);
     setGameOpponentList(list);
     setThinking(false);
+    setTimeout(() => {
+      globalStore.gameSettlement(
+        grade > 0
+          ? GameResultStatus.win
+          : grade < 0
+          ? GameResultStatus.loss
+          : GameResultStatus.tie
+      );
+    }, 3000);
   };
 
   return (

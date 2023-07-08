@@ -1,5 +1,6 @@
-import { makeAutoObservable } from 'mobx';
-import { BgLayoutItemType, Status } from '@/typings';
+import { action, makeAutoObservable, observable } from 'mobx';
+import { BgLayoutItemType, Status, GameResultStatus } from '@/typings';
+import message from '@/components/message/message';
 
 const obstacleArr = [
   [5, 0],
@@ -155,6 +156,8 @@ const obstacleArr = [
   [18, 24],
 ];
 const duelArr = [[13, 24]];
+// 最小视野范围
+const MINVIEWDISTANCE = 2;
 
 class GlobalStore {
   WIDTH = 700;
@@ -174,6 +177,8 @@ class GlobalStore {
   obstacleArr: number[][] = obstacleArr;
   // 决斗
   duelArr: number[][] = duelArr;
+  // 对局显示
+  showGameModal = false;
 
   constructor() {
     makeAutoObservable(this);
@@ -208,6 +213,32 @@ class GlobalStore {
     const type = this.bgLayout[y][x];
     return typeof type === 'number' && type !== BgLayoutItemType.obstacle;
   };
+
+  /**新的视野范围 */
+  getNewView(type: 'add' | 'redunce') {
+    if (type === 'add') {
+      this.viewDistance++;
+      return;
+    }
+    this.viewDistance = Math.min(this.viewDistance - 1, MINVIEWDISTANCE);
+  }
+
+  /**游戏结算 */
+  @action
+  gameSettlement(status: GameResultStatus) {
+    console.log('status', status);
+    if (status === GameResultStatus.win) {
+      this.getNewView('add');
+      message.success('游戏胜利');
+      console.log('win');
+    } else if (status === GameResultStatus.loss) {
+      this.getNewView('redunce');
+      message.warning('游戏失败');
+      console.log('loss');
+    }
+    this.showGameModal = false;
+    globalStore.status = Status.normal;
+  }
 }
 
 const globalStore = new GlobalStore();

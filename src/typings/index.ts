@@ -10,7 +10,18 @@ export enum BgLayoutItemType {
   backTo = 7, // 回到原点
 }
 
+// 游戏状态
 export enum Status {
   normal = 0,
   stop = 1,
+}
+
+// 游戏结果
+export enum GameResultStatus {
+  // 赢
+  win = 0,
+  // 输
+  loss = 1,
+  // 平
+  tie = 2,
 }

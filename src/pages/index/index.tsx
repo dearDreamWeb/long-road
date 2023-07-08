@@ -7,6 +7,7 @@ import { observer, useObserver, Observer } from 'mobx-react';
 import classNames from 'classnames';
 import { BgLayoutItemType, Status } from '@/typings';
 import RockGame from '@/components/rockGame/rockGame';
+import message from '@/components/message/message';
 
 interface RectGraphics extends PIXI.Graphics {
   rectType: BgLayoutItemType;
@@ -82,7 +83,7 @@ const Index = () => {
     globalStore.bgLayout[endRect.y][endRect.x] = BgLayoutItemType.end;
     initLine();
     drawLayout();
-  }, [app, globalStore.bgLayout]);
+  }, [app, globalStore.bgLayout, globalStore.viewDistance]);
 
   /**
    * 初始化网格
@@ -254,7 +255,7 @@ const Index = () => {
       globalStore.status = Status.stop;
       setFlash(Math.random());
       setTimeout(() => {
-        setOpen(true);
+        globalStore.showGameModal = true;
       }, 500);
     }
     // createRect({
@@ -284,7 +285,7 @@ const Index = () => {
     <div className={styles.indexMain}>
       <button
         className={classNames('btn btn-primary', styles.testBtn)}
-        onClick={() => setOpen(true)}
+        onClick={() => message.success('123123132')}
       >
         Button
       </button>
@@ -294,7 +295,10 @@ const Index = () => {
           className={`${styles.flashBox} ${flash ? styles.flash : ''}`}
         ></div>
       </div>
-      <RockGame isOpen={open} onChange={(value) => setOpen(value)} />
+      <RockGame
+        isOpen={globalStore.showGameModal}
+        onChange={(value) => (globalStore.showGameModal = value)}
+      />
     </div>
   );
 };
