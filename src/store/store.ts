@@ -3,11 +3,12 @@ import {
   BgLayoutItemType,
   Status,
   GameResultStatus,
-  TextureCacheObj,
+  PunishEnum,
 } from '@/typings';
 import message from '@/components/message/message';
-import { GRIDROWS } from '@/const';
+import { GRIDROWS, MINVIEWDISTANCE } from '@/const';
 import * as PIXI from 'pixi.js';
+import roleStore from './roleStore';
 
 configure({ enforceActions: 'never' });
 
@@ -168,14 +169,10 @@ const duelArr = [
   [13, 24],
   [13, 0],
 ];
-// 最小视野范围
-const MINVIEWDISTANCE = 2;
 
 class GlobalStore {
   // 关卡
   leave = 1;
-  // 视野距离
-  viewDistance = 5;
   // 游戏状态
   status: Status = 0;
   // 二维数组
@@ -186,12 +183,6 @@ class GlobalStore {
   duelArr: number[][] = duelArr;
   // 对局显示
   showGameModal = false;
-  // 人物textures
-  heroTextures: TextureCacheObj = { left: [], right: [], up: [], down: [] };
-  // 人物组帧动画精灵图
-  animatedSprite: PIXI.AnimatedSprite | any = {};
-  // 人物方向
-  direction: keyof TextureCacheObj = 'down';
 
   constructor() {
     makeAutoObservable(this);
@@ -227,13 +218,27 @@ class GlobalStore {
     return typeof type === 'number' && type !== BgLayoutItemType.obstacle;
   };
 
-  /**新的视野范围 */
-  getNewView(type: 'add' | 'redunce') {
-    if (type === 'add') {
-      this.viewDistance++;
+  /**失败处理 */
+  failHandler() {
+    let valuesArr = Object.values(PunishEnum);
+    valuesArr.splice(0, valuesArr.length / 2);
+    if (roleStore.viewDistance <= MINVIEWDISTANCE) {
+      valuesArr.splice(valuesArr.indexOf(PunishEnum.reduceView));
+    } else if (roleStore.isReverse) {
+      valuesArr.splice(valuesArr.indexOf(PunishEnum.reverse));
+    }
+    if (!valuesArr.length) {
       return;
     }
-    this.viewDistance = Math.max(this.viewDistance - 1, MINVIEWDISTANCE);
+    const len = valuesArr.length;
+    const index = Math.floor(Math.random() * len);
+    const value = valuesArr[index];
+    if (value === PunishEnum.reduceView) {
+      roleStore.getNewView('reduce');
+    } else if (value === PunishEnum.reverse) {
+      roleStore.isReverse = true;
+    }
+    console.log('Punish---', value);
   }
 
   /**游戏结算 */
@@ -241,13 +246,12 @@ class GlobalStore {
   gameSettlement(status: GameResultStatus) {
     console.log('status', status);
     if (status === GameResultStatus.win) {
-      this.getNewView('add');
+      roleStore.getNewView('add');
       message.success('游戏胜利');
       console.log('win');
     } else if (status === GameResultStatus.loss) {
-      this.getNewView('redunce');
+      this.failHandler();
       message.warning('游戏失败');
-      console.log('loss');
     }
     this.showGameModal = false;
     globalStore.status = Status.normal;

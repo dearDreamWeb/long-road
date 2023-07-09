@@ -1,3 +1,50 @@
 .statusBox {
   position: relative;
+  margin-right: 12px;
+  padding: 8px;
+  box-shadow: 0 0 4px #CCCCCC;
+
+  :global {
+    .card {
+      color: #FFFFFF;
+      background: #3C3C3C;
+    }
+
+    .card-body {
+      padding: 8px;
+    }
+  }
+
+  h1 {
+    font-size: 2rem;
+    font-weight: bold;
+    text-align: center;
+  }
+
+  .itemBox {
+    .titleBox {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      .badgeBox {
+        margin-left: auto;
+      }
+    }
+
+    .avatarBox {
+      display: flex;
+      justify-content: center;
+      margin-top: 12px;
+
+      :global {
+        .avatar {
+          & > div {
+            cursor: pointer;
+            box-shadow: 0 0 3px #CCCCCC;
+          }
+        }
+      }
+    }
+  }
 }

@@ -8,6 +8,7 @@ import {
 } from '@/utils';
 import * as PIXI from 'pixi.js';
 import globalStore from '@/store/store';
+import roleStore from '@/store/roleStore';
 import { observer, useObserver, Observer } from 'mobx-react';
 import classNames from 'classnames';
 import { BgLayoutItemType, Status, TextureCacheObj } from '@/typings';
@@ -85,36 +86,33 @@ const Index = () => {
     globalStore.bgLayout[endRect.y][endRect.x] = BgLayoutItemType.end;
     initLine();
     drawLayout();
-  }, [app, globalStore.bgLayout, globalStore.viewDistance]);
+  }, [app, globalStore.bgLayout, roleStore.viewDistance]);
 
   // 人物移动动画
   useEffect(() => {
-    if (
-      !globalStore.heroTextures.down ||
-      !globalStore.heroTextures.down.length
-    ) {
+    if (!roleStore.heroTextures.down || !roleStore.heroTextures.down.length) {
       return;
     }
-    if (globalStore.animatedSprite.textures) {
-      globalStore.animatedSprite.textures =
-        globalStore.heroTextures[globalStore.direction || 'down'];
+    if (roleStore.animatedSprite.textures) {
+      roleStore.animatedSprite.textures =
+        roleStore.heroTextures[roleStore.direction || 'down'];
     }
     const sprite = animatedSpriteUpdate({
       app: app!,
-      sprite: globalStore.animatedSprite,
-      list: globalStore.heroTextures[globalStore.direction || 'down'],
+      sprite: roleStore.animatedSprite,
+      list: roleStore.heroTextures[roleStore.direction || 'down'],
       mainPosition: mainPosition.current,
     });
-    if (globalStore.animatedSprite.textures) {
-      app?.stage.removeChild(globalStore.animatedSprite);
+    if (roleStore.animatedSprite.textures) {
+      app?.stage.removeChild(roleStore.animatedSprite);
     }
-    globalStore.animatedSprite = sprite;
-    app?.stage.addChild(globalStore.animatedSprite);
+    roleStore.animatedSprite = sprite;
+    app?.stage.addChild(roleStore.animatedSprite);
   }, [
     globalStore.bgLayout,
-    globalStore.heroTextures,
-    globalStore.direction,
-    globalStore.viewDistance,
+    roleStore.heroTextures,
+    roleStore.direction,
+    roleStore.viewDistance,
   ]);
 
   /**
@@ -204,8 +202,8 @@ const Index = () => {
     globalStore.bgLayout.forEach((items, y) => {
       items.forEach((item: BgLayoutItemType, x) => {
         if (
-          Math.abs(mainX - x) < globalStore.viewDistance &&
-          Math.abs(mainY - y) < globalStore.viewDistance
+          Math.abs(mainX - x) < roleStore.viewDistance &&
+          Math.abs(mainY - y) < roleStore.viewDistance
         ) {
           createRect({
             position: translatePosition({
@@ -249,23 +247,23 @@ const Index = () => {
       return;
     }
     let nextStep = { ...mainPosition.current };
-    let arr: number[][] = [];
+    const step = roleStore.isReverse ? -1 : 1;
     switch (e.key) {
       case 'ArrowUp':
-        globalStore.direction = 'up';
-        nextStep.y--;
+        roleStore.direction = roleStore.isReverse ? 'down' : 'up';
+        nextStep.y -= step;
         break;
       case 'ArrowDown':
-        globalStore.direction = 'down';
-        nextStep.y++;
+        roleStore.direction = roleStore.isReverse ? 'up' : 'down';
+        nextStep.y += step;
         break;
       case 'ArrowLeft':
-        globalStore.direction = 'left';
-        nextStep.x--;
+        roleStore.direction = roleStore.isReverse ? 'right' : 'left';
+        nextStep.x -= step;
         break;
       case 'ArrowRight':
-        globalStore.direction = 'right';
-        nextStep.x++;
+        roleStore.direction = roleStore.isReverse ? 'left' : 'right';
+        nextStep.x += step;
         break;
       // case 's':
       //   globalStore.bgLayout.forEach((rows, rowIndex) => {
@@ -343,7 +341,7 @@ const Index = () => {
         }
         list.push(arr);
       }
-      globalStore.heroTextures = {
+      roleStore.heroTextures = {
         left: list[1],
         right: list[2],
         up: list[3],
@@ -356,7 +354,7 @@ const Index = () => {
     <div className={styles.indexMain}>
       <button
         className={classNames('btn btn-primary', styles.testBtn)}
-        onClick={() => message.success('123123132')}
+        onClick={() => globalStore.gameSettlement(1)}
       >
         Button
       </button>
