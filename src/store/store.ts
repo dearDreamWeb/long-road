@@ -186,6 +186,8 @@ class GlobalStore {
   showGameModal = false;
   // 人物textures
   heroTextures: TextureCacheObj = { left: [], right: [], up: [], down: [] };
+  // 人物组帧动画精灵图
+  animatedSprite: PIXI.AnimatedSprite | any = {};
   // 人物方向
   direction: keyof TextureCacheObj = 'up';
 

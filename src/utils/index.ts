@@ -33,6 +33,7 @@ interface AnimatedSpriteUpdateParams {
   app: PIXI.Application;
   mainPosition: Position;
   list: PIXI.Texture<PIXI.Resource>[];
+  sprite: PIXI.AnimatedSprite;
 }
 
 export const createLine = ({
@@ -148,8 +149,9 @@ export function animatedSpriteUpdate({
   app,
   mainPosition,
   list,
+  sprite,
 }: AnimatedSpriteUpdateParams) {
-  let animatedSprite = new PIXI.AnimatedSprite(list);
+  let animatedSprite = sprite.textures ? sprite : new PIXI.AnimatedSprite(list);
   const { x, y } = translatePosition({
     width: WIDTH,
     height: HEIGHT,
@@ -168,5 +170,7 @@ export function animatedSpriteUpdate({
   //   console.log('播放完成');
   // }; // 动画完成的回调函数
   animatedSprite.gotoAndPlay(0); // 从第几帧开始播放
-  app?.stage.addChild(animatedSprite);
+  animatedSprite.zIndex = 99999;
+  // console.log(app.stage.children);
+  return animatedSprite;
 }

@@ -76,21 +76,6 @@ const Index = () => {
   }, []);
 
   useEffect(() => {
-    if (
-      !app ||
-      !globalStore.heroTextures.up ||
-      !globalStore.heroTextures.up.length
-    ) {
-      return;
-    }
-    animatedSpriteUpdate({
-      app,
-      list: globalStore.heroTextures[globalStore.direction || 'up'],
-      mainPosition: mainPosition.current,
-    });
-  }, [app, globalStore.heroTextures]);
-
-  useEffect(() => {
     if (!app) {
       return;
     }
@@ -101,15 +86,26 @@ const Index = () => {
     drawLayout();
   }, [app, globalStore.bgLayout, globalStore.viewDistance]);
 
+  // 人物移动动画
   useEffect(() => {
-    // 人物移动
-    if (globalStore.heroTextures.up && globalStore.heroTextures.up.length) {
-      animatedSpriteUpdate({
-        app: app!,
-        list: globalStore.heroTextures[globalStore.direction],
-        mainPosition: mainPosition.current,
-      });
+    if (!globalStore.heroTextures.up || !globalStore.heroTextures.up.length) {
+      return;
     }
+    if (globalStore.animatedSprite.textures) {
+      globalStore.animatedSprite.textures =
+        globalStore.heroTextures[globalStore.direction || 'up'];
+    }
+    const sprite = animatedSpriteUpdate({
+      app: app!,
+      sprite: globalStore.animatedSprite,
+      list: globalStore.heroTextures[globalStore.direction || 'up'],
+      mainPosition: mainPosition.current,
+    });
+    if (globalStore.animatedSprite.textures) {
+      app?.stage.removeChild(globalStore.animatedSprite);
+    }
+    globalStore.animatedSprite = sprite;
+    app?.stage.addChild(globalStore.animatedSprite);
   }, [globalStore.bgLayout, globalStore.heroTextures, globalStore.direction]);
 
   /**
