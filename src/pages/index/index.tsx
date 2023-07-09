@@ -15,6 +15,7 @@ import RockGame from '@/components/rockGame/rockGame';
 import message from '@/components/message/message';
 import { WIDTH, HEIGHT, GRIDROWS, GRIDWIDTH, GRIDHEIGHT } from '@/const';
 import heroImg from '@/assets/images/hero.png';
+import StatusComponent from './statusComponent/statusComponent';
 
 interface RectGraphics extends PIXI.Graphics {
   rectType: BgLayoutItemType;
@@ -88,17 +89,20 @@ const Index = () => {
 
   // 人物移动动画
   useEffect(() => {
-    if (!globalStore.heroTextures.up || !globalStore.heroTextures.up.length) {
+    if (
+      !globalStore.heroTextures.down ||
+      !globalStore.heroTextures.down.length
+    ) {
       return;
     }
     if (globalStore.animatedSprite.textures) {
       globalStore.animatedSprite.textures =
-        globalStore.heroTextures[globalStore.direction || 'up'];
+        globalStore.heroTextures[globalStore.direction || 'down'];
     }
     const sprite = animatedSpriteUpdate({
       app: app!,
       sprite: globalStore.animatedSprite,
-      list: globalStore.heroTextures[globalStore.direction || 'up'],
+      list: globalStore.heroTextures[globalStore.direction || 'down'],
       mainPosition: mainPosition.current,
     });
     if (globalStore.animatedSprite.textures) {
@@ -106,7 +110,12 @@ const Index = () => {
     }
     globalStore.animatedSprite = sprite;
     app?.stage.addChild(globalStore.animatedSprite);
-  }, [globalStore.bgLayout, globalStore.heroTextures, globalStore.direction]);
+  }, [
+    globalStore.bgLayout,
+    globalStore.heroTextures,
+    globalStore.direction,
+    globalStore.viewDistance,
+  ]);
 
   /**
    * 初始化网格
@@ -352,10 +361,13 @@ const Index = () => {
         Button
       </button>
       <div className={styles.main}>
-        <canvas id="mainCanvas"></canvas>
-        <div
-          className={`${styles.flashBox} ${flash ? styles.flash : ''}`}
-        ></div>
+        <StatusComponent />
+        <div className={styles.canvasMain}>
+          <canvas id="mainCanvas"></canvas>
+          <div
+            className={`${styles.flashBox} ${flash ? styles.flash : ''}`}
+          ></div>
+        </div>
       </div>
       <RockGame
         isOpen={globalStore.showGameModal}

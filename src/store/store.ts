@@ -1,4 +1,4 @@
-import { action, makeAutoObservable, observable } from 'mobx';
+import { action, makeAutoObservable, observable, configure } from 'mobx';
 import {
   BgLayoutItemType,
   Status,
@@ -8,6 +8,8 @@ import {
 import message from '@/components/message/message';
 import { GRIDROWS } from '@/const';
 import * as PIXI from 'pixi.js';
+
+configure({ enforceActions: 'never' });
 
 const obstacleArr = [
   [5, 0],
@@ -189,7 +191,7 @@ class GlobalStore {
   // 人物组帧动画精灵图
   animatedSprite: PIXI.AnimatedSprite | any = {};
   // 人物方向
-  direction: keyof TextureCacheObj = 'up';
+  direction: keyof TextureCacheObj = 'down';
 
   constructor() {
     makeAutoObservable(this);
