@@ -1,25 +1,26 @@
 import { useRef, useState, useEffect, EventHandler } from 'react';
 import styles from './index.module.less';
-import { createLine, translatePosition, clickPosition } from '@/utils';
+import {
+  createLine,
+  translatePosition,
+  clickPosition,
+  animatedSpriteUpdate,
+} from '@/utils';
 import * as PIXI from 'pixi.js';
 import globalStore from '@/store/store';
 import { observer, useObserver, Observer } from 'mobx-react';
 import classNames from 'classnames';
-import { BgLayoutItemType, Status } from '@/typings';
+import { BgLayoutItemType, Status, TextureCacheObj } from '@/typings';
 import RockGame from '@/components/rockGame/rockGame';
 import message from '@/components/message/message';
+import { WIDTH, HEIGHT, GRIDROWS, GRIDWIDTH, GRIDHEIGHT } from '@/const';
+import heroImg from '@/assets/images/hero.png';
 
 interface RectGraphics extends PIXI.Graphics {
   rectType: BgLayoutItemType;
   paramX: number;
   paramY: number;
 }
-
-const WIDTH = 700;
-const HEIGHT = 700;
-const GRIDROWS = 25;
-const GRIDWIDTH = WIDTH / GRIDROWS;
-const GRIDHEIGHT = HEIGHT / GRIDROWS;
 
 const Index = () => {
   const [app, setApp] = useState<PIXI.Application>();
@@ -38,7 +39,6 @@ const Index = () => {
     y: 0,
   });
   const [flash, setFlash] = useState(0);
-  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     let _app = new PIXI.Application({
@@ -51,6 +51,7 @@ const Index = () => {
       view: document.getElementById('mainCanvas') as HTMLCanvasElement,
     });
     setApp(_app);
+    loaderResources();
     document.addEventListener('keydown', characterMove);
     // _app!.renderer.plugins.interaction.removeAllListeners();
     // // 点击事件生成障碍物，再次点击障碍物将障碍物消掉，也可以生成开始点和结束点
@@ -75,6 +76,21 @@ const Index = () => {
   }, []);
 
   useEffect(() => {
+    if (
+      !app ||
+      !globalStore.heroTextures.up ||
+      !globalStore.heroTextures.up.length
+    ) {
+      return;
+    }
+    animatedSpriteUpdate({
+      app,
+      list: globalStore.heroTextures[globalStore.direction || 'up'],
+      mainPosition: mainPosition.current,
+    });
+  }, [app, globalStore.heroTextures]);
+
+  useEffect(() => {
     if (!app) {
       return;
     }
@@ -84,6 +100,17 @@ const Index = () => {
     initLine();
     drawLayout();
   }, [app, globalStore.bgLayout, globalStore.viewDistance]);
+
+  useEffect(() => {
+    // 人物移动
+    if (globalStore.heroTextures.up && globalStore.heroTextures.up.length) {
+      animatedSpriteUpdate({
+        app: app!,
+        list: globalStore.heroTextures[globalStore.direction],
+        mainPosition: mainPosition.current,
+      });
+    }
+  }, [globalStore.bgLayout, globalStore.heroTextures, globalStore.direction]);
 
   /**
    * 初始化网格
@@ -220,15 +247,19 @@ const Index = () => {
     let arr: number[][] = [];
     switch (e.key) {
       case 'ArrowUp':
+        globalStore.direction = 'up';
         nextStep.y--;
         break;
       case 'ArrowDown':
+        globalStore.direction = 'down';
         nextStep.y++;
         break;
       case 'ArrowLeft':
+        globalStore.direction = 'left';
         nextStep.x--;
         break;
       case 'ArrowRight':
+        globalStore.direction = 'right';
         nextStep.x++;
         break;
       // case 's':
@@ -257,6 +288,9 @@ const Index = () => {
       setTimeout(() => {
         globalStore.showGameModal = true;
       }, 500);
+    } else if (rectType === BgLayoutItemType.end) {
+      globalStore.status = Status.stop;
+      message.success('恭喜通关');
     }
     // createRect({
     //   position: translatePosition({
@@ -279,6 +313,38 @@ const Index = () => {
     //   type: BgLayoutItemType.route,
     // });
     mainPosition.current = { ...nextStep };
+  };
+
+  /**
+   * 加载图片资源
+   */
+  const loaderResources = () => {
+    const loaders = new PIXI.Loader();
+    loaders.add('heroImg', heroImg);
+    loaders.load();
+    let list: PIXI.Texture<PIXI.Resource>[][] = [];
+    loaders.onComplete.add(() => {
+      // 148x190
+      const itemW = 148 / 4;
+      const itemH = 190 / 4;
+      for (let i = 0; i < 4; i++) {
+        let arr: PIXI.Texture<PIXI.Resource>[] = [];
+        for (let j = 0; j < 4; j++) {
+          const spriteTexture = new PIXI.Texture(
+            loaders.resources.heroImg.texture!.baseTexture,
+            new PIXI.Rectangle(itemW * j, itemH * i, itemW, itemH)
+          );
+          arr.push(spriteTexture);
+        }
+        list.push(arr);
+      }
+      globalStore.heroTextures = {
+        left: list[1],
+        right: list[2],
+        up: list[3],
+        down: list[0],
+      };
+    });
   };
 
   return (

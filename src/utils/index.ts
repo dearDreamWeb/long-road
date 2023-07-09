@@ -1,4 +1,5 @@
-import { Graphics, Application } from 'pixi.js';
+import * as PIXI from 'pixi.js';
+import { WIDTH, HEIGHT, GRIDROWS, GRIDWIDTH, GRIDHEIGHT } from '@/const';
 
 interface CreateLine {
   moveToX: number;
@@ -28,6 +29,12 @@ interface Position {
   y: number;
 }
 
+interface AnimatedSpriteUpdateParams {
+  app: PIXI.Application;
+  mainPosition: Position;
+  list: PIXI.Texture<PIXI.Resource>[];
+}
+
 export const createLine = ({
   moveToX,
   moveToY,
@@ -36,7 +43,7 @@ export const createLine = ({
   lineColor = 0xfffffff,
   lineWidth = 1,
 }: CreateLine) => {
-  let line = new Graphics();
+  let line = new PIXI.Graphics();
   line.lineStyle(lineWidth, lineColor, 1);
   line.moveTo(moveToX, moveToY);
   line.lineTo(lineToX, lineToY);
@@ -134,4 +141,32 @@ export function randomHash(hashLength = 24): string {
   }
 
   return hs.join('');
+}
+
+/**更新主角动画 */
+export function animatedSpriteUpdate({
+  app,
+  mainPosition,
+  list,
+}: AnimatedSpriteUpdateParams) {
+  let animatedSprite = new PIXI.AnimatedSprite(list);
+  const { x, y } = translatePosition({
+    width: WIDTH,
+    height: HEIGHT,
+    itemRows: GRIDROWS,
+    rows: mainPosition.y,
+    columns: mainPosition.x,
+  });
+  const scale = GRIDWIDTH / (190 / 4);
+  const diffX = ((1 - scale) * (148 / 4)) / 2 / 2;
+  animatedSprite.x = x + diffX;
+  animatedSprite.y = y;
+  animatedSprite.scale.set(scale);
+  animatedSprite.animationSpeed = 0.1; // 动画播放的速度，默认为1,每秒播放60张图片
+  animatedSprite.loop = true; // 动画是否循环
+  // animatedSprite.onComplete = () => {
+  //   console.log('播放完成');
+  // }; // 动画完成的回调函数
+  animatedSprite.gotoAndPlay(0); // 从第几帧开始播放
+  app?.stage.addChild(animatedSprite);
 }

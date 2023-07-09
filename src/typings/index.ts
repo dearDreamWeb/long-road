@@ -1,3 +1,5 @@
+import * as PIXI from 'pixi.js';
+
 // 决斗，输了路径去除回到原点，赢了获取开墙道具；保护道具；回到原点陷阱
 export enum BgLayoutItemType {
   empty = 0, // 可以走
@@ -25,3 +27,14 @@ export enum GameResultStatus {
   // 平
   tie = 2,
 }
+
+// 人物材质
+export interface TextureCacheObj {
+  left: PIXI.Texture<PIXI.Resource>[];
+  right: PIXI.Texture<PIXI.Resource>[];
+  up: PIXI.Texture<PIXI.Resource>[];
+  down: PIXI.Texture<PIXI.Resource>[];
+}
+
+// 人物方向
+export type Direction = keyof TextureCacheObj;

@@ -1,6 +1,13 @@
 import { action, makeAutoObservable, observable } from 'mobx';
-import { BgLayoutItemType, Status, GameResultStatus } from '@/typings';
+import {
+  BgLayoutItemType,
+  Status,
+  GameResultStatus,
+  TextureCacheObj,
+} from '@/typings';
 import message from '@/components/message/message';
+import { GRIDROWS } from '@/const';
+import * as PIXI from 'pixi.js';
 
 const obstacleArr = [
   [5, 0],
@@ -155,16 +162,14 @@ const obstacleArr = [
   [20, 23],
   [18, 24],
 ];
-const duelArr = [[13, 24]];
+const duelArr = [
+  [13, 24],
+  [13, 0],
+];
 // 最小视野范围
 const MINVIEWDISTANCE = 2;
 
 class GlobalStore {
-  WIDTH = 700;
-  HEIGHT = 700;
-  GRIDROWS = 25;
-  GRIDWIDTH = this.WIDTH / this.GRIDROWS;
-  GRIDHEIGHT = this.HEIGHT / this.GRIDROWS;
   // 关卡
   leave = 1;
   // 视野距离
@@ -179,6 +184,10 @@ class GlobalStore {
   duelArr: number[][] = duelArr;
   // 对局显示
   showGameModal = false;
+  // 人物textures
+  heroTextures: TextureCacheObj = { left: [], right: [], up: [], down: [] };
+  // 人物方向
+  direction: keyof TextureCacheObj = 'up';
 
   constructor() {
     makeAutoObservable(this);
@@ -187,7 +196,7 @@ class GlobalStore {
 
   init() {
     let obstacleAll: BgLayoutItemType[][] = [];
-    for (let i = 0; i < this.GRIDROWS; i++) {
+    for (let i = 0; i < GRIDROWS; i++) {
       obstacleAll.push(new Array(25).fill(0));
     }
 
@@ -220,7 +229,7 @@ class GlobalStore {
       this.viewDistance++;
       return;
     }
-    this.viewDistance = Math.min(this.viewDistance - 1, MINVIEWDISTANCE);
+    this.viewDistance = Math.max(this.viewDistance - 1, MINVIEWDISTANCE);
   }
 
   /**游戏结算 */
