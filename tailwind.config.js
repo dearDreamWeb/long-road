@@ -6,6 +6,9 @@ export default {
     {
       pattern: /card/,
     },
+    {
+      pattern: /alert/,
+    },
   ],
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   theme: {
