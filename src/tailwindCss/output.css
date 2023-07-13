@@ -1179,30 +1179,6 @@ html {
   min-width: 4rem;
 }
 
-.alert-success {
-  border-color: hsl(var(--su) / 0.2);
-  --tw-text-opacity: 1;
-  color: hsl(var(--suc) / var(--tw-text-opacity));
-  --alert-bg: hsl(var(--su));
-  --alert-bg-mix: hsl(var(--b1));
-}
-
-.alert-warning {
-  border-color: hsl(var(--wa) / 0.2);
-  --tw-text-opacity: 1;
-  color: hsl(var(--wac) / var(--tw-text-opacity));
-  --alert-bg: hsl(var(--wa));
-  --alert-bg-mix: hsl(var(--b1));
-}
-
-.alert-error {
-  border-color: hsl(var(--er) / 0.2);
-  --tw-text-opacity: 1;
-  color: hsl(var(--erc) / var(--tw-text-opacity));
-  --alert-bg: hsl(var(--er));
-  --alert-bg-mix: hsl(var(--b1));
-}
-
 .avatar-group :where(.avatar) {
   overflow: hidden;
   border-radius: 9999px;
@@ -1515,6 +1491,12 @@ html {
   border-color: hsl(var(--b2) / var(--tw-border-opacity));
 }
 
+.card-bordered {
+  border-width: 1px;
+  --tw-border-opacity: 1;
+  border-color: hsl(var(--b2) / var(--tw-border-opacity));
+}
+
 .card.compact .card-body {
   padding: 1rem;
   font-size: 0.875rem;
@@ -1733,6 +1715,38 @@ html {
 .tooltip.tooltip-error {
   --tooltip-color: hsl(var(--er));
   --tooltip-text-color: hsl(var(--erc));
+}
+
+.card-side {
+  align-items: stretch;
+  flex-direction: row;
+}
+
+.card-side :where(figure:first-child) {
+  overflow: hidden;
+  border-start-start-radius: inherit;
+  border-start-end-radius: unset;
+  border-end-start-radius: inherit;
+  border-end-end-radius: unset;
+}
+
+.card-side :where(figure:last-child) {
+  overflow: hidden;
+  border-start-start-radius: unset;
+  border-start-end-radius: inherit;
+  border-end-start-radius: unset;
+  border-end-end-radius: inherit;
+}
+
+.card-side figure > * {
+  max-width: unset;
+}
+
+:where(.card-side figure > *) {
+  width: 100%;
+  height: 100%;
+  -o-object-fit: cover;
+     object-fit: cover;
 }
 
 .join.join-vertical {
@@ -2051,48 +2065,24 @@ html {
   bottom: var(--tooltip-tail-offset);
 }
 
-.flex {
-  display: flex;
-}
-
-.hidden {
-  display: none;
-}
-
 .h-6 {
   height: 1.5rem;
-}
-
-.w-6 {
-  width: 1.5rem;
-}
-
-.w-24 {
-  width: 6rem;
 }
 
 .w-12 {
   width: 3rem;
 }
 
-.w-96 {
-  width: 24rem;
-}
-
 .w-32 {
   width: 8rem;
 }
 
-.w-64 {
-  width: 16rem;
+.w-6 {
+  width: 1.5rem;
 }
 
 .shrink-0 {
   flex-shrink: 0;
-}
-
-.justify-end {
-  justify-content: flex-end;
 }
 
 .rounded-full {
