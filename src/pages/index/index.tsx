@@ -354,7 +354,9 @@ const Index = () => {
     <div className={styles.indexMain}>
       <button
         className={classNames('btn btn-primary', styles.testBtn)}
-        onClick={() => globalStore.gameSettlement(1)}
+        onClick={() =>
+          console.log(JSON.parse(JSON.stringify(globalStore.bgLayout)))
+        }
       >
         Button
       </button>
