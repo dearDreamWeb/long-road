@@ -222,20 +222,26 @@ class GlobalStore {
   failHandler() {
     let valuesArr = Object.values(PunishEnum);
     valuesArr.splice(0, valuesArr.length / 2);
+    console.log(3333, [...valuesArr]);
     if (roleStore.viewDistance <= MINVIEWDISTANCE) {
-      valuesArr.splice(valuesArr.indexOf(PunishEnum.reduceView));
-    } else if (roleStore.isReverse) {
-      valuesArr.splice(valuesArr.indexOf(PunishEnum.reverse));
+      valuesArr.splice(valuesArr.indexOf(PunishEnum.reduceView), 1);
     }
+    if (roleStore.isReverse) {
+      valuesArr.splice(valuesArr.indexOf(PunishEnum.reverse), 1);
+    }
+    console.log(valuesArr, roleStore.isReverse);
     if (!valuesArr.length) {
       return;
     }
     const len = valuesArr.length;
     const index = Math.floor(Math.random() * len);
     const value = valuesArr[index];
+
     if (value === PunishEnum.reduceView) {
       roleStore.getNewView('reduce');
+      message.warning('视野范围减小');
     } else if (value === PunishEnum.reverse) {
+      message.warning('方向混乱');
       roleStore.isReverse = true;
     }
     console.log('Punish---', value);
@@ -247,11 +253,8 @@ class GlobalStore {
     console.log('status', status);
     if (status === GameResultStatus.win) {
       roleStore.getNewView('add');
-      message.success('游戏胜利');
-      console.log('win');
     } else if (status === GameResultStatus.loss) {
       this.failHandler();
-      message.warning('游戏失败');
     }
     this.showGameModal = false;
     globalStore.status = Status.normal;

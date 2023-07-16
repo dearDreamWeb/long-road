@@ -9,4 +9,4 @@ export const GRIDWIDTH = WIDTH / GRIDROWS;
 /**每个格子的高度 */
 export const GRIDHEIGHT = HEIGHT / GRIDROWS;
 /**最小视野范围 */
-export const MINVIEWDISTANCE = 2;
+export const MINVIEWDISTANCE = 5;

@@ -9,6 +9,11 @@ const routes: RouteConfig[] = [
   },
   {
     exact: true,
+    path: '/createGame',
+    component: lazy(() => import('@/pages/createGame/createGame')),
+  },
+  {
+    exact: true,
     path: '/warning',
     component: lazy(() => import('@/pages/warning/warning')),
   },
