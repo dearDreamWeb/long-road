@@ -174,3 +174,16 @@ export function animatedSpriteUpdate({
   // console.log(app.stage.children);
   return animatedSprite;
 }
+
+/**将0x开头的颜色值转换成#颜色值 */
+export function convertColor(hexColor: string) {
+  // 去掉0x前缀并转换成十进制数
+  const decimalColor = parseInt(hexColor, 16);
+  // 将十进制数转换成十六进制字符串
+  const hexString = decimalColor.toString(16);
+  // 补齐字符串长度到6位
+  const paddedHexString = hexString.padStart(6, '0');
+  // 添加#前缀
+  const finalColor = '#' + paddedHexString;
+  return finalColor;
+}

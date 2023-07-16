@@ -8,7 +8,10 @@ import {
   translatePosition,
   clickPosition,
   animatedSpriteUpdate,
+  convertColor,
 } from '@/utils';
+import Modal from '@/components/modal/modal';
+import message from '@/components/message/message';
 
 interface RectGraphics extends PIXI.Graphics {
   rectType: BgLayoutItemType;
@@ -29,10 +32,37 @@ const defaultTypeList = [
   {
     type: BgLayoutItemType.empty,
     label: '清除',
+    color: '0x000000',
   },
   {
     type: BgLayoutItemType.obstacle,
     label: '障碍物',
+    color: '0xcccccc',
+  },
+  {
+    type: BgLayoutItemType.backTo,
+    label: '回到原点',
+    color: '0x64bcf2',
+  },
+  {
+    type: BgLayoutItemType.duel,
+    label: '决斗',
+    color: '0xe2f050',
+  },
+  {
+    type: BgLayoutItemType.end,
+    label: '终点',
+    color: '0x67c23a',
+  },
+  {
+    type: BgLayoutItemType.main,
+    label: '起点',
+    color: '0xe4393c',
+  },
+  {
+    type: BgLayoutItemType.protect,
+    label: '保护卡',
+    color: '0x6bd09e',
   },
 ];
 
@@ -47,24 +77,30 @@ const createGame = () => {
     x: 12,
     y: 24,
   });
-  const [endRect, setEndRect] = useState<{ x: number; y: number }>({
+  const endRect = useRef<{ x: number; y: number }>({
     x: 12,
     y: 0,
   });
   const [createType, setCreateType] = useState(BgLayoutItemType.obstacle);
-  const [typeList, setTypeList] = useState([]);
+  const [typeList, setTypeList] = useState(defaultTypeList);
+  const [isOpen, setIsOpen] = useState(false);
+  const [textareaValue, setTextareaValue] = useState('');
 
   useEffect(() => {
-    let _app = new PIXI.Application({
-      width: WIDTH,
-      height: HEIGHT,
-      antialias: true,
-      transparent: false,
-      resolution: 1,
-      backgroundColor: 0x000000,
-      view: document.getElementById('createCanvas') as HTMLCanvasElement,
-    });
-    setApp(_app);
+    let _app = app;
+    if (!_app) {
+      _app = new PIXI.Application({
+        width: WIDTH,
+        height: HEIGHT,
+        antialias: true,
+        transparent: false,
+        resolution: 1,
+        backgroundColor: 0x000000,
+        view: document.getElementById('createCanvas') as HTMLCanvasElement,
+      });
+      setApp(_app);
+    }
+
     _app!.renderer.plugins.interaction.removeAllListeners();
     // 点击事件生成障碍物，再次点击障碍物将障碍物消掉，也可以生成开始点和结束点
     _app!.renderer.plugins.interaction.on(
@@ -80,20 +116,23 @@ const createGame = () => {
         });
         if (bgLayout.current[relativeY][relativeX] === createType) {
           bgLayout.current[relativeY][relativeX] = BgLayoutItemType.empty;
-          createRect({
-            position: { x, y },
-            type: BgLayoutItemType.empty,
-          });
+          drawLayout();
         } else {
+          if (createType === BgLayoutItemType.main) {
+            bgLayout.current[mainPosition.current.y][mainPosition.current.x] =
+              BgLayoutItemType.empty;
+            mainPosition.current = { x: relativeX, y: relativeY };
+          } else if (createType === BgLayoutItemType.end) {
+            bgLayout.current[endRect.current.y][endRect.current.x] =
+              BgLayoutItemType.empty;
+            endRect.current = { x: relativeX, y: relativeY };
+          }
           bgLayout.current[relativeY][relativeX] = createType;
-          createRect({
-            position: { x, y },
-            type: createType,
-          });
+          drawLayout();
         }
       }
     );
-  }, []);
+  }, [app, createType]);
 
   useEffect(() => {
     if (!app) {
@@ -101,7 +140,8 @@ const createGame = () => {
     }
     bgLayout.current[mainPosition.current.y][mainPosition.current.x] =
       BgLayoutItemType.main;
-    bgLayout.current[endRect.y][endRect.x] = BgLayoutItemType.end;
+    bgLayout.current[endRect.current.y][endRect.current.x] =
+      BgLayoutItemType.end;
     drawLayout();
   }, [app]);
 
@@ -139,29 +179,8 @@ const createGame = () => {
     const { x, y } = position;
     let rectangle = new PIXI.Graphics() as RectGraphics;
     rectangle.lineStyle(1, 0x000000, 1);
-    switch (type) {
-      case BgLayoutItemType.route:
-        rectangle.beginFill(0xe6a23c);
-        break;
-      case BgLayoutItemType.main:
-        rectangle.beginFill(0xe4393c);
-        break;
-      case BgLayoutItemType.end:
-        rectangle.beginFill(0x67c23a);
-        break;
-      case BgLayoutItemType.obstacle:
-        rectangle.beginFill(0xcccccc);
-        break;
-      case BgLayoutItemType.empty:
-        rectangle.beginFill(0x000000);
-        break;
-      case BgLayoutItemType.duel:
-        rectangle.beginFill(0x1e6700);
-        break;
-      default:
-        rectangle.beginFill(0xcccccc);
-        break;
-    }
+    const item = typeList.find((item) => item.type === type);
+    rectangle.beginFill(Number(item?.color));
     rectangle.drawRect(
       x - (x % GRIDWIDTH),
       y - (y % GRIDHEIGHT),
@@ -176,19 +195,84 @@ const createGame = () => {
     app?.stage.addChild(rectContainer.current!);
   };
 
+  /**导入数据 */
+  const importHandler = () => {
+    setIsOpen(false);
+    try {
+      const value = JSON.parse(textareaValue);
+      bgLayout.current = value;
+      drawLayout();
+    } catch (err) {
+      message.info('数据格式错误');
+    }
+  };
+
   return (
-    <div className="relative">
-      <div>
-        <h1>当前要生成的类型</h1>
-        <input
-          type="radio"
-          name="radio-7"
-          className="radio radio-info"
-          checked
-        />
-        <input type="radio" name="radio-7" className="radio radio-info" />
+    <div className="relative flex">
+      <div className="mr-4 py-4 shadow-lg shadow-#ccc-500/50">
+        <h1 className="mb-4 px-4 text-center">当前要生成的类型</h1>
+        {typeList.map((item) => (
+          <div
+            key={item.type}
+            className="flex items-center py-2 px-4 cursor-pointer hover:bg-base-200"
+            onClick={() => setCreateType(item.type)}
+          >
+            <input
+              type="radio"
+              name="radio-7"
+              className="radio radio-info w-5 h-5"
+              checked={item.type === createType}
+              onChange={() => setCreateType(item.type)}
+            />
+            <span
+              className={`ml-2 ${item.type === createType ? 'text-info' : ''}`}
+            >
+              {item.label}
+            </span>
+            <span
+              className="block ml-4 w-4 h-4"
+              style={{ background: convertColor(item.color) }}
+            ></span>
+          </div>
+        ))}
       </div>
       <canvas id="createCanvas"></canvas>
+      <button
+        className="btn btn-active absolute bottom-full mb-4 left-1/3"
+        onClick={() => setIsOpen(true)}
+      >
+        导入数据
+      </button>
+      <button
+        className="btn btn-neutral absolute bottom-full mb-4 left-1/2"
+        onClick={() => {
+          console.log(bgLayout.current);
+        }}
+      >
+        保存数据
+      </button>
+      <Modal isOpen={isOpen}>
+        <div className="p-4">
+          <h1 className="text-lg font-bold text-center mb-8">导入数据</h1>
+          <textarea
+            className="textarea textarea-info w-full resize-none"
+            placeholder="输入数据"
+            rows={5}
+            onChange={(e) => setTextareaValue(e.target.value)}
+          ></textarea>
+          <div className="flex justify-center mt-4">
+            <button
+              className="btn btn-info mr-4"
+              onClick={() => setIsOpen(false)}
+            >
+              取消
+            </button>
+            <button className="btn btn-success" onClick={importHandler}>
+              确定
+            </button>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 };
