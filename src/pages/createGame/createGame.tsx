@@ -28,7 +28,7 @@ for (let i = 0; i < GRIDROWS; i++) {
   defaultBgLayout[i] = rows;
 }
 
-const defaultTypeList = [
+export const defaultTypeList = [
   {
     type: BgLayoutItemType.empty,
     label: '清除',

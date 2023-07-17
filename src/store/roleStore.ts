@@ -17,6 +17,14 @@ class RoleStore {
   direction: keyof TextureCacheObj = 'down';
   // 是否反向
   isReverse = false;
+  mainPosition = {
+    x: 12,
+    y: 24,
+  };
+  endRect = {
+    x: 12,
+    y: 0,
+  };
 
   constructor() {
     makeAutoObservable(this);

@@ -10,12 +10,18 @@ import { GRIDROWS, MINVIEWDISTANCE } from '@/const';
 import * as PIXI from 'pixi.js';
 import roleStore from './roleStore';
 import level1 from '@/assets/levels/level-1.json';
+import level2 from '@/assets/levels/level-2.json';
 
 configure({ enforceActions: 'never' });
 
+const levelMap: any = {
+  1: level1,
+  2: level2,
+};
+
 class GlobalStore {
   // 关卡
-  leave = 1;
+  level = 1;
   // 游戏状态
   status: Status = 0;
   // 二维数组
@@ -29,7 +35,17 @@ class GlobalStore {
   }
 
   init() {
-    this.bgLayout = level1;
+    const dataJson = levelMap[this.level];
+    for (let i = 0; i < dataJson.length; i++) {
+      for (let j = 0; j < dataJson[i].length; j++) {
+        if (dataJson[i][j] === BgLayoutItemType.main) {
+          roleStore.mainPosition = { x: j, y: i };
+        } else if (dataJson[i][j] === BgLayoutItemType.end) {
+          roleStore.endRect = { x: j, y: i };
+        }
+      }
+    }
+    this.bgLayout = dataJson;
   }
 
   /**
@@ -86,6 +102,14 @@ class GlobalStore {
     }
     this.showGameModal = false;
     globalStore.status = Status.normal;
+  }
+
+  @action
+  winGame() {
+    // this.status = Status.stop;
+    this.level++;
+    this.init();
+    message.success('恭喜通关');
   }
 }
 

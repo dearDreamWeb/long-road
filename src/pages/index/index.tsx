@@ -24,6 +24,17 @@ interface RectGraphics extends PIXI.Graphics {
   paramY: number;
 }
 
+const colorMap = {
+  [BgLayoutItemType.empty]: 0x000000,
+  [BgLayoutItemType.backTo]: 0x64bcf2,
+  [BgLayoutItemType.duel]: 0xe2f050,
+  [BgLayoutItemType.end]: 0x67c23a,
+  [BgLayoutItemType.main]: 0xe4393c,
+  [BgLayoutItemType.obstacle]: 0xcccccc,
+  [BgLayoutItemType.protect]: 0x6bd09e,
+  [BgLayoutItemType.route]: 0xe6a23c,
+};
+
 const Index = () => {
   const [app, setApp] = useState<PIXI.Application>();
   // 背景条纹容器
@@ -32,14 +43,6 @@ const Index = () => {
   const rectContainer = useRef<PIXI.Container>(new PIXI.Container());
   // 路径容器
   const routeContainer = useRef<PIXI.Container>(new PIXI.Container());
-  const mainPosition = useRef<{ x: number; y: number }>({
-    x: 12,
-    y: 24,
-  });
-  const [endRect, setEndRect] = useState<{ x: number; y: number }>({
-    x: 12,
-    y: 0,
-  });
   const [flash, setFlash] = useState(0);
 
   useEffect(() => {
@@ -81,9 +84,6 @@ const Index = () => {
     if (!app) {
       return;
     }
-    globalStore.bgLayout[mainPosition.current.y][mainPosition.current.x] =
-      BgLayoutItemType.main;
-    globalStore.bgLayout[endRect.y][endRect.x] = BgLayoutItemType.end;
     initLine();
     drawLayout();
   }, [app, globalStore.bgLayout, roleStore.viewDistance]);
@@ -101,7 +101,7 @@ const Index = () => {
       app: app!,
       sprite: roleStore.animatedSprite,
       list: roleStore.heroTextures[roleStore.direction || 'down'],
-      mainPosition: mainPosition.current,
+      mainPosition: roleStore.mainPosition,
     });
     if (roleStore.animatedSprite.textures) {
       app?.stage.removeChild(roleStore.animatedSprite);
@@ -157,29 +157,7 @@ const Index = () => {
     const { x, y } = position;
     let rectangle = new PIXI.Graphics() as RectGraphics;
     rectangle.lineStyle(1, 0x000000, 1);
-    switch (type) {
-      case BgLayoutItemType.route:
-        rectangle.beginFill(0xe6a23c);
-        break;
-      case BgLayoutItemType.main:
-        rectangle.beginFill(0xe4393c);
-        break;
-      case BgLayoutItemType.end:
-        rectangle.beginFill(0x67c23a);
-        break;
-      case BgLayoutItemType.obstacle:
-        rectangle.beginFill(0xcccccc);
-        break;
-      case BgLayoutItemType.empty:
-        rectangle.beginFill(0x000000);
-        break;
-      case BgLayoutItemType.duel:
-        rectangle.beginFill(0x1e6700);
-        break;
-      default:
-        rectangle.beginFill(0xcccccc);
-        break;
-    }
+    rectangle.beginFill(colorMap[type]);
     rectangle.drawRect(
       x - (x % GRIDWIDTH),
       y - (y % GRIDHEIGHT),
@@ -198,7 +176,7 @@ const Index = () => {
    * 绘制画布
    */
   const drawLayout = () => {
-    const { x: mainX, y: mainY } = mainPosition.current;
+    const { x: mainX, y: mainY } = roleStore.mainPosition;
     globalStore.bgLayout.forEach((items, y) => {
       items.forEach((item: BgLayoutItemType, x) => {
         if (
@@ -246,7 +224,7 @@ const Index = () => {
     if (globalStore.status === Status.stop) {
       return;
     }
-    let nextStep = { ...mainPosition.current };
+    let nextStep = { ...roleStore.mainPosition };
     const step = roleStore.isReverse ? -1 : 1;
     switch (e.key) {
       case 'ArrowUp':
@@ -280,10 +258,16 @@ const Index = () => {
       return;
     }
     const rectType = globalStore.bgLayout[nextStep.y][nextStep.x];
-    globalStore.bgLayout[mainPosition.current.y][mainPosition.current.x] =
+    globalStore.bgLayout[roleStore.mainPosition.y][roleStore.mainPosition.x] =
       BgLayoutItemType.route;
     globalStore.bgLayout[nextStep.y][nextStep.x] = BgLayoutItemType.main;
     globalStore.bgLayout = JSON.parse(JSON.stringify(globalStore.bgLayout));
+
+    roleStore.mainPosition = { ...nextStep };
+    globalStore.bgLayout[roleStore.mainPosition.y][roleStore.mainPosition.x] =
+      BgLayoutItemType.main;
+    globalStore.bgLayout[roleStore.endRect.y][roleStore.endRect.x] =
+      BgLayoutItemType.end;
 
     if (rectType === BgLayoutItemType.duel) {
       globalStore.status = Status.stop;
@@ -292,8 +276,7 @@ const Index = () => {
         globalStore.showGameModal = true;
       }, 500);
     } else if (rectType === BgLayoutItemType.end) {
-      globalStore.status = Status.stop;
-      message.success('恭喜通关');
+      globalStore.winGame();
     }
     // createRect({
     //   position: translatePosition({
@@ -310,12 +293,11 @@ const Index = () => {
     //     width: WIDTH,
     //     height: HEIGHT,
     //     itemRows: GRIDROWS,
-    //     rows: mainPosition.current.y,
-    //     columns: mainPosition.current.x,
+    //     rows: roleStore.mainPosition.y,
+    //     columns: roleStore.mainPosition.x,
     //   }),
     //   type: BgLayoutItemType.route,
     // });
-    mainPosition.current = { ...nextStep };
   };
 
   /**
