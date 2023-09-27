@@ -1,9 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import Modal from '../modal/modal';
 import Typewriter from '../typewriter/typewriter';
 import styles from './rockGame.module.less';
 import globalStore from '@/store/store';
 import { GameResultStatus } from '@/typings';
+import { observer } from 'mobx-react';
+import classnames from 'classnames';
 import rock1 from '@/assets/images/rock-game-1.png';
 import rock2 from '@/assets/images/rock-game-2.png';
 import rock3 from '@/assets/images/rock-game-3.png';
@@ -82,6 +84,24 @@ interface RockGameProps {
   onChange(value: boolean): void;
 }
 
+const resultMap = {
+  win: {
+    text: '你赢了，算你走运。',
+    imgClass: 'text-success',
+    imgUrl: 'https://resource.blogwxb.cn/longLoad/game-win.gif',
+  },
+  loss: {
+    text: '你输喽，辣鸡！',
+    imgClass: 'text-error',
+    imgUrl: 'https://resource.blogwxb.cn/longLoad/game-loss.gif',
+  },
+  tie: {
+    text: '什么，居然平手了？',
+    imgClass: 'text-warning',
+    imgUrl: 'https://resource.blogwxb.cn/longLoad/game-level.gif',
+  },
+};
+
 const RockGame = (props: RockGameProps) => {
   const { isOpen, onChange } = props;
 
@@ -93,7 +113,7 @@ const RockGame = (props: RockGameProps) => {
   const [thinking, setThinking] = useState(true);
 
   const selectedRock = (data: RockListItem) => {
-    if (selectedList.length > 2) {
+    if (globalStore.isEnd || selectedList.length > 2) {
       return;
     }
     setSelectedList([...selectedList, data]);
@@ -101,6 +121,7 @@ const RockGame = (props: RockGameProps) => {
 
   useEffect(() => {
     if (isOpen) {
+      globalStore.isEnd = false;
       return;
     }
     init();
@@ -112,6 +133,14 @@ const RockGame = (props: RockGameProps) => {
     setResult(0);
     setThinking(true);
   };
+
+  const resultOptions = useMemo(() => {
+    return result < 0
+      ? resultMap.loss
+      : result > 0
+      ? resultMap.win
+      : resultMap.tie;
+  }, [result]);
 
   const goBackHandler = () => {
     if (selectedList.length) {
@@ -155,7 +184,7 @@ const RockGame = (props: RockGameProps) => {
       );
     }, 3000);
   };
-
+  console.log(1111, globalStore.isEnd);
   return (
     <Modal isOpen={isOpen} className={styles.modalBox} width={600} height={600}>
       <div className={styles.gameBox}>
@@ -199,28 +228,65 @@ const RockGame = (props: RockGameProps) => {
                 ))}
               </div>
             </div>
-            <div className={styles.operationBox}>
-              <button
-                className="btn btn-outline btn-info"
-                onClick={goBackHandler}
-              >
-                撤回
-              </button>
-              <button
-                className="btn btn-outline btn-success"
-                onClick={confirmHandler}
-              >
-                确定
-              </button>
-              <button
-                className="btn btn-outline btn-error"
-                onClick={() => {
-                  onChange(false);
-                }}
-              >
-                投降
-              </button>
-            </div>
+            {globalStore.isEnd ? (
+              <div className="flex flex-col justify-center items-center">
+                <div className="mt-20 text-xl">
+                  游戏结果:
+                  <span
+                    className={classnames(
+                      'inline-block ml-4',
+                      resultOptions.imgClass
+                    )}
+                  >
+                    {resultOptions.text}
+                  </span>
+                </div>
+                <button
+                  className="btn px-8 text-xl mt-4"
+                  onClick={() => onChange(false)}
+                >
+                  关闭
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-6 w-6"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M6 18L18 6M6 6l12 12"
+                    />
+                  </svg>
+                </button>
+              </div>
+            ) : (
+              <div className={styles.operationBox}>
+                <button
+                  className="btn btn-outline btn-info"
+                  onClick={goBackHandler}
+                >
+                  撤回
+                </button>
+                <button
+                  className="btn btn-outline btn-success"
+                  onClick={confirmHandler}
+                >
+                  确定
+                </button>
+                <button
+                  className="btn btn-outline btn-error"
+                  onClick={() => {
+                    setResult(-1);
+                    globalStore.gameSettlement(GameResultStatus.loss);
+                  }}
+                >
+                  投降
+                </button>
+              </div>
+            )}
           </>
         ) : (
           <div className={styles.resultMain}>
@@ -261,32 +327,47 @@ const RockGame = (props: RockGameProps) => {
               ))}
             </div>
             <div className={`${styles.heroName} text-secondary`}>你</div>
+            <div className="flex flex-col justify-center items-center">
+              <div className="text-xl">
+                游戏结果:
+                <span
+                  className={classnames(
+                    'inline-block ml-4',
+                    resultOptions.imgClass
+                  )}
+                >
+                  {resultOptions.text}
+                </span>
+              </div>
+              <button
+                className="btn px-8 text-xl mt-4"
+                onClick={() => onChange(false)}
+              >
+                关闭
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-6 w-6"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </button>
+            </div>
             <div className={styles.resultImgBox}>
               <img
                 className={styles.resultImg}
-                src={
-                  result < 0
-                    ? 'https://resource.blogwxb.cn/longLoad/game-loss.gif'
-                    : result > 0
-                    ? 'https://resource.blogwxb.cn/longLoad/game-win.gif'
-                    : 'https://resource.blogwxb.cn/longLoad/game-level.gif'
-                }
+                src={resultOptions.imgUrl}
                 alt="result"
               />
-              <p
-                className={`${
-                  result < 0
-                    ? 'text-error'
-                    : result > 0
-                    ? 'text-success'
-                    : 'text-warning'
-                }`}
-              >
-                {result < 0
-                  ? '你输喽，辣鸡！'
-                  : result > 0
-                  ? '你赢了，算你走运。'
-                  : '什么，居然平手了？'}
+              <p className={`${resultOptions.imgClass}`}>
+                {resultOptions.text}
               </p>
             </div>
           </div>
@@ -295,4 +376,4 @@ const RockGame = (props: RockGameProps) => {
     </Modal>
   );
 };
-export default RockGame;
+export default observer(RockGame);

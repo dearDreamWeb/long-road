@@ -9,7 +9,7 @@ import {
 import * as PIXI from 'pixi.js';
 import globalStore from '@/store/store';
 import roleStore from '@/store/roleStore';
-import { observer, useObserver, Observer } from 'mobx-react';
+import { observer } from 'mobx-react';
 import classNames from 'classnames';
 import { BgLayoutItemType, Status, TextureCacheObj } from '@/typings';
 import RockGame from '@/components/rockGame/rockGame';

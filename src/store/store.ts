@@ -28,6 +28,8 @@ class GlobalStore {
   bgLayout: BgLayoutItemType[][] = [[]];
   // 对局显示
   showGameModal = false;
+  // 对局是否结束
+  isEnd = false;
 
   constructor() {
     makeAutoObservable(this);
@@ -100,8 +102,9 @@ class GlobalStore {
     } else if (status === GameResultStatus.loss) {
       this.failHandler();
     }
-    this.showGameModal = false;
-    globalStore.status = Status.normal;
+    this.isEnd = true;
+    // this.showGameModal = false;
+    this.status = Status.normal;
   }
 
   @action
