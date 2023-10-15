@@ -1,0 +1,56 @@
+.modalBox {
+  .modal-main {
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.blackjackGameBox {
+  padding: 16px 12px;
+  width: 100%;
+  height: 100%;
+  color: #FFFFFF;
+  background-color: #3C3C3C;
+
+  .testBox {
+    position: relative;
+    width: 70px;
+    height: 98.5px;
+    transform-style: preserve-3d;
+    transition: transform 1s;
+  }
+
+  .testBox:hover {
+    transform: rotateY(180deg);
+  }
+
+  .front {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url("../../assets/images/blackjackGameBg.png") no-repeat;
+    background-position: 0 0;
+    background-size: 800%;
+    backface-visibility: hidden;
+    transform: rotateY(180deg);
+  }
+
+  .black {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url("../../assets/images/blackjackGameBg.png") no-repeat;
+    // background-position: -248px -100px;
+    // 2
+    // background-position: -82px 0;
+    // 3
+    // background-position: -162px 0 ;
+    background-position: -248px -100px;
+    background-size: 800%;
+    backface-visibility: hidden;
+  }
+}

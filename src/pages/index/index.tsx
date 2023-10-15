@@ -13,6 +13,7 @@ import { observer } from 'mobx-react';
 import classNames from 'classnames';
 import { BgLayoutItemType, Status, TextureCacheObj } from '@/typings';
 import RockGame from '@/components/rockGame/rockGame';
+import BlackjackGame from '@/components/blackjackGame/blackjackGame';
 import message from '@/components/message/message';
 import { WIDTH, HEIGHT, GRIDROWS, GRIDWIDTH, GRIDHEIGHT } from '@/const';
 import heroImg from '@/assets/images/hero.png';
@@ -351,7 +352,11 @@ const Index = () => {
           ></div>
         </div>
       </div>
-      <RockGame
+      {/* <RockGame
+        isOpen={globalStore.showGameModal}
+        onChange={(value) => (globalStore.showGameModal = value)}
+      /> */}
+      <BlackjackGame
         isOpen={globalStore.showGameModal}
         onChange={(value) => (globalStore.showGameModal = value)}
       />
