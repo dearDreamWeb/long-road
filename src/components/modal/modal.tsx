@@ -1,4 +1,4 @@
-import { useEffect, PropsWithChildren, useState } from 'react';
+import { useEffect, PropsWithChildren, useState, CSSProperties } from 'react';
 import { createPortal } from 'react-dom';
 import { randomHash } from '@/utils';
 import './modal.less';
@@ -6,16 +6,18 @@ import classnames from 'classnames';
 
 interface ModalProps extends PropsWithChildren {
   isOpen: boolean;
+  moreStyle?: CSSProperties;
   className?: string;
   width?: number;
   height?: number;
 }
 
 export default function Modal(props: ModalProps) {
-  const { isOpen, className, width, height } = props;
+  const { isOpen, className, width, height, moreStyle } = props;
   const styles = {
     ...(width ? { width: `${width}px` } : {}),
     ...(height ? { height: `${height}px` } : {}),
+    ...(moreStyle || {}),
   };
 
   return isOpen

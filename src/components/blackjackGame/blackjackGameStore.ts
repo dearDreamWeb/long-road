@@ -18,13 +18,16 @@ class BlackjackGame {
 
   @action
   resetData() {
+    const playerCount1 = this.getRandomNum();
+    const playerCount2 = this.getRandomNum();
     this.playerInfo = {
-      cardList: [],
-      count: 0,
+      cardList: [playerCount1, playerCount2],
+      count: playerCount1 + playerCount2,
     };
+    const computerCount1 = this.getRandomNum();
     this.computerInfo = {
-      cardList: [],
-      count: 0,
+      cardList: [playerCount1],
+      count: computerCount1,
     };
     this.isOver = false;
     this.isWin = false;
@@ -66,7 +69,7 @@ class BlackjackGame {
   }
 
   @action
-  autoCard() {
+  async autoCard() {
     if (this.isOver) {
       return;
     }
@@ -76,7 +79,8 @@ class BlackjackGame {
         return;
       }
       if (this.computerInfo.count <= this.playerInfo.count) {
-        this.autoCard();
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+        await this.autoCard();
       } else if (this.computerInfo.count > 21) {
         this.isOver = true;
         this.isWin = true;
@@ -87,6 +91,7 @@ class BlackjackGame {
         console.log('--result--', this);
       }
     }
+    return;
   }
 }
 const blackjackGameStore = new BlackjackGame();

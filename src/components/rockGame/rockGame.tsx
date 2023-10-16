@@ -186,7 +186,7 @@ const RockGame = (props: RockGameProps) => {
   };
   console.log(1111, globalStore.isEnd);
   return (
-    <Modal isOpen={isOpen} className={styles.modalBox} width={600} height={600}>
+    <Modal isOpen={isOpen} className={styles.modalBox} width={700} height={700}>
       <div className={styles.gameBox}>
         <h1 className="title-1">决斗吧，骚年</h1>
         <p>规则：</p>
