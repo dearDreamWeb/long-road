@@ -73,7 +73,7 @@ class BlackjackGame {
     if (this.isOver) {
       return;
     }
-    if (this.computerInfo.count <= this.playerInfo.count) {
+    if (this.computerInfo.count < this.playerInfo.count) {
       this.addCard(false, this.getRandomNum());
       if (this.isOver) {
         return;

@@ -32,7 +32,13 @@ function MessageComponent(props: MessageComponentProps) {
   const { type, content } = props;
   return (
     <div>
-      <div className={classNames(['alert', `alert-${type}`])}>
+      <section className="flex">
+        <i className="nes-bcrikko mr-4"></i>
+        <div className="nes-balloon from-left is-dark">
+          <span className="tracking-3">{content}</span>
+        </div>
+      </section>
+      {/* <div className={classNames(['alert', `alert-${type}`])}>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
@@ -47,7 +53,7 @@ function MessageComponent(props: MessageComponentProps) {
           ></path>
         </svg>
         <span>{content}</span>
-      </div>
+      </div> */}
     </div>
   );
 }

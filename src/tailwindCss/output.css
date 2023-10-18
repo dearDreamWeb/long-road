@@ -2668,6 +2668,14 @@ html {
   font-weight: 700;
 }
 
+.tracking-4 {
+  letter-spacing: 0.4rem;
+}
+
+.tracking-3 {
+  letter-spacing: 0.3rem;
+}
+
 .text-error {
   --tw-text-opacity: 1;
   color: hsl(var(--er) / var(--tw-text-opacity));

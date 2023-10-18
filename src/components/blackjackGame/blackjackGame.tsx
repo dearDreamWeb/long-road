@@ -5,6 +5,8 @@ import Modal from '../modal/modal';
 import styles from './blackjackGame.module.less';
 import classNames from 'classnames';
 import Typewriter from '../typewriter/typewriter';
+import store from '@/store/store';
+import { GameResultStatus } from '@/typings';
 
 interface BlackjackGamProps {
   isOpen: boolean;
@@ -37,6 +39,9 @@ const BlackjackGame = (props: BlackjackGamProps) => {
   const playerStop = async () => {
     setPlayerTurn(false);
     await blackjackGameStore.autoCard();
+    store.gameSettlement(
+      blackjackGameStore.isWin ? GameResultStatus.win : GameResultStatus.loss
+    );
   };
 
   return (
@@ -48,11 +53,11 @@ const BlackjackGame = (props: BlackjackGamProps) => {
       mainAnimation
     >
       <div className={classNames(styles.blackjackGameBox, 'flex flex-col')}>
-        <h1 className="title-1">决斗吧，骚年</h1>
-        <p>规则：</p>
+        <h1 className="title-1 text-shadow">决斗吧，骚年--《21点》</h1>
+        <p className="nes-text">规则：</p>
         <Typewriter text="游戏的目标是在不超过总分21的情况下获得高于庄家的得分。每张牌的分值在1-10之间。"></Typewriter>
         <div className="mt-2  pl-2 py-1 h-128 flex flex-col bg-lime-700 shadow-md shadow-indigo-500/50">
-          <h2 className="font-bold text-3xl mb-2 text-info">
+          <h2 className="font-bold text-3xl mb-2 text-info text-info-shadow">
             庄家：{computerInfo.count}
           </h2>
           <div className={styles.computerBox}>
@@ -77,14 +82,17 @@ const BlackjackGame = (props: BlackjackGamProps) => {
               <div className={styles.black}></div>
             </div>
           </div>
-          <div className="relative flex m-auto">
+          <div className="relative flex m-auto text-info-shadow">
             {isOver ? (
               <h1 className="flex justify-center flex-auto items-center text-3xl">
                 {isWin ? '你赢了' : '你输了'}
               </h1>
             ) : (
               <h1 className="flex justify-center flex-auto items-center text-3xl">
-                {playerTurn ? '玩家回合' : '庄家回合'}...
+                {playerTurn ? '玩家回合' : '庄家回合'}
+                <i
+                  className={classNames('nes-pokeball', styles.ballAnimation)}
+                ></i>
               </h1>
             )}
           </div>
@@ -111,7 +119,7 @@ const BlackjackGame = (props: BlackjackGamProps) => {
             </div>
           </div>
           <div className="flex">
-            <h2 className="font-bold text-3xl mt-2 text-success">
+            <h2 className="font-bold text-3xl mt-2 text-success text-info-shadow">
               你：{playerInfo.count}
             </h2>
             <div className="ml-32 mr-2 flex">

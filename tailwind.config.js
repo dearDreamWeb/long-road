@@ -16,6 +16,10 @@ export default {
       height: {
         128: '32rem',
       },
+      letterSpacing: {
+        3: '0.3rem',
+        4: '0.4rem',
+      },
     },
   },
   plugins: [require('daisyui')],

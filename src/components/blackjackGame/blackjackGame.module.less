@@ -110,4 +110,24 @@
     background-size: 800%;
     backface-visibility: hidden;
   }
+
+  .ballAnimation {
+    margin-left: -20px;
+    transform: scale(.3);
+    animation: ball-animation 6s  cubic-bezier(.77, .35, .38, .93) infinite;
+    // cubic-bezier(0.77, 0.35, 0.38, 0.93)
+    @keyframes ball-animation {
+      50% {
+        transform: scale(.3) translateX(200px) rotateZ(1800deg);
+      }
+
+      90% {
+        transform: scale(.3) translateX(20px) rotateZ(60deg);
+      }
+
+      100% {
+        transform: scale(.3) translateX(0) rotateZ(0deg);
+      }
+    }
+  }
 }

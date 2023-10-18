@@ -99,6 +99,7 @@ class GlobalStore {
     console.log('status', status);
     if (status === GameResultStatus.win) {
       roleStore.getNewView('add');
+      message.warning('视野范围增大');
     } else if (status === GameResultStatus.loss) {
       this.failHandler();
     }

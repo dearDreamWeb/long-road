@@ -32,10 +32,11 @@ td {
 html,
 body {
   font-size: 16px;
+  font-family: ZpixLocal, Helvetica, Arial, Verdana, Tahoma, sans-serif;
   font-weight: 400;
   color: #333333;
-  // color: #68F9CB;
   background: #FFFFFF;
+  cursor: url("./assets/images/cursor.png"), auto;
   text-rendering: optimizelegibility;
   -webkit-font-smoothing: none;
   -moz-osx-font-smoothing: none;
@@ -46,19 +47,6 @@ td,
 th,
 caption {
   font-size: 14px;
-}
-
-address,
-caption,
-cite,
-code,
-dfn,
-em,
-strong,
-th,
-var {
-  font-style: normal;
-  font-weight: normal;
 }
 
 a {
@@ -84,7 +72,11 @@ input,
 textarea,
 select,
 button {
-  font: 14px Verdana, Helvetica, Arial, sans-serif;
+  font-size: 14px;
+
+  &:hover {
+    cursor: url("./assets/images/cursor-click.png"), auto;
+  }
 }
 
 table {
@@ -116,15 +108,36 @@ title {
   display: block;
 }
 
-.btn {
-  height: 1.5rem;
-  min-height: 1.5rem;
-}
-
 #message-wrapper {
   position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%);
   z-index: 999;
+}
+
+@font-face {
+  font-family: ZpixLocal;
+  // src: url(zpix.woff2);
+  src: url("./assets/fonts/zpix-split.woff");
+}
+
+.text-shadow {
+  text-shadow: 2px 2px 0 #4A7C82, -2px -2px 0 #E59999;
+}
+
+.btn {
+  box-shadow: 2px 2px 0 #B8B6B6 inset, -2px -2px 0 #292626 inset;
+}
+
+.btn-accent {
+  box-shadow: 2px 2px 0 #72ABA6 inset, -2px -2px 0 #249B90 inset;
+}
+
+.btn-primary {
+  box-shadow: 2px 2px 0 #9983CF inset, -2px -2px 0 #22114A inset;
+}
+
+.text-info-shadow {
+  text-shadow: 2px 2px 0 #4A827E, -2px -2px 0 #A03A85;
 }
