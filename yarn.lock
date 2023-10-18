@@ -2990,6 +2990,11 @@ needle@^3.1.0:
     iconv-lite "^0.6.3"
     sax "^1.2.4"
 
+nes.css.14x@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.npmmirror.com/nes.css.14x/-/nes.css.14x-1.0.1.tgz#618ac7859ce75aaea2bf6fed93ca5cbc8407e08d"
+  integrity sha512-Wv76vKefAOOCLshcXItNQN2KETYn9GfiSlaCmjg709SnXZNIUgX38HBrUZK5Xn6be/5mEVfwi+E9My9/ZfyX2Q==
+
 node-releases@^2.0.6:
   version "2.0.6"
   resolved "https://registry.yarnpkg.com/node-releases/-/node-releases-2.0.6.tgz#8a7088c63a55e493845683ebf3c828d8c51c5503"

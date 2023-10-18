@@ -18,6 +18,7 @@ import message from '@/components/message/message';
 import { WIDTH, HEIGHT, GRIDROWS, GRIDWIDTH, GRIDHEIGHT } from '@/const';
 import heroImg from '@/assets/images/hero.png';
 import StatusComponent from './statusComponent/statusComponent';
+import { mosaicFilter } from '@/utils/filters';
 
 interface RectGraphics extends PIXI.Graphics {
   rectType: BgLayoutItemType;
@@ -107,6 +108,9 @@ const Index = () => {
     if (roleStore.animatedSprite.textures) {
       app?.stage.removeChild(roleStore.animatedSprite);
     }
+    // 创建 PixelateFilter
+    const pixelateFilter = new PIXI.filters.NoiseFilter(0.2);
+    sprite.filters = [pixelateFilter];
     roleStore.animatedSprite = sprite;
     app?.stage.addChild(roleStore.animatedSprite);
   }, [
@@ -166,6 +170,10 @@ const Index = () => {
       GRIDHEIGHT
     );
     rectangle.endFill();
+
+    // 创建 PixelateFilter
+    // const pixelateFilter = new PIXI.filters.NoiseFilter(0.2);
+    // rectangle.filters = [pixelateFilter];
     rectangle.paramX = x;
     rectangle.paramY = y;
     rectangle.rectType = type;
@@ -337,9 +345,10 @@ const Index = () => {
     <div className={styles.indexMain}>
       <button
         className={classNames('btn btn-primary', styles.testBtn)}
-        onClick={() =>
-          console.log(JSON.parse(JSON.stringify(globalStore.bgLayout)))
-        }
+        onClick={() => {
+          message.info('收到12313收拾收拾');
+          console.log(JSON.parse(JSON.stringify(globalStore.bgLayout)));
+        }}
       >
         Button
       </button>
