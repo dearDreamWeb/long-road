@@ -12,6 +12,22 @@
   .modal-main {
     min-width: 450px;
     min-height: 300px;
-    background-color: #EDEDED;
+    background-color: #ededed;
+
+    &.main-animation {
+      animation: main-show 1s cubic-bezier(0.4, 0, 1, 1);
+    }
+  }
+
+  @keyframes main-show {
+    0% {
+      opacity: 0;
+      transform: scale(0);
+    }
+
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
   }
 }

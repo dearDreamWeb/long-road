@@ -40,7 +40,13 @@ const BlackjackGame = (props: BlackjackGamProps) => {
   };
 
   return (
-    <Modal isOpen={isOpen} className={styles.modalBox} width={700} height={700}>
+    <Modal
+      isOpen={isOpen}
+      className={styles.modalBox}
+      width={700}
+      height={700}
+      mainAnimation
+    >
       <div className={styles.blackjackGameBox}>
         <h1 className="title-1">决斗吧，骚年</h1>
         <p>规则：</p>
