@@ -11,7 +11,8 @@
     "lint": "npx --no -- lint-staged",
     "prepare": "husky install",
     "fix": "eslint src/**/*.*  --fix",
-    "lint:style": "stylelint \"src/**/*.(less|scss|css)\" --fix"
+    "lint:style": "stylelint \"src/**/*.(less|scss|css)\"",
+    "lint:style-fix": "stylelint \"src/**/*.(less|scss|css)\" --fix"
   },
   "dependencies": {
     "classnames": "^2.3.2",
@@ -62,11 +63,7 @@
       "git add ."
     ],
     "**/*.*.less": [
-      "npm run lint:style",
-      "git add ."
-    ],
-    "*": [
-      "prettier --check --write",
+      "npm run lint:style-fix",
       "git add ."
     ]
   },
