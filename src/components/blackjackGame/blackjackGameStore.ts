@@ -18,8 +18,8 @@ class BlackjackGame {
 
   @action
   resetData() {
-    const playerCount1 = this.getRandomNum();
-    const playerCount2 = this.getRandomNum();
+    const playerCount1 = 1 || this.getRandomNum();
+    const playerCount2 = 1 || this.getRandomNum();
     this.playerInfo = {
       cardList: [playerCount1, playerCount2],
       count: playerCount1 + playerCount2,
@@ -84,14 +84,17 @@ class BlackjackGame {
       } else if (this.computerInfo.count > 21) {
         this.isOver = true;
         this.isWin = true;
-        console.log('--result--', this);
+        console.log('--result1--', JSON.parse(JSON.stringify(this)));
       } else {
         this.isOver = true;
         this.isWin = false;
-        console.log('--result--', this);
+        console.log('--result2--', JSON.parse(JSON.stringify(this)));
       }
+    } else {
+      this.isOver = true;
+      this.isWin = false;
+      console.log('--result3--', JSON.parse(JSON.stringify(this)));
     }
-    return;
   }
 }
 const blackjackGameStore = new BlackjackGame();

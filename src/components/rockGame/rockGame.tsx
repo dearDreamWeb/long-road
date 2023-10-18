@@ -186,7 +186,13 @@ const RockGame = (props: RockGameProps) => {
   };
   console.log(1111, globalStore.isEnd);
   return (
-    <Modal isOpen={isOpen} className={styles.modalBox} width={700} height={700}>
+    <Modal
+      isOpen={isOpen}
+      className={styles.modalBox}
+      width={700}
+      height={700}
+      mainAnimation
+    >
       <div className={styles.gameBox}>
         <h1 className="title-1">决斗吧，骚年</h1>
         <p>规则：</p>
@@ -254,9 +260,9 @@ const RockGame = (props: RockGameProps) => {
                     stroke="currentColor"
                   >
                     <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
                       d="M6 18L18 6M6 6l12 12"
                     />
                   </svg>

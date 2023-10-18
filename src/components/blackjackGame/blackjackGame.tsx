@@ -47,7 +47,7 @@ const BlackjackGame = (props: BlackjackGamProps) => {
       height={700}
       mainAnimation
     >
-      <div className={styles.blackjackGameBox}>
+      <div className={classNames(styles.blackjackGameBox, 'flex flex-col')}>
         <h1 className="title-1">决斗吧，骚年</h1>
         <p>规则：</p>
         <Typewriter text="游戏的目标是在不超过总分21的情况下获得高于庄家的得分。每张牌的分值在1-10之间。"></Typewriter>
@@ -124,6 +124,28 @@ const BlackjackGame = (props: BlackjackGamProps) => {
             </div>
           </div>
         </div>
+        {isOver && (
+          <button
+            className="btn px-8 text-xl m-auto mt-4"
+            onClick={() => onChange(false)}
+          >
+            关闭
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          </button>
+        )}
       </div>
     </Modal>
   );
