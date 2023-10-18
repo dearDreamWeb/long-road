@@ -10,9 +10,9 @@ function App() {
   useEffect(() => {
     if (import.meta.env.MODE !== 'development') {
       DisableDevtool({
-        url: '/warning',
+        url: '/#/warning',
         disableMenu: true,
-        ignore: ['/warning'],
+        ignore: ['/#/warning'],
       });
     }
     setIsRender(true);
