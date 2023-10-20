@@ -36,8 +36,8 @@ class GlobalStore {
   isEnd = false;
   // 文件资源
   audioResources: AudioResources = {} as any;
-  // 全局配置
-  config = {};
+  // 游戏设置
+  settings: any = {};
 
   constructor() {
     makeAutoObservable(this);
@@ -60,20 +60,26 @@ class GlobalStore {
   }
 
   initConfig() {
-    const configLocal = JSON.parse(localStorage.getItem('config') || '{}');
-    this.config = configLocal;
+    const settingsLocal = JSON.parse(localStorage.getItem('settings') || '{}');
+    this.settings = settingsLocal;
   }
 
   /**加载资源文件 */
-  loadResource() {
-    // https://resource.blogwxb.cn/longLoad/audios/%E8%BF%B7%E5%AE%AB%E4%B9%8B%E6%A2%A6_%E7%88%B1%E7%BB%99%E7%BD%91_aigei_com.mp3
+  async loadResource() {
+    this.loadFontResource();
+    this.loadAudioResources();
+  }
 
+  /**加载音频资源 */
+  loadAudioResources() {
+    // https://resource.blogwxb.cn/longLoad/audios/%E8%BF%B7%E5%AE%AB%E4%B9%8B%E6%A2%A6_%E7%88%B1%E7%BB%99%E7%BD%91_aigei_com.mp3
     const len = Object.keys(config.audios).length;
     let loadedIndex = 0;
     return new Promise((resolve) => {
       const audioResources = sound.add(config.audios as any as SoundSourceMap, {
         autoPlay: false,
         preload: true,
+        volume: this.settings.volume || 1,
         loaded: function (err, sound) {
           console.log(loadedIndex, sound);
           // 背景音乐
@@ -82,11 +88,31 @@ class GlobalStore {
           }
           loadedIndex++;
           if (loadedIndex === len) {
+            console.log('audio loaded');
             resolve(null);
           }
         },
       });
       this.audioResources = audioResources as AudioResources;
+    });
+  }
+
+  /**加载字体资源 */
+  loadFontResource() {
+    return new Promise((resolve) => {
+      const font = new window.FontFace('IPix', `url(${config.font})`);
+      document.fonts.add(font);
+
+      font
+        .load()
+        .then((info) => {
+          document.body.style.fontFamily = 'IPix';
+          console.log('font loaded');
+          resolve(null);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     });
   }
 

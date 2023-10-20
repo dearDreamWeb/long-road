@@ -9,6 +9,7 @@ export interface Audios {
 
 export interface Config {
   audios: Audios;
+  font: string;
   [key: string]: any;
 }
 
@@ -20,6 +21,7 @@ const config: Config = {
     collectAudio:
       'https://blogwxb.oss-cn-hangzhou.aliyuncs.com/longLoad/audios/%E6%94%B6%E9%9B%86%28collect%29_%E7%88%B1%E7%BB%99%E7%BD%91_aigei_com.mp3',
   },
+  font: 'https://blogwxb.oss-cn-hangzhou.aliyuncs.com/longLoad/fonts/IPix.ttf',
 };
 
 export default config;

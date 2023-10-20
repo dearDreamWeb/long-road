@@ -17,9 +17,11 @@ import BlackjackGame from '@/components/blackjackGame/blackjackGame';
 import message from '@/components/message/message';
 import { WIDTH, HEIGHT, GRIDROWS, GRIDWIDTH, GRIDHEIGHT } from '@/const';
 import heroImg from '@/assets/images/hero.png';
+import settingsIcon from '@/assets/images/settings-icon.png';
 import StatusComponent from './statusComponent/statusComponent';
 import { mosaicFilter } from '@/utils/filters';
 import store from '@/store/store';
+import MosaicImg from '@/components/mosaicImg/mosaicImg';
 
 interface RectGraphics extends PIXI.Graphics {
   rectType: BgLayoutItemType;
@@ -354,6 +356,16 @@ const Index = () => {
       >
         Button
       </button>
+      <button className="btn absolute right-4 top-4">
+        <MosaicImg
+          imgUrl={settingsIcon}
+          width={40}
+          height={40}
+          compressTimes={2}
+        />
+        <span className="text-2xl">设置</span>
+      </button>
+
       <div className={styles.main}>
         <StatusComponent />
         <div className={styles.canvasMain}>
@@ -363,14 +375,16 @@ const Index = () => {
           ></div>
         </div>
       </div>
-      {/* <RockGame
-        isOpen={globalStore.showGameModal}
-        onChange={(value) => (globalStore.showGameModal = value)}
-      /> */}
+
       <BlackjackGame
         isOpen={globalStore.showGameModal}
         onChange={(value) => (globalStore.showGameModal = value)}
       />
+
+      {/* <RockGame
+        isOpen={globalStore.showGameModal}
+        onChange={(value) => (globalStore.showGameModal = value)}
+      /> */}
     </div>
   );
 };

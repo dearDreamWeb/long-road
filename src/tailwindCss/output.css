@@ -2466,6 +2466,30 @@ html {
   left: 33.333333%;
 }
 
+.left-1 {
+  left: 0.25rem;
+}
+
+.bottom-1 {
+  bottom: 0.25rem;
+}
+
+.bottom-4 {
+  bottom: 1rem;
+}
+
+.left-4 {
+  left: 1rem;
+}
+
+.right-4 {
+  right: 1rem;
+}
+
+.top-4 {
+  top: 1rem;
+}
+
 .m-auto {
   margin: auto;
 }
@@ -2664,12 +2688,13 @@ html {
   line-height: 1.75rem;
 }
 
-.font-bold {
-  font-weight: 700;
+.text-2xl {
+  font-size: 1.5rem;
+  line-height: 2rem;
 }
 
-.tracking-4 {
-  letter-spacing: 0.4rem;
+.font-bold {
+  font-weight: 700;
 }
 
 .tracking-3 {
