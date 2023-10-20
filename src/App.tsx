@@ -7,7 +7,15 @@ import { createPortal } from 'react-dom';
 
 function App() {
   const [isRender, setIsRender] = useState(false);
+
+  const setRootRem = () => {
+    const rootSize = (((screen.width / 1920) * screen.height) / 1080) * 16;
+    document.body.style.fontSize = `${rootSize}px`;
+    document.documentElement.style.fontSize = `${rootSize}px`;
+  };
+
   useEffect(() => {
+    setRootRem();
     if (import.meta.env.MODE !== 'development') {
       DisableDevtool({
         url: '/#/warning',

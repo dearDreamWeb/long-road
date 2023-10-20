@@ -24,6 +24,7 @@
     "mobx-react": "^7.6.0",
     "nes.css.14x": "^1.0.1",
     "pixi.js": "6.5.9",
+    "postcss-pxtorem": "^6.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "vite-plugin-eslint": "^1.8.1"

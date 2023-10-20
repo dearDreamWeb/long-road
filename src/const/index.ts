@@ -1,3 +1,4 @@
+const rate = ((screen.width / 1920) * screen.height) / 1080;
 /**游戏界面的宽度 */
 export const WIDTH = 700;
 /**游戏界面的高度 */
