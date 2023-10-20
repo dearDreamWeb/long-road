@@ -5,6 +5,7 @@ import { renderRoutes } from 'react-router-config';
 import DisableDevtool from 'disable-devtool';
 import { createPortal } from 'react-dom';
 import { RATE } from '@/const';
+import store from '@/store/store';
 
 function App() {
   const [isRender, setIsRender] = useState(false);
@@ -16,6 +17,10 @@ function App() {
   };
 
   useEffect(() => {
+    (async () => {
+      await store.loadResource();
+      // store.audioResources.bgAudio.play();
+    })();
     setRootRem();
     if (import.meta.env.MODE !== 'development') {
       DisableDevtool({

@@ -19,6 +19,7 @@ import { WIDTH, HEIGHT, GRIDROWS, GRIDWIDTH, GRIDHEIGHT } from '@/const';
 import heroImg from '@/assets/images/hero.png';
 import StatusComponent from './statusComponent/statusComponent';
 import { mosaicFilter } from '@/utils/filters';
+import store from '@/store/store';
 
 interface RectGraphics extends PIXI.Graphics {
   rectType: BgLayoutItemType;
@@ -346,6 +347,7 @@ const Index = () => {
       <button
         className={classNames('btn btn-primary', styles.testBtn)}
         onClick={() => {
+          store.audioResources.collectAudio.play();
           message.info('收到12313收拾收拾');
           console.log(JSON.parse(JSON.stringify(globalStore.bgLayout)));
         }}

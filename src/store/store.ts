@@ -8,9 +8,13 @@ import {
 import message from '@/components/message/message';
 import { GRIDROWS, MINVIEWDISTANCE } from '@/const';
 import * as PIXI from 'pixi.js';
+import { sound, Sound, SoundMap, SoundSourceMap } from '@pixi/sound';
 import roleStore from './roleStore';
+import config, { Audios, Config } from '@/config';
 import level1 from '@/assets/levels/level-1.json';
 import level2 from '@/assets/levels/level-2.json';
+
+type AudioResources = Record<keyof Audios, Sound>;
 
 configure({ enforceActions: 'never' });
 
@@ -30,6 +34,10 @@ class GlobalStore {
   showGameModal = false;
   // 对局是否结束
   isEnd = false;
+  // 文件资源
+  audioResources: AudioResources = {} as any;
+  // 全局配置
+  config = {};
 
   constructor() {
     makeAutoObservable(this);
@@ -37,6 +45,7 @@ class GlobalStore {
   }
 
   init() {
+    this.initConfig();
     const dataJson = levelMap[this.level];
     for (let i = 0; i < dataJson.length; i++) {
       for (let j = 0; j < dataJson[i].length; j++) {
@@ -48,6 +57,37 @@ class GlobalStore {
       }
     }
     this.bgLayout = dataJson;
+  }
+
+  initConfig() {
+    const configLocal = JSON.parse(localStorage.getItem('config') || '{}');
+    this.config = configLocal;
+  }
+
+  /**加载资源文件 */
+  loadResource() {
+    // https://resource.blogwxb.cn/longLoad/audios/%E8%BF%B7%E5%AE%AB%E4%B9%8B%E6%A2%A6_%E7%88%B1%E7%BB%99%E7%BD%91_aigei_com.mp3
+
+    const len = Object.keys(config.audios).length;
+    let loadedIndex = 0;
+    return new Promise((resolve) => {
+      const audioResources = sound.add(config.audios as any as SoundSourceMap, {
+        autoPlay: false,
+        preload: true,
+        loaded: function (err, sound) {
+          console.log(loadedIndex, sound);
+          // 背景音乐
+          if (sound?.url === config.audios.bgAudio) {
+            sound?.play();
+          }
+          loadedIndex++;
+          if (loadedIndex === len) {
+            resolve(null);
+          }
+        },
+      });
+      this.audioResources = audioResources as AudioResources;
+    });
   }
 
   /**

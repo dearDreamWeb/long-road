@@ -677,6 +677,11 @@
   resolved "https://registry.npmjs.org/@pixi/settings/-/settings-6.5.9.tgz#2dda1a3b6c23ea9822c93c9a54433f8f5d819a1d"
   integrity sha512-cOODlDuToO3uixgDRHlsxGbzlgZKNyZn+AeZKHyo6z8JpLh5mYrC4wEgLyHoKSOX0VgNzlSY6VNLthmgpu2gAg==
 
+"@pixi/sound@4.4.1":
+  version "4.4.1"
+  resolved "https://registry.npmmirror.com/@pixi/sound/-/sound-4.4.1.tgz#dde083eb3f94fc68aa22b4b232ae527a5b368fda"
+  integrity sha512-M8pC/5NZ5OHIngGD9lWjxaSSzAEED1eFnWJUo+uHkQezX2v2n98jEZ5DLyEW/O0NPDceOEWC+NKtitCMcRN23A==
+
 "@pixi/sprite-animated@6.5.9":
   version "6.5.9"
   resolved "https://registry.npmjs.org/@pixi/sprite-animated/-/sprite-animated-6.5.9.tgz#8cb012fad46d33ff11c21c17a484ba33f5c2801d"
