@@ -4,12 +4,13 @@ import routes from '../config/routes';
 import { renderRoutes } from 'react-router-config';
 import DisableDevtool from 'disable-devtool';
 import { createPortal } from 'react-dom';
+import { RATE } from '@/const';
 
 function App() {
   const [isRender, setIsRender] = useState(false);
 
   const setRootRem = () => {
-    const rootSize = (((screen.width / 1920) * screen.height) / 1080) * 16;
+    const rootSize = RATE * 16;
     document.body.style.fontSize = `${rootSize}px`;
     document.documentElement.style.fontSize = `${rootSize}px`;
   };

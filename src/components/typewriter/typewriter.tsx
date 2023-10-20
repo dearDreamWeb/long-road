@@ -3,11 +3,13 @@ import './typewriter.less';
 
 interface TypeWriterProps {
   text: string;
+  color?: string;
+  rectColor?: string;
   time?: number;
 }
 
 const TypeWriter = (props: TypeWriterProps) => {
-  const { text, time = 100 } = props;
+  const { text, time = 100, color, rectColor } = props;
   const [currentText, setCurrentText] = useState('');
   let timer = useRef<NodeJS.Timer | null>(null);
   useEffect(() => {
@@ -25,9 +27,12 @@ const TypeWriter = (props: TypeWriterProps) => {
     }, time);
   }, [text]);
   return (
-    <div className="typeWriterBox">
+    <div className="type-writer-box" style={{ color: color || 'inherit' }}>
       {currentText}
-      <span className="rect"></span>
+      <span
+        className="rect"
+        style={{ backgroundColor: rectColor || '#fff' }}
+      ></span>
     </div>
   );
 };

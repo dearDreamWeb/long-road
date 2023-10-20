@@ -1,10 +1,11 @@
-const rate = ((screen.width / 1920) * screen.height) / 1080;
-/**游戏界面的宽度 */
-export const WIDTH = 700;
-/**游戏界面的高度 */
-export const HEIGHT = 700;
+/**屏幕分辨率比 */
+export const RATE = screen.width / 1920;
 /**游戏界面的行列数 */
 export const GRIDROWS = 25;
+/**游戏界面的宽度 */
+export const WIDTH = Math.floor((RATE * 700) / GRIDROWS) * GRIDROWS;
+/**游戏界面的高度 */
+export const HEIGHT = Math.floor((RATE * 700) / GRIDROWS) * GRIDROWS;
 /**每个格子的宽度 */
 export const GRIDWIDTH = WIDTH / GRIDROWS;
 /**每个格子的高度 */
