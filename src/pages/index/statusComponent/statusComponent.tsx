@@ -5,6 +5,7 @@ import roleStore from '@/store/roleStore';
 import viewImg from '@/assets/images/view.png';
 import confusionImg from '@/assets/images/confusion.png';
 import classNames from 'classnames';
+import MosaicImg from '@/components/mosaicImg/mosaicImg';
 
 /**状态栏 */
 const StatusComponent = () => {
@@ -58,7 +59,13 @@ const StatusComponent = () => {
                     <div className={styles.avatarBox}>
                       <div className="avatar">
                         <div className="w-12 rounded-full">
-                          <img src={item.img} />
+                          {/* <img src={item.img} /> */}
+                          <MosaicImg
+                            imgUrl={item.img}
+                            width={50}
+                            height={50}
+                            compressTimes={5}
+                          />
                         </div>
                       </div>
                     </div>

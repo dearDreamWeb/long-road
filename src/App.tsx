@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, MouseEvent } from 'react';
 import styles from './App.module.less';
 import routes from '../config/routes';
 import { renderRoutes } from 'react-router-config';
@@ -19,11 +19,18 @@ function App() {
     document.documentElement.style.fontSize = `${rootSize}px`;
   };
 
+  const buttonClick = (e: MouseEvent) => {
+    if (
+      (e as any).target?.nodeName === 'BUTTON' ||
+      (e as any).target?.parentElement.nodeName === 'BUTTON'
+    ) {
+      store.audioResources.collectAudio.play();
+    }
+  };
+
   useEffect(() => {
-    (async () => {
-      await store.loadResource();
-      // store.audioResources.bgAudio.play();
-    })();
+    document.addEventListener('click', buttonClick as any);
+    store.loadResource();
     setRootRem();
     if (import.meta.env.MODE !== 'development') {
       DisableDevtool({

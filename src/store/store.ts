@@ -37,11 +37,14 @@ class GlobalStore {
   isEnd = false;
   // 文件资源
   audioResources: AudioResources = {} as any;
+  // 加载文案
   loadingText = '';
+  // 显示加载
   loadResources = false;
+  // 加载进度
   loadResourcesProgress = 0;
   // 游戏设置
-  settings: any = {};
+  settings: any = { switchAudio: false };
 
   constructor() {
     makeAutoObservable(this);
@@ -49,7 +52,6 @@ class GlobalStore {
   }
 
   init() {
-    this.initConfig();
     const dataJson = levelMap[this.level];
     for (let i = 0; i < dataJson.length; i++) {
       for (let j = 0; j < dataJson[i].length; j++) {
@@ -63,6 +65,7 @@ class GlobalStore {
     this.bgLayout = dataJson;
   }
 
+  /**本地配置同步 */
   initConfig() {
     const settingsLocal = JSON.parse(localStorage.getItem('settings') || '{}');
     this.settings = settingsLocal;
@@ -71,10 +74,12 @@ class GlobalStore {
   /**加载资源文件 */
   async loadResource() {
     this.loadResources = true;
-    this.loadingText = '字体资源加载中';
     this.loadResourcesProgress = 0;
-    await sleep(1000);
+    this.loadingText = '本地配置加载中';
+    this.initConfig();
+    await sleep(500);
     this.loadResourcesProgress = 5;
+    this.loadingText = '字体资源加载中';
     await this.loadFontResource();
     this.loadResourcesProgress = 50;
     this.loadingText = '音频资源加载中';
@@ -95,12 +100,14 @@ class GlobalStore {
         autoPlay: false,
         preload: true,
         volume: this.settings.volume || 1,
-        loaded: function (err, sound) {
+        loaded: (err, sound) => {
           console.log(loadedIndex, sound);
           // 背景音乐
           if (sound?.url === config.audios.bgAudio) {
             sound.loop = true;
-            sound?.play();
+            if (this.settings.switchAudio) {
+              sound?.play();
+            }
           }
           loadedIndex++;
           if (loadedIndex === len) {
