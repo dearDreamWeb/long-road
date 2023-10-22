@@ -22,6 +22,7 @@ import StatusComponent from './statusComponent/statusComponent';
 import { mosaicFilter } from '@/utils/filters';
 import store from '@/store/store';
 import MosaicImg from '@/components/mosaicImg/mosaicImg';
+import SettingsModal from './settingsModal/settingsModal';
 
 interface RectGraphics extends PIXI.Graphics {
   rectType: BgLayoutItemType;
@@ -49,6 +50,7 @@ const Index = () => {
   // 路径容器
   const routeContainer = useRef<PIXI.Container>(new PIXI.Container());
   const [flash, setFlash] = useState(0);
+  const [openSettings, setOpenSettings] = useState(false);
 
   useEffect(() => {
     let _app = new PIXI.Application({
@@ -355,7 +357,10 @@ const Index = () => {
       >
         Button
       </button>
-      <button className="btn absolute right-4 top-4">
+      <button
+        className="btn absolute right-4 top-4"
+        onClick={() => setOpenSettings(true)}
+      >
         <MosaicImg
           imgUrl={settingsIcon}
           width={40}
@@ -374,7 +379,10 @@ const Index = () => {
           ></div>
         </div>
       </div>
-
+      <SettingsModal
+        isOpen={openSettings}
+        onClose={() => setOpenSettings(false)}
+      />
       <BlackjackGame
         isOpen={globalStore.showGameModal}
         onChange={(value) => (globalStore.showGameModal = value)}

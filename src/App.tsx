@@ -21,8 +21,9 @@ function App() {
 
   const buttonClick = (e: MouseEvent) => {
     if (
-      (e as any).target?.nodeName === 'BUTTON' ||
-      (e as any).target?.parentElement.nodeName === 'BUTTON'
+      store.settings.switchAudio &&
+      ((e as any).target?.nodeName === 'BUTTON' ||
+        (e as any).target?.parentElement.nodeName === 'BUTTON')
     ) {
       store.audioResources.collectAudio.play();
     }
@@ -41,8 +42,6 @@ function App() {
     }
     setIsRender(true);
   }, []);
-
-  console.log(111, store.loadResources);
 
   return (
     <>

@@ -15,7 +15,11 @@ import level1 from '@/assets/levels/level-1.json';
 import level2 from '@/assets/levels/level-2.json';
 import { sleep } from '@/utils';
 
-type AudioResources = Record<keyof Audios, Sound>;
+export type AudioResources = Record<keyof Audios, Sound>;
+interface Settings {
+  switchAudio: boolean;
+  volume: number;
+}
 
 configure({ enforceActions: 'never' });
 
@@ -44,11 +48,17 @@ class GlobalStore {
   // 加载进度
   loadResourcesProgress = 0;
   // 游戏设置
-  settings: any = { switchAudio: false };
+  settings: Settings = { switchAudio: false, volume: 0.5 };
 
   constructor() {
     makeAutoObservable(this);
     this.init();
+  }
+
+  @action
+  setSettings(value: Settings) {
+    this.settings = value;
+    localStorage.setItem('settings', JSON.stringify(value || {}));
   }
 
   init() {
@@ -68,7 +78,7 @@ class GlobalStore {
   /**本地配置同步 */
   initConfig() {
     const settingsLocal = JSON.parse(localStorage.getItem('settings') || '{}');
-    this.settings = settingsLocal;
+    this.settings = { ...this.settings, ...settingsLocal };
   }
 
   /**加载资源文件 */
@@ -99,7 +109,7 @@ class GlobalStore {
       const audioResources = sound.add(config.audios as any as SoundSourceMap, {
         autoPlay: false,
         preload: true,
-        volume: this.settings.volume || 1,
+        volume: this.settings.volume,
         loaded: (err, sound) => {
           console.log(loadedIndex, sound);
           // 背景音乐

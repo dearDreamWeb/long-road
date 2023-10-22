@@ -18,8 +18,8 @@ class BlackjackGame {
 
   @action
   resetData() {
-    const playerCount1 = 1 || this.getRandomNum();
-    const playerCount2 = 1 || this.getRandomNum();
+    const playerCount1 = this.getRandomNum();
+    const playerCount2 = this.getRandomNum();
     this.playerInfo = {
       cardList: [playerCount1, playerCount2],
       count: playerCount1 + playerCount2,

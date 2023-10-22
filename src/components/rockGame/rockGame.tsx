@@ -6,6 +6,7 @@ import globalStore from '@/store/store';
 import { GameResultStatus } from '@/typings';
 import { observer } from 'mobx-react';
 import classnames from 'classnames';
+import CloseIcon from '@/components/closeIcon/closeIcon';
 import rock1 from '@/assets/images/rock-game-1.png';
 import rock2 from '@/assets/images/rock-game-2.png';
 import rock3 from '@/assets/images/rock-game-3.png';
@@ -350,20 +351,7 @@ const RockGame = (props: RockGameProps) => {
                 onClick={() => onChange(false)}
               >
                 关闭
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-6 w-6"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M6 18L18 6M6 6l12 12"
-                  />
-                </svg>
+                <CloseIcon />
               </button>
             </div>
             <div className={styles.resultImgBox}>
