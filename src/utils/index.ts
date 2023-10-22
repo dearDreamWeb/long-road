@@ -187,3 +187,8 @@ export function convertColor(hexColor: string) {
   const finalColor = '#' + paddedHexString;
   return finalColor;
 }
+
+/**暂停时间 */
+export function sleep(duration = 3000) {
+  return new Promise((resolve) => setTimeout(resolve, duration));
+}

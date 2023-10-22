@@ -345,7 +345,7 @@ const Index = () => {
   };
 
   return (
-    <div className={styles.indexMain}>
+    <div className={classNames('theme-bg', styles.indexMain)}>
       <button
         className={classNames('btn btn-primary', styles.testBtn)}
         onClick={() => {

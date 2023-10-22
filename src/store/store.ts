@@ -13,6 +13,7 @@ import roleStore from './roleStore';
 import config, { Audios, Config } from '@/config';
 import level1 from '@/assets/levels/level-1.json';
 import level2 from '@/assets/levels/level-2.json';
+import { sleep } from '@/utils';
 
 type AudioResources = Record<keyof Audios, Sound>;
 
@@ -36,6 +37,9 @@ class GlobalStore {
   isEnd = false;
   // 文件资源
   audioResources: AudioResources = {} as any;
+  loadingText = '';
+  loadResources = false;
+  loadResourcesProgress = 0;
   // 游戏设置
   settings: any = {};
 
@@ -66,8 +70,19 @@ class GlobalStore {
 
   /**加载资源文件 */
   async loadResource() {
-    this.loadFontResource();
-    this.loadAudioResources();
+    this.loadResources = true;
+    this.loadingText = '字体资源加载中';
+    this.loadResourcesProgress = 0;
+    await sleep(1000);
+    this.loadResourcesProgress = 5;
+    await this.loadFontResource();
+    this.loadResourcesProgress = 50;
+    this.loadingText = '音频资源加载中';
+    await this.loadAudioResources();
+    this.loadResourcesProgress = 100;
+    this.loadingText = '资源加载完成';
+    await sleep(1000);
+    this.loadResources = false;
   }
 
   /**加载音频资源 */
@@ -84,6 +99,7 @@ class GlobalStore {
           console.log(loadedIndex, sound);
           // 背景音乐
           if (sound?.url === config.audios.bgAudio) {
+            sound.loop = true;
             sound?.play();
           }
           loadedIndex++;
@@ -177,9 +193,10 @@ class GlobalStore {
   @action
   winGame() {
     // this.status = Status.stop;
-    this.level++;
-    this.init();
-    message.success('恭喜通关');
+    message.success('恭喜通关', 3000, () => {
+      this.level++;
+      this.init();
+    });
   }
 }
 

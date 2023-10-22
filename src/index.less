@@ -112,7 +112,7 @@ title {
   position: fixed;
   top: 50%;
   left: 50%;
-  transform: translate(-50%);
+  transform: translate(-50%, -50%);
   z-index: 999;
 }
 
@@ -145,4 +145,14 @@ title {
 
 .text-info-shadow {
   text-shadow: 2px 2px 0 #4A827E, -2px -2px 0 #A03A85;
+}
+
+.theme-bg {
+  --tw-bg-opacity: 1;
+
+  background-size: 1.5rem 1.5rem;
+  background-color: rgb(209 250 229 / var(--tw-bg-opacity));
+  background-image:
+    linear-gradient(to right, #FFFFFF .1rem, transparent .5rem),
+    linear-gradient(to bottom, #FFFFFF .1rem, transparent .5rem);
 }
