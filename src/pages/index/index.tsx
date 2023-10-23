@@ -357,13 +357,7 @@ const Index = () => {
       >
         Button
       </button>
-      <input
-        type="checkbox"
-        className={classNames(
-          'toggle toggle-success ml-2',
-          styles.toggleSwitch
-        )}
-      />
+
       <button
         className="nes-btn absolute right-4 top-4 flex items-center"
         onClick={() => setOpenSettings(true)}

@@ -41,7 +41,7 @@ const SettingsModal = (props: SettingsModalProps) => {
   };
 
   return (
-    <Modal isOpen={isOpen} height={200}>
+    <Modal isOpen={isOpen} height={200} className={styles.settingsModalBox}>
       <div className="py-4 flex flex-col h-full bg-cyan-100">
         <h1 className=" text-center font-bold text-4xl mb-8">设置</h1>
         <div className="flex items-center p-4 bg-cyan-200">
@@ -68,7 +68,7 @@ const SettingsModal = (props: SettingsModalProps) => {
               max="100"
               step="1"
               defaultValue={Math.floor(volume * 100)}
-              className="w-3/5"
+              className="range range-xs w-3/5"
               onChange={volumeChange}
             />
             <span className="ml-4">{Math.floor(volume * 100)}</span>
