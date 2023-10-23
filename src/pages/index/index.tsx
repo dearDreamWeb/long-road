@@ -349,7 +349,7 @@ const Index = () => {
   return (
     <div className={classNames('theme-bg', styles.indexMain)}>
       <button
-        className={classNames('btn btn-primary', styles.testBtn)}
+        className={classNames('nes-btn is-primary', styles.testBtn)}
         onClick={() => {
           message.info('收到12313收拾收拾');
           console.log(JSON.parse(JSON.stringify(globalStore.bgLayout)));
@@ -357,8 +357,15 @@ const Index = () => {
       >
         Button
       </button>
+      <input
+        type="checkbox"
+        className={classNames(
+          'toggle toggle-success ml-2',
+          styles.toggleSwitch
+        )}
+      />
       <button
-        className="btn absolute right-4 top-4"
+        className="nes-btn absolute right-4 top-4 flex items-center"
         onClick={() => setOpenSettings(true)}
       >
         <MosaicImg
@@ -379,10 +386,12 @@ const Index = () => {
           ></div>
         </div>
       </div>
+
       <SettingsModal
         isOpen={openSettings}
         onClose={() => setOpenSettings(false)}
       />
+
       <BlackjackGame
         isOpen={globalStore.showGameModal}
         onChange={(value) => (globalStore.showGameModal = value)}

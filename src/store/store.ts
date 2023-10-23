@@ -55,6 +55,7 @@ class GlobalStore {
     this.init();
   }
 
+  /**更新设置 */
   @action
   setSettings(value: Settings) {
     this.settings = value;
@@ -96,7 +97,7 @@ class GlobalStore {
     await this.loadAudioResources();
     this.loadResourcesProgress = 100;
     this.loadingText = '资源加载完成';
-    await sleep(1000);
+    await sleep(500);
     this.loadResources = false;
   }
 

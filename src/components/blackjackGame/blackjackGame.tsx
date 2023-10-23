@@ -124,10 +124,10 @@ const BlackjackGame = (props: BlackjackGamProps) => {
               你：{playerInfo.count}
             </h2>
             <div className="ml-32 mr-2 flex">
-              <button className="btn mr-4" onClick={playerAdd}>
+              <button className="nes-btn mr-4" onClick={playerAdd}>
                 要
               </button>
-              <button className="btn btn-accent" onClick={playerStop}>
+              <button className="nes-btn is-primary" onClick={playerStop}>
                 不要
               </button>
             </div>
@@ -135,7 +135,7 @@ const BlackjackGame = (props: BlackjackGamProps) => {
         </div>
         {isOver && (
           <button
-            className="btn px-8 text-xl m-auto mt-4"
+            className="nes-btn px-8 text-xl m-auto mt-4"
             onClick={() => onChange(false)}
           >
             关闭

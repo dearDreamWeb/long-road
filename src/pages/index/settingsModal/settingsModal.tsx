@@ -4,6 +4,8 @@ import CloseIcon from '@/components/closeIcon/closeIcon';
 import store from '@/store/store';
 import { observer, useObserver } from 'mobx-react';
 import config, { Audios, Config } from '@/config';
+import classNames from 'classnames';
+import styles from './settingsModal.module.less';
 
 interface SettingsModalProps {
   isOpen: boolean;
@@ -48,7 +50,10 @@ const SettingsModal = (props: SettingsModalProps) => {
             {store.settings.switchAudio ? '开' : '关'}
             <input
               type="checkbox"
-              className="toggle toggle-success ml-2"
+              className={classNames(
+                'toggle toggle-success ml-2',
+                styles.toggleSwitch
+              )}
               defaultChecked={switchAudio}
               onClick={changeSwitch}
             />
@@ -71,7 +76,7 @@ const SettingsModal = (props: SettingsModalProps) => {
         )}
         <div className="flex justify-center items-center mt-auto">
           <button
-            className="btn px-8 text-xl m-auto mt-4 ml-auto"
+            className="nes-btn flex items-center px-8 text-xl m-auto mt-4 ml-auto"
             onClick={() => onClose()}
           >
             关闭
