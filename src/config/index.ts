@@ -20,9 +20,9 @@ const config: Config = {
     bgAudio:
       'https://blogwxb.oss-cn-hangzhou.aliyuncs.com/longLoad/audios/bg.mp3',
     collectAudio:
-      'https://blogwxb.oss-cn-hangzhou.aliyuncs.com/longLoad/audios/click.mp3',
-    buttonClickAudio:
       'https://blogwxb.oss-cn-hangzhou.aliyuncs.com/longLoad/audios/collect.mp3',
+    buttonClickAudio:
+      'https://blogwxb.oss-cn-hangzhou.aliyuncs.com/longLoad/audios/click.mp3',
   },
   font: 'https://blogwxb.oss-cn-hangzhou.aliyuncs.com/longLoad/fonts/IPix.ttf',
 };

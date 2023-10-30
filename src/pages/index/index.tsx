@@ -64,6 +64,7 @@ const Index = () => {
     });
     setApp(_app);
     loaderResources();
+    rectContainer.current.filters = [new PIXI.filters.NoiseFilter(0.3)];
     document.addEventListener('keydown', characterMove);
     // _app!.renderer.plugins.interaction.removeAllListeners();
     // // 点击事件生成障碍物，再次点击障碍物将障碍物消掉，也可以生成开始点和结束点
@@ -175,10 +176,6 @@ const Index = () => {
       GRIDHEIGHT
     );
     rectangle.endFill();
-
-    // 创建 PixelateFilter
-    // const pixelateFilter = new PIXI.filters.NoiseFilter(0.2);
-    // rectangle.filters = [pixelateFilter];
     rectangle.paramX = x;
     rectangle.paramY = y;
     rectangle.rectType = type;
@@ -191,35 +188,42 @@ const Index = () => {
    */
   const drawLayout = () => {
     const { x: mainX, y: mainY } = roleStore.mainPosition;
+    let arr: any[] = [];
+    rectContainer.current.removeChildren();
+    console.log(333, app!.stage.children);
     globalStore.bgLayout.forEach((items, y) => {
       items.forEach((item: BgLayoutItemType, x) => {
-        if (
-          Math.abs(mainX - x) < roleStore.viewDistance &&
-          Math.abs(mainY - y) < roleStore.viewDistance
-        ) {
-          createRect({
-            position: translatePosition({
-              width: WIDTH,
-              height: HEIGHT,
-              itemRows: GRIDROWS,
-              rows: y,
-              columns: x,
-            }),
-            type: item,
-          });
-        } else {
-          createRect({
-            position: translatePosition({
-              width: WIDTH,
-              height: HEIGHT,
-              itemRows: GRIDROWS,
-              rows: y,
-              columns: x,
-            }),
-            type: BgLayoutItemType.empty,
-          });
-        }
+        arr.push({ type: item, x, y });
       });
+    });
+    arr.forEach((item) => {
+      const { x, y, type } = item;
+      if (
+        Math.abs(mainX - x) < roleStore.viewDistance &&
+        Math.abs(mainY - y) < roleStore.viewDistance
+      ) {
+        createRect({
+          position: translatePosition({
+            width: WIDTH,
+            height: HEIGHT,
+            itemRows: GRIDROWS,
+            rows: y,
+            columns: x,
+          }),
+          type,
+        });
+      } else {
+        createRect({
+          position: translatePosition({
+            width: WIDTH,
+            height: HEIGHT,
+            itemRows: GRIDROWS,
+            rows: y,
+            columns: x,
+          }),
+          type: BgLayoutItemType.empty,
+        });
+      }
     });
   };
 
