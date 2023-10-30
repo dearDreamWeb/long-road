@@ -16,6 +16,8 @@ const SettingsModal = (props: SettingsModalProps) => {
   const { isOpen, onClose } = props;
   const switchAudio = useObserver(() => store.settings.switchAudio);
   const volume = useObserver(() => store.settings.volume);
+  const bgVolume = useObserver(() => store.settings.bgVolume);
+  const clickVolume = useObserver(() => store.settings.clickVolume);
 
   const changeSwitch = () => {
     if (!switchAudio) {
@@ -29,20 +31,29 @@ const SettingsModal = (props: SettingsModalProps) => {
     });
   };
 
-  const volumeChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const volumeChange = (
+    e: ChangeEvent<HTMLInputElement>,
+    type?: 'bg' | 'click'
+  ) => {
     const volumeValue = Number((Number(e.target.value) / 100).toFixed(2));
     for (let key in store.audioResources) {
-      store.audioResources[key as keyof Audios].volume = volumeValue;
+      if (type === 'bg' && key === 'bgAudio') {
+        store.audioResources[key as keyof Audios].volume = volumeValue;
+      }
+      if (type === 'click' && key === 'buttonClickAudio') {
+        console.log(key);
+        store.audioResources[key as keyof Audios].volume = volumeValue;
+      }
     }
     store.setSettings({
       ...store.settings,
-      volume: volumeValue,
+      [type === 'bg' ? 'bgVolume' : 'clickVolume']: volumeValue,
     });
   };
 
   return (
     <Modal isOpen={isOpen} height={200} className={styles.settingsModalBox}>
-      <div className="py-4 flex flex-col h-full bg-cyan-100">
+      <div className="py-4 flex flex-col bg-cyan-100">
         <h1 className=" text-center font-bold text-4xl mb-8">设置</h1>
         <div className="flex items-center p-4 bg-cyan-200">
           <div className="text-3xl font-bold">音效</div>
@@ -60,19 +71,34 @@ const SettingsModal = (props: SettingsModalProps) => {
           </div>
         </div>
         {store.settings.switchAudio && (
-          <div className="flex items-center pt-4 pl-8 bg-cyan-200">
-            音量：
-            <input
-              type="range"
-              min="0"
-              max="100"
-              step="1"
-              defaultValue={Math.floor(volume * 100)}
-              className="range range-xs w-3/5"
-              onChange={volumeChange}
-            />
-            <span className="ml-4">{Math.floor(volume * 100)}</span>
-          </div>
+          <>
+            <div className="flex items-center pt-4 pl-8 bg-cyan-200">
+              背景音量：
+              <input
+                type="range"
+                min="0"
+                max="100"
+                step="1"
+                defaultValue={Math.floor(bgVolume * 100)}
+                className="range range-xs w-3/5"
+                onChange={(e) => volumeChange(e, 'bg')}
+              />
+              <span className="ml-4">{Math.floor(bgVolume * 100)}</span>
+            </div>
+            <div className="flex items-center pt-4 pl-8 bg-cyan-200">
+              按钮音量：
+              <input
+                type="range"
+                min="0"
+                max="100"
+                step="1"
+                defaultValue={Math.floor(clickVolume * 100)}
+                className="range range-xs w-3/5"
+                onChange={(e) => volumeChange(e, 'click')}
+              />
+              <span className="ml-4">{Math.floor(clickVolume * 100)}</span>
+            </div>
+          </>
         )}
         <div className="flex justify-center items-center mt-auto">
           <button

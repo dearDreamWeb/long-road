@@ -19,6 +19,8 @@ export type AudioResources = Record<keyof Audios, Sound>;
 interface Settings {
   switchAudio: boolean;
   volume: number;
+  bgVolume: number;
+  clickVolume: number;
 }
 
 configure({ enforceActions: 'never' });
@@ -48,7 +50,12 @@ class GlobalStore {
   // 加载进度
   loadResourcesProgress = 0;
   // 游戏设置
-  settings: Settings = { switchAudio: false, volume: 0.5 };
+  settings: Settings = {
+    switchAudio: false,
+    volume: 0.5,
+    bgVolume: 0.5,
+    clickVolume: 0.5,
+  };
 
   constructor() {
     makeAutoObservable(this);
@@ -110,15 +117,17 @@ class GlobalStore {
       const audioResources = sound.add(config.audios as any as SoundSourceMap, {
         autoPlay: false,
         preload: true,
-        volume: this.settings.volume,
         loaded: (err, sound) => {
           console.log(loadedIndex, sound);
           // 背景音乐
           if (sound?.url === config.audios.bgAudio) {
+            sound.volume = this.settings.bgVolume;
             sound.loop = true;
             if (this.settings.switchAudio) {
               sound?.play();
             }
+          } else if (sound?.url === config.audios.buttonClickAudio) {
+            sound.volume = this.settings.clickVolume;
           }
           loadedIndex++;
           if (loadedIndex === len) {

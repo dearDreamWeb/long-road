@@ -25,7 +25,7 @@ function App() {
       ((e as any).target?.nodeName === 'BUTTON' ||
         (e as any).target?.parentElement.nodeName === 'BUTTON')
     ) {
-      store.audioResources.collectAudio.play();
+      store.audioResources.buttonClickAudio.play();
     }
   };
 
