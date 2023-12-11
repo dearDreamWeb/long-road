@@ -190,7 +190,7 @@ const Index = () => {
     const { x: mainX, y: mainY } = roleStore.mainPosition;
     let arr: any[] = [];
     rectContainer.current.removeChildren();
-    console.log(333, app!.stage.children);
+    // console.log(333, app!.stage.children);
     globalStore.bgLayout.forEach((items, y) => {
       items.forEach((item: BgLayoutItemType, x) => {
         arr.push({ type: item, x, y });
@@ -289,6 +289,9 @@ const Index = () => {
 
     if (rectType === BgLayoutItemType.duel) {
       globalStore.status = Status.stop;
+      if (store.settings.switchAudio) {
+        store.audioResources.duelAudio.play();
+      }
       setFlash(Math.random());
       setTimeout(() => {
         globalStore.showGameModal = true;

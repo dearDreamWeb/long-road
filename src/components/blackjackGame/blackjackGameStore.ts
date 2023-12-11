@@ -26,7 +26,7 @@ class BlackjackGame {
     };
     const computerCount1 = this.getRandomNum();
     this.computerInfo = {
-      cardList: [playerCount1],
+      cardList: [computerCount1],
       count: computerCount1,
     };
     this.isOver = false;

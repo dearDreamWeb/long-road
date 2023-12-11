@@ -40,7 +40,7 @@ const SettingsModal = (props: SettingsModalProps) => {
       if (type === 'bg' && key === 'bgAudio') {
         store.audioResources[key as keyof Audios].volume = volumeValue;
       }
-      if (type === 'click' && key === 'buttonClickAudio') {
+      if (type === 'click' && key !== 'bgAudio') {
         console.log(key);
         store.audioResources[key as keyof Audios].volume = volumeValue;
       }
@@ -86,7 +86,7 @@ const SettingsModal = (props: SettingsModalProps) => {
               <span className="ml-4">{Math.floor(bgVolume * 100)}</span>
             </div>
             <div className="flex items-center pt-4 pl-8 bg-cyan-200">
-              按钮音量：
+              音效音量：
               <input
                 type="range"
                 min="0"
