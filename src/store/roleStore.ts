@@ -7,16 +7,18 @@ import * as PIXI from 'pixi.js';
 configure({ enforceActions: 'never' });
 
 class RoleStore {
-  // 视野距离
+  /**视野距离 */
   viewDistance = 5;
-  // 人物textures
+  /**人物textures */
   heroTextures: TextureCacheObj = { left: [], right: [], up: [], down: [] };
-  // 人物组帧动画精灵图
+  /**人物组帧动画精灵图 */
   animatedSprite: PIXI.AnimatedSprite | any = {};
-  // 人物方向
+  /**人物方向 */
   direction: keyof TextureCacheObj = 'down';
-  // 是否反向
+  /**是否反向 */
   isReverse = false;
+  /**净化次数 */
+  purifyCount = 0;
   mainPosition = {
     x: 12,
     y: 24,
@@ -38,6 +40,15 @@ class RoleStore {
       return;
     }
     this.viewDistance = Math.max(this.viewDistance - 1, MINVIEWDISTANCE);
+  }
+
+  /**初始化角色状态 */
+  @action
+  initRole() {
+    this.viewDistance = 5;
+    this.isReverse = false;
+    this.purifyCount = 0;
+    this.direction = 'down';
   }
 }
 

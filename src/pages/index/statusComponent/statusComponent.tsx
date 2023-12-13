@@ -4,6 +4,7 @@ import styles from './statusComponent.module.less';
 import roleStore from '@/store/roleStore';
 import viewImg from '@/assets/images/view.png';
 import confusionImg from '@/assets/images/confusion.png';
+import purifyImg from '@/assets/images/purify.png';
 import classNames from 'classnames';
 import MosaicImg from '@/components/mosaicImg/mosaicImg';
 
@@ -26,6 +27,14 @@ const StatusComponent = () => {
         img: confusionImg,
         show: roleStore.isReverse,
         count: roleStore.isReverse ? 1 : 0,
+      },
+      {
+        key: '2',
+        title: '保护罩',
+        desc: '可抵消一次失败处罚',
+        img: purifyImg,
+        show: roleStore.purifyCount,
+        count: roleStore.purifyCount,
       },
     ];
   }, [roleStore.viewDistance, roleStore.isReverse]);

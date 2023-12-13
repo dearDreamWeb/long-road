@@ -4,9 +4,10 @@ import {
   Status,
   GameResultStatus,
   PunishEnum,
+  AwardEnum,
 } from '@/typings';
 import message from '@/components/message/message';
-import { GRIDROWS, MINVIEWDISTANCE } from '@/const';
+import { GRIDROWS, MINVIEWDISTANCE, MAXEWDISTANCE } from '@/const';
 import * as PIXI from 'pixi.js';
 import { sound, Sound, SoundMap, SoundSourceMap } from '@pixi/sound';
 import roleStore from './roleStore';
@@ -69,6 +70,8 @@ class GlobalStore {
     localStorage.setItem('settings', JSON.stringify(value || {}));
   }
 
+  /**初始化游戏场景 */
+  @action
   init() {
     const dataJson = levelMap[this.level];
     for (let i = 0; i < dataJson.length; i++) {
@@ -175,6 +178,11 @@ class GlobalStore {
 
   /**失败处理 */
   failHandler() {
+    if (roleStore.purifyCount) {
+      message.warning('保护罩抵消本次处罚');
+      roleStore.purifyCount--;
+      return;
+    }
     let valuesArr = Object.values(PunishEnum);
     valuesArr.splice(0, valuesArr.length / 2);
     console.log(3333, [...valuesArr]);
@@ -186,6 +194,9 @@ class GlobalStore {
     }
     console.log(valuesArr, roleStore.isReverse);
     if (!valuesArr.length) {
+      message.error('游戏结束');
+      roleStore.initRole();
+      this.init();
       return;
     }
     const len = valuesArr.length;
@@ -202,13 +213,42 @@ class GlobalStore {
     console.log('Punish---', value);
   }
 
+  /**胜利处理 */
+  winHandler() {
+    let valuesArr = Object.values(AwardEnum);
+    valuesArr.splice(0, valuesArr.length / 2);
+    if (roleStore.viewDistance >= MAXEWDISTANCE) {
+      valuesArr.splice(valuesArr.indexOf(AwardEnum.addView), 1);
+    }
+    if (!roleStore.isReverse) {
+      valuesArr.splice(valuesArr.indexOf(AwardEnum.reverse), 1);
+    }
+    console.log(valuesArr, roleStore.isReverse);
+    if (!valuesArr.length) {
+      return;
+    }
+    const len = valuesArr.length;
+    const index = Math.floor(Math.random() * len);
+    const value = valuesArr[index];
+    if (value === AwardEnum.addView) {
+      roleStore.getNewView('add');
+      message.warning('视野范围增大');
+    } else if (value === AwardEnum.reverse) {
+      message.warning('方向恢复正常');
+      roleStore.isReverse = false;
+    } else if (value === AwardEnum.purify) {
+      message.warning('获得保护罩');
+      roleStore.purifyCount++;
+    }
+    console.log('Award---', value);
+  }
+
   /**游戏结算 */
   @action
   gameSettlement(status: GameResultStatus) {
     console.log('status', status);
     if (status === GameResultStatus.win) {
-      roleStore.getNewView('add');
-      message.warning('视野范围增大');
+      this.winHandler();
     } else if (status === GameResultStatus.loss) {
       this.failHandler();
     }

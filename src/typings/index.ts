@@ -43,3 +43,13 @@ export enum PunishEnum {
   // 方向是反的
   reverse = 1,
 }
+
+/**奖励 */
+export enum AwardEnum {
+  // 增加视野
+  addView = 0,
+  // 方向正常
+  reverse = 1,
+  // 净化
+  purify = 2,
+}

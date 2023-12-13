@@ -35,9 +35,18 @@ const BlackjackGame = (props: BlackjackGamProps) => {
       return;
     }
     blackjackGameStore.addCard(true, blackjackGameStore.getRandomNum());
+    if (blackjackGameStore.isOver) {
+      store.gameSettlement(
+        blackjackGameStore.isWin ? GameResultStatus.win : GameResultStatus.loss
+      );
+    }
   };
 
   const playerStop = async () => {
+    if (isOver) {
+      console.log('game over');
+      return;
+    }
     setPlayerTurn(false);
     await blackjackGameStore.autoCard();
     store.gameSettlement(
