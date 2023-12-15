@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import './typewriter.less';
+import classNames from 'classnames';
 
 interface TypeWriterProps {
   text: string;
@@ -30,7 +31,10 @@ const TypeWriter = (props: TypeWriterProps) => {
     <div className="type-writer-box" style={{ color: color || 'inherit' }}>
       {currentText}
       <span
-        className="rect"
+        className={classNames([
+          'rect',
+          { typingEnd: currentText.length === text.length },
+        ])}
         style={{ backgroundColor: rectColor || '#fff' }}
       ></span>
     </div>
