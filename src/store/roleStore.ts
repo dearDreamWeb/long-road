@@ -19,10 +19,17 @@ class RoleStore {
   isReverse = false;
   /**净化次数 */
   purifyCount = 0;
+  /**主角当前位置 */
   mainPosition = {
     x: 12,
     y: 24,
   };
+  /**主角一开始的位置 */
+  mainInitPosition = {
+    x: 0,
+    y: 0,
+  };
+  /**终点 */
   endRect = {
     x: 12,
     y: 0,

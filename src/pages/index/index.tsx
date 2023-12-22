@@ -238,7 +238,7 @@ const Index = () => {
    * @param e
    * @returns
    */
-  const characterMove = (e: KeyboardEvent) => {
+  const characterMove = async (e: KeyboardEvent) => {
     if (globalStore.status === Status.stop) {
       return;
     }
@@ -296,6 +296,16 @@ const Index = () => {
       setTimeout(() => {
         globalStore.showGameModal = true;
       }, 500);
+    } else if (rectType === BgLayoutItemType.backTo) {
+      globalStore.status = Status.stop;
+      await message.warning('糟糕，踩到了传送门，回到了原点！');
+      globalStore.backToLevelOrigin();
+      globalStore.status = Status.normal;
+    } else if (rectType === BgLayoutItemType.protect) {
+      globalStore.status = Status.stop;
+      await message.success('找到了保护罩，嘻嘻嘻!');
+      globalStore.getProtectTool();
+      globalStore.status = Status.normal;
     } else if (rectType === BgLayoutItemType.end) {
       globalStore.winGame();
     }

@@ -57,7 +57,6 @@ class GlobalStore {
     bgVolume: 0.5,
     clickVolume: 0.5,
   };
-
   constructor() {
     makeAutoObservable(this);
     this.init();
@@ -72,18 +71,28 @@ class GlobalStore {
 
   /**初始化游戏场景 */
   @action
-  init() {
-    const dataJson = levelMap[this.level];
-    for (let i = 0; i < dataJson.length; i++) {
-      for (let j = 0; j < dataJson[i].length; j++) {
-        if (dataJson[i][j] === BgLayoutItemType.main) {
-          roleStore.mainPosition = { x: j, y: i };
-        } else if (dataJson[i][j] === BgLayoutItemType.end) {
-          roleStore.endRect = { x: j, y: i };
+  async init() {
+    try {
+      const dataJson = levelMap[this.level];
+      for (let i = 0; i < dataJson.length; i++) {
+        for (let j = 0; j < dataJson[i].length; j++) {
+          if (dataJson[i][j] === BgLayoutItemType.main) {
+            const position = { x: j, y: i };
+            roleStore.mainPosition = position;
+            roleStore.mainInitPosition = position;
+          } else if (dataJson[i][j] === BgLayoutItemType.end) {
+            roleStore.endRect = { x: j, y: i };
+          }
         }
       }
+      this.bgLayout = dataJson;
+    } catch (e) {
+      this.status = Status.stop;
+      message.error('哎呀，关卡加载失败，QAQ...');
+      console.error('init error', e);
+      return;
     }
-    this.bgLayout = dataJson;
+    return;
   }
 
   /**本地配置同步 */
@@ -257,6 +266,7 @@ class GlobalStore {
     this.status = Status.normal;
   }
 
+  /**游戏通关 */
   @action
   winGame() {
     // this.status = Status.stop;
@@ -264,6 +274,25 @@ class GlobalStore {
       this.level++;
       this.init();
     });
+  }
+
+  /**回到原点，清除走过的路径 */
+  @action
+  backToLevelOrigin() {
+    this.bgLayout.forEach((rows, rowIndex) => {
+      rows.forEach((item, columnIndex) => {
+        if (item === BgLayoutItemType.route) {
+          this.bgLayout[rowIndex][columnIndex] = BgLayoutItemType.empty;
+        }
+      });
+    });
+    roleStore.mainPosition = { ...roleStore.mainInitPosition };
+  }
+
+  /**获取保护道具 */
+  @action
+  getProtectTool() {
+    roleStore.purifyCount++;
   }
 }
 

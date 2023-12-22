@@ -60,16 +60,19 @@ function MessageComponent(props: MessageComponentProps) {
 
 const render = (type: string) => {
   return (content: string, duration = 3000, onClose?: () => void) => {
-    const el = document.createElement('div');
-    document.getElementById('message-wrapper')!.append(el);
-    el.setAttribute('class', 'messageBox');
-    el.style.animationDuration = `${duration}ms`;
-    const root = ReactDOM.createRoot(el);
-    root.render(<MessageComponent type={type} content={content} />);
-    setTimeout(() => {
-      el.remove();
-      onClose && onClose();
-    }, duration);
+    return new Promise((resolve) => {
+      const el = document.createElement('div');
+      document.getElementById('message-wrapper')!.append(el);
+      el.setAttribute('class', 'messageBox');
+      el.style.animationDuration = `${duration}ms`;
+      const root = ReactDOM.createRoot(el);
+      root.render(<MessageComponent type={type} content={content} />);
+      setTimeout(() => {
+        el.remove();
+        resolve(null);
+        onClose && onClose();
+      }, duration);
+    });
   };
 };
 
