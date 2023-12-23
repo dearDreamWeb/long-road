@@ -286,6 +286,9 @@ class GlobalStore {
         }
       });
     });
+    this.bgLayout[roleStore.mainInitPosition.y][roleStore.mainInitPosition.x] =
+      BgLayoutItemType.main;
+    this.bgLayout = JSON.parse(JSON.stringify(this.bgLayout));
     roleStore.mainPosition = { ...roleStore.mainInitPosition };
   }
 

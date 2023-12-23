@@ -37,7 +37,7 @@ const StatusComponent = () => {
         count: roleStore.purifyCount,
       },
     ];
-  }, [roleStore.viewDistance, roleStore.isReverse]);
+  }, [roleStore.viewDistance, roleStore.purifyCount, roleStore.isReverse]);
   return (
     <div className={styles.statusBox}>
       <h1>状态栏</h1>

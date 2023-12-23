@@ -299,6 +299,8 @@ const Index = () => {
     } else if (rectType === BgLayoutItemType.backTo) {
       globalStore.status = Status.stop;
       await message.warning('糟糕，踩到了传送门，回到了原点！');
+      globalStore.bgLayout[roleStore.mainPosition.y][roleStore.mainPosition.x] =
+        BgLayoutItemType.empty;
       globalStore.backToLevelOrigin();
       globalStore.status = Status.normal;
     } else if (rectType === BgLayoutItemType.protect) {
