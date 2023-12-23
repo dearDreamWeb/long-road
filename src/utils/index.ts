@@ -1,5 +1,5 @@
 import * as PIXI from 'pixi.js';
-import { WIDTH, HEIGHT, GRIDROWS, GRIDWIDTH, GRIDHEIGHT } from '@/const';
+import { WIDTH, HEIGHT, GRIDROWS, GRIDWIDTH, GRIDHEIGHT, RATE } from '@/const';
 
 interface CreateLine {
   moveToX: number;
@@ -159,10 +159,10 @@ export function animatedSpriteUpdate({
     rows: mainPosition.y,
     columns: mainPosition.x,
   });
-  const scale = GRIDWIDTH / (190 / 4);
-  const diffX = ((1 - scale) * (148 / 4)) / 2 / 2;
-  animatedSprite.x = x + diffX;
-  animatedSprite.y = y;
+  const scale = GRIDHEIGHT / (190 / 4);
+  animatedSprite.anchor.set(0.5);
+  animatedSprite.x = x + GRIDWIDTH / 2;
+  animatedSprite.y = y + GRIDHEIGHT / 2;
   animatedSprite.scale.set(scale);
   animatedSprite.animationSpeed = 0.1; // 动画播放的速度，默认为1,每秒播放60张图片
   animatedSprite.loop = true; // 动画是否循环
