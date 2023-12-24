@@ -1,4 +1,11 @@
-import { useRef, useState, useEffect, EventHandler } from 'react';
+import {
+  useRef,
+  useState,
+  useEffect,
+  EventHandler,
+  useMemo,
+  useCallback,
+} from 'react';
 import styles from './index.module.less';
 import {
   createLine,
@@ -23,6 +30,7 @@ import { mosaicFilter } from '@/utils/filters';
 import store from '@/store/store';
 import MosaicImg from '@/components/mosaicImg/mosaicImg';
 import SettingsModal from './settingsModal/settingsModal';
+import GameRender from '@/components/gameRender/gameRender';
 
 interface RectGraphics extends PIXI.Graphics {
   rectType: BgLayoutItemType;
@@ -405,10 +413,12 @@ const Index = () => {
         onClose={() => setOpenSettings(false)}
       />
 
-      <BlackjackGame
+      <GameRender />
+
+      {/* <BlackjackGame
         isOpen={globalStore.showGameModal}
         onChange={(value) => (globalStore.showGameModal = value)}
-      />
+      /> */}
 
       {/* <RockGame
         isOpen={globalStore.showGameModal}
