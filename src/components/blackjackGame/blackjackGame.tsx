@@ -144,7 +144,7 @@ const BlackjackGame = (props: BlackjackGamProps) => {
         </div>
         {isOver && (
           <button
-            className="nes-btn px-8 text-xl m-auto mt-4"
+            className="nes-btn px-8 text-xl m-auto mt-4 flex items-center"
             onClick={() => onChange(false)}
           >
             关闭

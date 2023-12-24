@@ -20,6 +20,8 @@ import roleStore from './roleStore';
 import config, { Audios, Config } from '@/config';
 import level1 from '@/assets/levels/level-1.json';
 import level2 from '@/assets/levels/level-2.json';
+import level3 from '@/assets/levels/level-3.json';
+import level4 from '@/assets/levels/level-4.json';
 import { sleep } from '@/utils';
 
 export type AudioResources = Record<keyof Audios, Sound>;
@@ -35,6 +37,8 @@ configure({ enforceActions: 'never' });
 const levelMap: any = {
   1: level1,
   2: level2,
+  3: level3,
+  4: level4,
 };
 
 class GlobalStore {
@@ -79,6 +83,11 @@ class GlobalStore {
   @action
   async init() {
     try {
+      if (this.level >= Object.keys(levelMap).length) {
+        message.success('恭喜你，通关完成！！！');
+        console.log('通关了');
+        return;
+      }
       const dataJson = levelMap[this.level];
       for (let i = 0; i < dataJson.length; i++) {
         for (let j = 0; j < dataJson[i].length; j++) {

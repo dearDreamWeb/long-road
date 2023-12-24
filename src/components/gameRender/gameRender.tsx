@@ -2,6 +2,8 @@ import globalStore from '@/store/store';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import BlackjackGame from '../blackjackGame/blackjackGame';
 import RockGame from '../rockGame/rockGame';
+import KnowledgeGame from '../knowledgeGame/knowledgeGame';
+import { observer } from 'mobx-react';
 
 const GameRender = () => {
   const [startGame, setStartGame] = useState(false);
@@ -29,6 +31,19 @@ const GameRender = () => {
           />
         ),
       },
+      {
+        key: 'knowledge',
+        name: '知识竞赛',
+        componentRender: () => (
+          <KnowledgeGame
+            isOpen={globalStore.showGameModal}
+            onChange={(value) => {
+              console.log('2222', value);
+              globalStore.showGameModal = value;
+            }}
+          />
+        ),
+      },
     ];
   }, [globalStore.showGameModal]);
 
@@ -43,6 +58,7 @@ const GameRender = () => {
     if (!globalStore.showGameModal || startGame) {
       return;
     }
+    // const randomIndex = 2;
     const randomIndex = Math.floor(Math.random() * gameList.length);
     console.log('random game', randomIndex, gameList.length);
     setStartGame(true);
@@ -52,7 +68,6 @@ const GameRender = () => {
   if (!globalStore.showGameModal) {
     return null;
   }
-
   return (
     <>
       {typeof gameIndex === 'number' && gameList[gameIndex].componentRender()}
@@ -60,4 +75,4 @@ const GameRender = () => {
   );
 };
 
-export default GameRender;
+export default observer(GameRender);

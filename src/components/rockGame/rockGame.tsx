@@ -195,7 +195,7 @@ const RockGame = (props: RockGameProps) => {
       mainAnimation
     >
       <div className={styles.gameBox}>
-        <h1 className="title-1">决斗吧，骚年</h1>
+        <h1 className="title-1">决斗吧，骚年--《石头剪刀布》</h1>
         <p>规则：</p>
         <Typewriter text="选择每一轮的石头剪刀布，三局两胜!"></Typewriter>
         {thinking ? (
