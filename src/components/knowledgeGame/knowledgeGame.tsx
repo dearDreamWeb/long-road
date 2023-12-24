@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import knowledgeQuestions from '@/assets/data/knowledgeQuestions.json';
 import Modal from '../modal/modal';
 import styles from './knowledgeGame.module.less';
@@ -12,17 +12,13 @@ interface KnowledgeGameProps {
   isOpen: boolean;
   onChange(value: boolean): void;
 }
-
-interface QuestionItem {
-  title: string;
-  options: string[];
-  result: number;
-}
-
 interface ResultListItem {
-  result: number;
+  result: number | null;
   right: boolean;
 }
+
+/**每个问题的时间 */
+const QUESTTIME = 15;
 
 const KnowledgeGame = (props: KnowledgeGameProps) => {
   const { isOpen, onChange } = props;
@@ -31,6 +27,8 @@ const KnowledgeGame = (props: KnowledgeGameProps) => {
   const [resultList, setResultList] = useState<ResultListItem[]>([]);
   const [gameOver, setGameOver] = useState(false);
   const [showDetails, setShowDetails] = useState(false);
+  const timer = useRef<NodeJS.Timer | null>(null);
+  const [seconds, setSeconds] = useState(QUESTTIME);
 
   const getRandomIndex = (selectedList: number[], size: number): number => {
     const random = Math.floor(Math.random() * size);
@@ -49,10 +47,26 @@ const KnowledgeGame = (props: KnowledgeGameProps) => {
   }, []);
 
   const currentQuestionInfo = useMemo(() => {
+    if (timer.current) {
+      clearInterval(timer.current);
+      timer.current = null;
+    }
+    let _seconds = QUESTTIME;
+    setSeconds(_seconds);
+    timer.current = setInterval(() => {
+      if (_seconds <= 0) {
+        timer.current && clearInterval(timer.current);
+        timer.current = null;
+        selectedResult(null);
+        return;
+      }
+      _seconds -= 10 / 1000;
+      setSeconds(_seconds);
+    }, 10);
     return questionsList[currentIndex];
   }, [questionsList, currentIndex]);
 
-  const selectedResult = (result: number) => {
+  const selectedResult = (result: number | null) => {
     setResultList([
       ...resultList,
       { result, right: result === currentQuestionInfo.result },
@@ -100,17 +114,48 @@ const KnowledgeGame = (props: KnowledgeGameProps) => {
         {!gameOver ? (
           <div className="mt-8">
             <div className="flex items-center justify-between">
-              <progress
-                className="progress progress-success h-4"
-                value={currentIndex + 1}
-                max={5}
-              ></progress>
+              <ul className="steps grow">
+                {questionsList.map((item, questionIndex) => (
+                  <li
+                    key={item.title}
+                    className={classNames([
+                      'step',
+                      resultList.length - 1 >= questionIndex
+                        ? resultList[questionIndex].right
+                          ? 'step-accent'
+                          : 'step-error'
+                        : 'step-warning',
+                    ])}
+                    data-content={
+                      resultList.length - 1 >= questionIndex
+                        ? resultList[questionIndex].right
+                          ? '✓'
+                          : '✕'
+                        : '?'
+                    }
+                  ></li>
+                ))}
+              </ul>
               <p className="w-32 text-right">
                 进度：<span>{currentIndex + 1}</span>/
                 <span>{questionsList.length}</span>
               </p>
             </div>
             <h1 className="mt-4 text-2xl">{currentQuestionInfo.title}</h1>
+            <div className="flex items-center">
+              <progress
+                className={classNames([
+                  'progress progress-success h-1',
+                  seconds <= 10 ? 'progress-warning' : '',
+                  seconds <= 5 ? 'progress-error' : '',
+                ])}
+                value={QUESTTIME - seconds}
+                max={QUESTTIME}
+              ></progress>
+              <span className="block ml-3 w-16 text-lg">
+                {Math.ceil(seconds)}s
+              </span>
+            </div>
             <ul className="mt-4">
               {currentQuestionInfo.options.map((item, index) => (
                 <li
@@ -171,7 +216,12 @@ const KnowledgeGame = (props: KnowledgeGameProps) => {
             </div>
             {questionsList.map((item, index) => (
               <div key={item.title} className="mt-4">
-                <h1 className="text-2xl">{item.title}</h1>
+                <h1 className="text-2xl">
+                  {item.title}
+                  {resultList[index].result === null ? (
+                    <span className="text-error">（回答超时）</span>
+                  ) : null}
+                </h1>
                 <ul className="mt-2 text-lg">
                   {item.options.map((optionItem, subIndex) => (
                     <li
