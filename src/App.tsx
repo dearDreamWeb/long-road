@@ -1,4 +1,4 @@
-import { useEffect, useState, MouseEvent } from 'react';
+import { useEffect, useState, MouseEvent, Suspense } from 'react';
 import styles from './App.module.less';
 import routes from '../config/routes';
 import { renderRoutes } from 'react-router-config';
@@ -8,6 +8,7 @@ import { RATE } from '@/const';
 import store from '@/store/store';
 import { observer } from 'mobx-react';
 import classnames from 'classnames';
+import { HashRouter } from 'react-router-dom';
 import titleLogo from '@/assets/images/title-logo2.png';
 
 function App() {
@@ -44,10 +45,10 @@ function App() {
   }, []);
 
   return (
-    <>
+    <Suspense>
       {isRender && (
         <div className={styles.app}>
-          {renderRoutes(routes)}
+          <HashRouter>{renderRoutes(routes)}</HashRouter>
           {createPortal(<div id="message-wrapper"></div>, document.body)}
         </div>
       )}
@@ -80,7 +81,7 @@ function App() {
           </div>
         </div>
       )}
-    </>
+    </Suspense>
   );
 }
 

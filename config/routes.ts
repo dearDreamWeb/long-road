@@ -8,17 +8,17 @@ const routes: RouteConfig[] = [
   {
     exact: true,
     path: '/',
-    component: Index,
+    component: lazy(() => import('@/pages/index/index')),
   },
   {
     exact: true,
     path: '/createGame',
-    component: CreateGame,
+    component: lazy(() => import('@/pages/createGame/createGame')),
   },
   {
     exact: true,
     path: '/warning',
-    component: Warning,
+    component: lazy(() => import('@/pages/warning/warning')),
   },
 ];
 export default routes;
