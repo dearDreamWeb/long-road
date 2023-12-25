@@ -118,6 +118,7 @@ class GlobalStore {
 
   /**加载资源文件 */
   async loadResource() {
+    this.status = Status.stop;
     this.loadResources = true;
     this.loadResourcesProgress = 0;
     this.loadingText = '本地配置加载中';
@@ -133,6 +134,7 @@ class GlobalStore {
     this.loadingText = '资源加载完成';
     await sleep(500);
     this.loadResources = false;
+    this.status = Status.normal;
   }
 
   /**加载音频资源 */

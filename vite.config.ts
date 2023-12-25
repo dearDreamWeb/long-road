@@ -3,6 +3,8 @@ import react from '@vitejs/plugin-react';
 import eslintPlugin from 'vite-plugin-eslint'; // 引入
 import path from 'path';
 import postCssPxToRem from 'postcss-pxtorem';
+import vitePluginTimer from 'vite-plugin-timer';
+import { visualizer } from 'rollup-plugin-visualizer';
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -21,6 +23,8 @@ export default defineConfig({
       cache: false,
       include: './src',
     }),
+    visualizer(),
+    vitePluginTimer(),
   ],
   base: './',
   server: {
@@ -55,6 +59,15 @@ export default defineConfig({
           propList: ['*'], // 需要转换的属性，这里选择全部都进行转换
         }),
       ],
+    },
+  },
+  build: {
+    rollupOptions: {
+      manualChunks: (id) => {
+        if (id.includes('node_modules/@pixi')) {
+          return 'pixi';
+        }
+      },
     },
   },
 });
