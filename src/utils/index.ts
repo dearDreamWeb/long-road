@@ -172,6 +172,7 @@ export function animatedSpriteUpdate({
   animatedSprite.gotoAndPlay(0); // 从第几帧开始播放
   animatedSprite.zIndex = 99999;
   // console.log(app.stage.children);
+
   return animatedSprite;
 }
 

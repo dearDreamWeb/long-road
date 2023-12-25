@@ -611,6 +611,11 @@
   resolved "https://registry.npmjs.org/@pixi/filter-fxaa/-/filter-fxaa-6.5.9.tgz#2e34ff889407c0e39f730a0c9d40f51a79363fb5"
   integrity sha512-bWESjdxHtg5+3j+9SRrwSWDHeLULryBVcbebPg8f7tSpja3niYkJa32TklY+yrb9Lz2x6iI5wfJ4QmbeYZW9Lw==
 
+"@pixi/filter-glow@4.1.5":
+  version "4.1.5"
+  resolved "https://registry.npmmirror.com/@pixi/filter-glow/-/filter-glow-4.1.5.tgz#bd92a6eca3320b71e8c3651fea26c56480a7b640"
+  integrity sha512-Km+30k1dMlmAn2QuzdR1qhGIiyRRrSLknS0aVxvFlCoIlBlSN6ii9eo2sn1FQxjJq3A977kwYrhrcZS/Y5SrwQ==
+
 "@pixi/filter-noise@6.5.9":
   version "6.5.9"
   resolved "https://registry.npmjs.org/@pixi/filter-noise/-/filter-noise-6.5.9.tgz#1b97cf2f5c53acea8dda019762e1e38ef1bdd629"

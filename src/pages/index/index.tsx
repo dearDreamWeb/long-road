@@ -31,6 +31,7 @@ import store from '@/store/store';
 import MosaicImg from '@/components/mosaicImg/mosaicImg';
 import SettingsModal from './settingsModal/settingsModal';
 import GameRender from '@/components/gameRender/gameRender';
+import { GlowFilter } from '@pixi/filter-glow';
 
 interface RectGraphics extends PIXI.Graphics {
   rectType: BgLayoutItemType;
@@ -122,11 +123,18 @@ const Index = () => {
     if (roleStore.animatedSprite.textures) {
       app?.stage.removeChild(roleStore.animatedSprite);
     }
-    // 创建 PixelateFilter
-    const pixelateFilter = new PIXI.filters.NoiseFilter(0.2);
+
+    // 噪点滤镜
+    const pixelateFilter = new PIXI.filters.NoiseFilter(0.1);
     sprite.filters = [pixelateFilter];
+    if (roleStore.purifyCount) {
+      // 保护罩滤镜
+      const glowFilter = new GlowFilter({ distance: 5, innerStrength: 1 });
+      sprite.filters.push(glowFilter);
+    }
     roleStore.animatedSprite = sprite;
     app?.stage.addChild(roleStore.animatedSprite);
+    // app?.stage.addChild(graphics);
   }, [
     globalStore.bgLayout,
     roleStore.heroTextures,

@@ -15,6 +15,7 @@
     "lint:style-fix": "stylelint \"src/**/*.(less|scss|css)\" --fix"
   },
   "dependencies": {
+    "@pixi/filter-glow": "4.1.5",
     "classnames": "^2.3.2",
     "daisyui": "^3.8.0",
     "disable-devtool": "^0.3.4",
