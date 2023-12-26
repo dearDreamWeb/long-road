@@ -55,16 +55,22 @@ export const bgTexture = (size?: number) => {
   // 线性渐变从左上角到右下角
   const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
   gradient.addColorStop(0, 'rgba(255,255,255,1)'); // 起始颜色为白色
-  gradient.addColorStop(0.5, 'transparent'); // 结束颜色为透明
+  gradient.addColorStop(0.2, 'rgba(255,255,255,0.1)'); // 结束颜色为透明
+  gradient.addColorStop(1, '#d1fae5'); // 结束颜色为透明
+  const lineWidth = rootSize * 0.2;
+  ctx.fillStyle = '#d1fae5';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = gradient;
+  ctx.fillRect(
+    lineWidth,
+    lineWidth,
+    canvas.width - lineWidth * 2,
+    canvas.height - lineWidth * 2
+  );
 
-  ctx.lineWidth = rootSize * 0.2;
+  ctx.lineWidth = lineWidth;
   ctx.strokeStyle = '#fff';
   ctx.strokeRect(0, 0, canvas.width, canvas.height);
-
-  // ctx.fillStyle = '#d1fae5';
-  // ctx.fillRect(0, 0, canvas.width, canvas.height);
-  ctx.fillStyle = gradient;
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
 
   return canvas;
 };

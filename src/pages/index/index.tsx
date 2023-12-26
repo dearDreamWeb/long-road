@@ -26,13 +26,13 @@ import { WIDTH, HEIGHT, GRIDROWS, GRIDWIDTH, GRIDHEIGHT, RATE } from '@/const';
 import heroImg from '@/assets/images/hero.png';
 import settingsIcon from '@/assets/images/settings-icon.png';
 import StatusComponent from './statusComponent/statusComponent';
-import { bgTexture, mosaicFilter } from '@/utils/filters';
+import { mosaicFilter } from '@/utils/filters';
 import store from '@/store/store';
 import MosaicImg from '@/components/mosaicImg/mosaicImg';
 import SettingsModal from './settingsModal/settingsModal';
 import GameRender from '@/components/gameRender/gameRender';
 import { GlowFilter } from '@pixi/filter-glow';
-import { ShockwaveFilter } from '@pixi/filter-shockwave';
+import BgComponent from '@/components/bgComponent/bgComponent';
 
 interface RectGraphics extends PIXI.Graphics {
   rectType: BgLayoutItemType;
@@ -61,7 +61,6 @@ const Index = () => {
   const routeContainer = useRef<PIXI.Container>(new PIXI.Container());
   const [flash, setFlash] = useState(0);
   const [openSettings, setOpenSettings] = useState(false);
-  const bgAppRef = useRef<PIXI.Application>();
 
   useEffect(() => {
     let _app = new PIXI.Application({
@@ -98,62 +97,6 @@ const Index = () => {
     //   }
     // );
   }, []);
-
-  useEffect(() => {
-    let _app = new PIXI.Application({
-      width: window.innerWidth,
-      height: window.innerHeight,
-      antialias: true,
-      transparent: true,
-      resolution: 1,
-      backgroundColor: 0xd1fae5,
-      view: document.getElementById('bgCanvas') as HTMLCanvasElement,
-    });
-    renderBgStage(null, null, _app);
-    bgAppRef.current = _app;
-    window.addEventListener('resize', renderBgStage);
-    return () => {
-      window.removeEventListener('resize', renderBgStage);
-    };
-  }, []);
-
-  /**渲染背景 */
-  const renderBgStage = (that?: any, e?: any, _app?: PIXI.Application) => {
-    const app = _app || bgAppRef.current!;
-    app.renderer.resize(window.innerWidth, window.innerHeight);
-    app.stage.removeChildren();
-    const rootSize = RATE * 16 * 1.5;
-    const createGradTexture = PIXI.Texture.from(bgTexture(rootSize));
-    const rows = Math.ceil(window.innerHeight / rootSize);
-    const columns = Math.ceil(window.innerWidth / rootSize);
-    const container = new PIXI.Container();
-    for (let i = 0; i < rows; i++) {
-      for (let j = 0; j < columns; j++) {
-        const sprite = new PIXI.Sprite(createGradTexture);
-        sprite.position.set(j * rootSize, i * rootSize);
-        sprite.width = rootSize;
-        sprite.height = rootSize;
-        container.addChild(sprite);
-      }
-    }
-    const shockwaveFilter = new ShockwaveFilter(
-      [window.innerWidth / 2, window.innerHeight / 2],
-      {
-        amplitude: 10, // 振幅
-        wavelength: window.innerWidth / 4, // 波长
-        // brightness: 0.5, // 亮度
-      },
-      0
-    );
-    container.filters = [shockwaveFilter];
-    app.stage.addChild(container);
-    app.ticker.add(() => {
-      shockwaveFilter.time += 0.01;
-      if (shockwaveFilter.time > 1.5) {
-        shockwaveFilter.time = 0;
-      }
-    });
-  };
 
   useEffect(() => {
     if (!app) {
@@ -492,9 +435,7 @@ const Index = () => {
         onChange={(value) => (globalStore.showGameModal = value)}
       /> */}
       </div>
-      <div className="fixed left-0 top-0 w-screen h-screen">
-        <canvas id="bgCanvas"></canvas>
-      </div>
+      <BgComponent />
     </div>
   );
 };

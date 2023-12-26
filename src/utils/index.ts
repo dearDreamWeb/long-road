@@ -193,3 +193,19 @@ export function convertColor(hexColor: string) {
 export function sleep(duration = 3000) {
   return new Promise((resolve) => setTimeout(resolve, duration));
 }
+
+/**防抖 */
+// eslint-disable-next-line @typescript-eslint/ban-types
+export function debounce<T extends Function>(func: T, delay: number): T {
+  let timer: NodeJS.Timeout | null;
+
+  return function (this: unknown, ...args: unknown[]) {
+    if (timer) {
+      clearTimeout(timer);
+    }
+
+    timer = setTimeout(() => {
+      func.apply(this, args);
+    }, delay);
+  } as unknown as T;
+}

@@ -75,7 +75,7 @@ function App() {
             >
               漫长之路
             </h1>
-            <h1 className="font-bold">{store.loadingText}...</h1>
+            <h1 className="font-bold text-2xl mb-4">{store.loadingText}...</h1>
             <div className="w-1/2">
               <progress
                 className="nes-progress is-primary"
