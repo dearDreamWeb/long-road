@@ -621,6 +621,11 @@
   resolved "https://registry.npmjs.org/@pixi/filter-noise/-/filter-noise-6.5.9.tgz#1b97cf2f5c53acea8dda019762e1e38ef1bdd629"
   integrity sha512-O4lXS8kHmwPB3n/yfPxVfr18y9mdjPjNsf9uQMmHa1W3EAzjILcLQa1hFZP+ek6XroMcG6+sv10lFd9PlNiRVg==
 
+"@pixi/filter-shockwave@4.1.5":
+  version "4.1.5"
+  resolved "https://registry.npmmirror.com/@pixi/filter-shockwave/-/filter-shockwave-4.1.5.tgz#2500f52f0ef77d790bc4890cc6d32c3a88bdf0c5"
+  integrity sha512-L9i12+2UIIIwxGdXeBBq1WNTexWgwdYIyq6NqG0dlet1qW8++4KxgLYERCT1lpPjDxUmD2SkOU9VR3sGJOP8pQ==
+
 "@pixi/graphics@6.5.9":
   version "6.5.9"
   resolved "https://registry.npmjs.org/@pixi/graphics/-/graphics-6.5.9.tgz#13ee11af626a6d1647da3e3a281412c68337c860"

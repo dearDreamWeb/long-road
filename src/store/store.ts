@@ -118,23 +118,29 @@ class GlobalStore {
 
   /**加载资源文件 */
   async loadResource() {
-    this.status = Status.stop;
-    this.loadResources = true;
-    this.loadResourcesProgress = 0;
-    this.loadingText = '本地配置加载中';
-    this.initConfig();
-    await sleep(500);
-    this.loadResourcesProgress = 5;
-    this.loadingText = '字体资源加载中';
-    await this.loadFontResource();
-    this.loadResourcesProgress = 50;
-    this.loadingText = '音频资源加载中';
-    await this.loadAudioResources();
-    this.loadResourcesProgress = 100;
-    this.loadingText = '资源加载完成';
-    await sleep(500);
-    this.loadResources = false;
-    this.status = Status.normal;
+    try {
+      this.status = Status.stop;
+      this.loadResources = true;
+      this.loadResourcesProgress = 0;
+      this.loadingText = '本地配置加载中';
+      this.initConfig();
+      await sleep(500);
+      this.loadResourcesProgress = 5;
+      this.loadingText = '字体资源加载中';
+      await this.loadFontResource();
+      this.loadResourcesProgress = 50;
+      this.loadingText = '音频资源加载中';
+      await this.loadAudioResources();
+      this.loadResourcesProgress = 100;
+      this.loadingText = '资源加载完成';
+      await sleep(500);
+      this.loadResources = false;
+      this.status = Status.normal;
+      return true;
+    } catch (e) {
+      message.error('加载资源错误');
+      return false;
+    }
   }
 
   /**加载音频资源 */

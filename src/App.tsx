@@ -1,4 +1,4 @@
-import { useEffect, useState, MouseEvent, Suspense } from 'react';
+import { useEffect, useState, MouseEvent, Suspense, useRef } from 'react';
 import styles from './App.module.less';
 import routes from '../config/routes';
 import { renderRoutes } from 'react-router-config';
@@ -32,7 +32,6 @@ function App() {
 
   useEffect(() => {
     document.addEventListener('click', buttonClick as any);
-    store.loadResource();
     setRootRem();
     if (import.meta.env.MODE !== 'development') {
       DisableDevtool({
@@ -41,46 +40,52 @@ function App() {
         ignore: ['/#/warning'],
       });
     }
-    setIsRender(true);
+    (async () => {
+      const res = await store.loadResource();
+      if (!res) {
+        return;
+      }
+      setIsRender(true);
+    })();
   }, []);
 
   return (
     <Suspense>
-      {isRender && (
-        <div className={styles.app}>
-          <HashRouter>{renderRoutes(routes)}</HashRouter>
-          {createPortal(<div id="message-wrapper"></div>, document.body)}
-        </div>
-      )}
-      {store.loadResources && (
-        <div
-          className={classnames(
-            'fixed left-0 top-0 w-screen h-screen  flex flex-col justify-center items-center theme-bg'
-          )}
-        >
-          {/* <img
-            className=" absolute left-1/2 top-12 -translate-x-1/2 "
-            src={titleLogo}
-            alt=""
-          /> */}
-          <h1
+      <div className="relative">
+        {isRender && (
+          <>
+            <div className={styles.app}>
+              <HashRouter>{renderRoutes(routes)}</HashRouter>
+              {createPortal(<div id="message-wrapper"></div>, document.body)}
+            </div>
+          </>
+        )}
+
+        {store.loadResources && (
+          <div
             className={classnames(
-              'font-bold text-9xl absolute left-1/2 top-12 -translate-x-1/2',
-              styles.titleLogoText
+              'fixed left-0 top-0 w-screen h-screen  flex flex-col justify-center items-center theme-bg'
             )}
           >
-            漫长之路
-          </h1>
-          <h1 className="font-bold">{store.loadingText}...</h1>
-          <div className="w-1/2">
-            <progress
-              className="nes-progress is-primary"
-              value={store.loadResourcesProgress}
-              max="100"
-            ></progress>
+            <h1
+              className={classnames(
+                'font-bold text-9xl absolute left-1/2 top-12 -translate-x-1/2',
+                styles.titleLogoText
+              )}
+            >
+              漫长之路
+            </h1>
+            <h1 className="font-bold">{store.loadingText}...</h1>
+            <div className="w-1/2">
+              <progress
+                className="nes-progress is-primary"
+                value={store.loadResourcesProgress}
+                max="100"
+              ></progress>
+            </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </Suspense>
   );
 }

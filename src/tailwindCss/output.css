@@ -2994,6 +2994,10 @@ html {
   display: flex;
 }
 
+.hidden {
+  display: none;
+}
+
 .h-1 {
   height: 0.25rem;
 }
@@ -3085,6 +3089,10 @@ html {
 
 .resize-none {
   resize: none;
+}
+
+.resize {
+  resize: both;
 }
 
 .flex-col {
