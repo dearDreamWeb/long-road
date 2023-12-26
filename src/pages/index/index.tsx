@@ -19,8 +19,6 @@ import roleStore from '@/store/roleStore';
 import { observer } from 'mobx-react';
 import classNames from 'classnames';
 import { BgLayoutItemType, Status, TextureCacheObj } from '@/typings';
-import RockGame from '@/components/rockGame/rockGame';
-import BlackjackGame from '@/components/blackjackGame/blackjackGame';
 import message from '@/components/message/message';
 import { WIDTH, HEIGHT, GRIDROWS, GRIDWIDTH, GRIDHEIGHT, RATE } from '@/const';
 import heroImg from '@/assets/images/hero.png';
@@ -63,39 +61,43 @@ const Index = () => {
   const [openSettings, setOpenSettings] = useState(false);
 
   useEffect(() => {
-    let _app = new PIXI.Application({
-      width: WIDTH,
-      height: HEIGHT,
-      antialias: true,
-      transparent: false,
-      resolution: 1,
-      backgroundColor: 0x000000,
-      view: document.getElementById('mainCanvas') as HTMLCanvasElement,
-    });
-    setApp(_app);
-    loaderResources();
-    rectContainer.current.filters = [new PIXI.filters.NoiseFilter(0.3)];
-    document.addEventListener('keydown', characterMove);
-    // _app!.renderer.plugins.interaction.removeAllListeners();
-    // // 点击事件生成障碍物，再次点击障碍物将障碍物消掉，也可以生成开始点和结束点
-    // _app!.renderer.plugins.interaction.on(
-    //   'pointerdown',
-    //   (event: PIXI.InteractionEvent) => {
-    //     let position = event.data.getLocalPosition(bgContainer.current!);
-    //     const { x, y, relativeX, relativeY } = clickPosition({
-    //       width: WIDTH,
-    //       height: HEIGHT,
-    //       itemRows: GRIDROWS,
-    //       y: position.y,
-    //       x: position.x,
-    //     });
-    //     globalStore.bgLayout[relativeY][relativeX] = BgLayoutItemType.obstacle;
-    //     createRect({
-    //       position: { x, y },
-    //       type: BgLayoutItemType.obstacle,
-    //     });
-    //   }
-    // );
+    (async () => {
+      let _app = new PIXI.Application({
+        width: WIDTH,
+        height: HEIGHT,
+        antialias: true,
+        transparent: false,
+        resolution: 1,
+        backgroundColor: 0x000000,
+        view: document.getElementById('mainCanvas') as HTMLCanvasElement,
+      });
+      store.gameApp = _app;
+      await store.init(_app);
+      setApp(_app);
+      loaderResources();
+      rectContainer.current.filters = [new PIXI.filters.NoiseFilter(0.3)];
+      document.addEventListener('keydown', characterMove);
+      // _app!.renderer.plugins.interaction.removeAllListeners();
+      // // 点击事件生成障碍物，再次点击障碍物将障碍物消掉，也可以生成开始点和结束点
+      // _app!.renderer.plugins.interaction.on(
+      //   'pointerdown',
+      //   (event: PIXI.InteractionEvent) => {
+      //     let position = event.data.getLocalPosition(bgContainer.current!);
+      //     const { x, y, relativeX, relativeY } = clickPosition({
+      //       width: WIDTH,
+      //       height: HEIGHT,
+      //       itemRows: GRIDROWS,
+      //       y: position.y,
+      //       x: position.x,
+      //     });
+      //     globalStore.bgLayout[relativeY][relativeX] = BgLayoutItemType.obstacle;
+      //     createRect({
+      //       position: { x, y },
+      //       type: BgLayoutItemType.obstacle,
+      //     });
+      //   }
+      // );
+    })();
   }, []);
 
   useEffect(() => {

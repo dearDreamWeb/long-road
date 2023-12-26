@@ -67,6 +67,7 @@ class GlobalStore {
     bgVolume: 0.5,
     clickVolume: 0.5,
   };
+  gameApp: PIXI.Application | null = null;
   constructor() {
     makeAutoObservable(this);
     this.init();
@@ -81,13 +82,35 @@ class GlobalStore {
 
   /**初始化游戏场景 */
   @action
-  async init() {
+  async init(_app?: PIXI.Application) {
     try {
       if (this.level >= Object.keys(levelMap).length) {
         message.success('恭喜你，通关完成！！！');
         console.log('通关了');
-        return;
+        return true;
       }
+
+      const app = _app || this.gameApp;
+      if (app) {
+        app.stage.removeChildren();
+        // 创建一个 PIXI.Text 对象
+        const text = new PIXI.Text(`关卡：${this.level}`, {
+          fontFamily: 'IPix', // 字体
+          fontSize: parseInt(document.body.style.fontSize) * 3, // 字体大小
+          fill: 'white', // 字体颜色
+          align: 'center', // 对齐方式
+        });
+
+        // 设置文本对象的位置
+        text.x = app.renderer.width / 2;
+        text.y = app.renderer.height / 2;
+        // 设置文本对象的锚点为中心点
+        text.anchor.set(0.5);
+        app.stage.addChild(text);
+        await new Promise((resolve) => setTimeout(resolve, 3000));
+        app.stage.removeChild(text);
+      }
+
       const dataJson = levelMap[this.level];
       for (let i = 0; i < dataJson.length; i++) {
         for (let j = 0; j < dataJson[i].length; j++) {
@@ -101,13 +124,13 @@ class GlobalStore {
         }
       }
       this.bgLayout = dataJson;
+      return true;
     } catch (e) {
       this.status = Status.stop;
       message.error('哎呀，关卡加载失败，QAQ...');
       console.error('init error', e);
-      return;
+      return false;
     }
-    return;
   }
 
   /**本地配置同步 */
@@ -293,7 +316,7 @@ class GlobalStore {
   @action
   winGame() {
     // this.status = Status.stop;
-    message.success('恭喜通关', 3000, () => {
+    message.success('恭喜通关', 2000, () => {
       this.level++;
       this.init();
     });
