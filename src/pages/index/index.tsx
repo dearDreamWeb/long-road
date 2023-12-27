@@ -187,7 +187,22 @@ const Index = () => {
     const { x, y } = position;
     let rectangle = new PIXI.Graphics() as RectGraphics;
     rectangle.lineStyle(1, 0x000000, 1);
-    rectangle.beginFill(colorMap[type]);
+    // 这部分颜色显示空
+    const disabledShowColorList = [
+      BgLayoutItemType.backTo,
+      BgLayoutItemType.duel,
+      BgLayoutItemType.end,
+      BgLayoutItemType.protect,
+    ];
+    if (import.meta.env.MODE === 'development') {
+      rectangle.beginFill(colorMap[type]);
+    } else {
+      if (disabledShowColorList.includes(type)) {
+        rectangle.beginFill(colorMap[BgLayoutItemType.empty]);
+      } else {
+        rectangle.beginFill(colorMap[type]);
+      }
+    }
     rectangle.drawRect(
       x - (x % GRIDWIDTH),
       y - (y % GRIDHEIGHT),

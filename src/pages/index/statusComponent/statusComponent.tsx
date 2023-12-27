@@ -39,7 +39,7 @@ const StatusComponent = () => {
     ];
   }, [roleStore.viewDistance, roleStore.purifyCount, roleStore.isReverse]);
   return (
-    <div className={styles.statusBox}>
+    <div className={classNames(styles.statusBox, 'backdrop-blur-sm')}>
       <h1>状态栏</h1>
       {statusList.map(
         (item) =>
