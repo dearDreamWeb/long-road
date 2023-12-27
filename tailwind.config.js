@@ -13,8 +13,14 @@ export default {
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   theme: {
     extend: {
+      width: {
+        128: '32rem',
+      },
       height: {
         128: '32rem',
+      },
+      right: {
+        '-136': '34rem',
       },
       letterSpacing: {
         3: '0.3rem',

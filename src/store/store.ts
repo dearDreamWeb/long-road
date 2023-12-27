@@ -107,7 +107,7 @@ class GlobalStore {
         // 设置文本对象的锚点为中心点
         text.anchor.set(0.5);
         app.stage.addChild(text);
-        await new Promise((resolve) => setTimeout(resolve, 3000));
+        await new Promise((resolve) => setTimeout(resolve, 1500));
         app.stage.removeChild(text);
       }
 

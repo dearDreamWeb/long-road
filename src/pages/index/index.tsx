@@ -24,6 +24,7 @@ import { WIDTH, HEIGHT, GRIDROWS, GRIDWIDTH, GRIDHEIGHT, RATE } from '@/const';
 import heroImg from '@/assets/images/hero.png';
 import settingsIcon from '@/assets/images/settings-icon.png';
 import StatusComponent from './statusComponent/statusComponent';
+import InfoComponent from './infoComponent/infoComponent';
 import { mosaicFilter } from '@/utils/filters';
 import store from '@/store/store';
 import MosaicImg from '@/components/mosaicImg/mosaicImg';
@@ -191,14 +192,23 @@ const Index = () => {
     const disabledShowColorList = [
       BgLayoutItemType.backTo,
       BgLayoutItemType.duel,
-      BgLayoutItemType.end,
+      // BgLayoutItemType.end,
       BgLayoutItemType.protect,
     ];
-    if (import.meta.env.MODE === 'development') {
+    if (import.meta.env.MODE !== 'development') {
       rectangle.beginFill(colorMap[type]);
     } else {
       if (disabledShowColorList.includes(type)) {
         rectangle.beginFill(colorMap[BgLayoutItemType.empty]);
+      } else if (type === BgLayoutItemType.end) {
+        // 角色在终点周围一格的范围内显示
+        const xPow = Math.pow(x / GRIDWIDTH - roleStore.mainPosition.x, 2);
+        const yPow = Math.pow(y / GRIDHEIGHT - roleStore.mainPosition.y, 2);
+        if (Math.sqrt(xPow + yPow) < 2) {
+          rectangle.beginFill(colorMap[type]);
+        } else {
+          rectangle.beginFill(colorMap[BgLayoutItemType.empty]);
+        }
       } else {
         rectangle.beginFill(colorMap[type]);
       }
@@ -433,6 +443,7 @@ const Index = () => {
               className={`${styles.flashBox} ${flash ? styles.flash : ''}`}
             ></div>
           </div>
+          <InfoComponent />
         </div>
 
         <SettingsModal

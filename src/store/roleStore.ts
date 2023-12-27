@@ -19,6 +19,8 @@ class RoleStore {
   isReverse = false;
   /**净化次数 */
   purifyCount = 0;
+  /**金币 */
+  coins = 100;
   /**主角当前位置 */
   mainPosition = {
     x: 12,

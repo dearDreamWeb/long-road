@@ -37,10 +37,7 @@ const GameRender = () => {
         componentRender: () => (
           <KnowledgeGame
             isOpen={globalStore.showGameModal}
-            onChange={(value) => {
-              console.log('2222', value);
-              globalStore.showGameModal = value;
-            }}
+            onChange={(value) => (globalStore.showGameModal = value)}
           />
         ),
       },
