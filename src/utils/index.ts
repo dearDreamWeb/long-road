@@ -152,6 +152,7 @@ export function animatedSpriteUpdate({
   sprite,
 }: AnimatedSpriteUpdateParams) {
   let animatedSprite = sprite.textures ? sprite : new PIXI.AnimatedSprite(list);
+  animatedSprite.zIndex = 2;
   const { x, y } = translatePosition({
     width: WIDTH,
     height: HEIGHT,

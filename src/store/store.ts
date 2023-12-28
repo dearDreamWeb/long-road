@@ -23,6 +23,8 @@ import level2 from '@/assets/levels/level-2.json';
 import level3 from '@/assets/levels/level-3.json';
 import level4 from '@/assets/levels/level-4.json';
 import { sleep } from '@/utils';
+import { GlowFilter } from '@pixi/filter-glow';
+import { buyStage } from '@/utils/stage';
 
 export type AudioResources = Record<keyof Audios, Sound>;
 interface Settings {
@@ -60,6 +62,8 @@ class GlobalStore {
   loadResources = false;
   // 加载进度
   loadResourcesProgress = 0;
+  // 道具材质
+  toolsTextures: PIXI.Texture<PIXI.Resource>[] = [];
   // 游戏设置
   settings: Settings = {
     switchAudio: false,
@@ -67,6 +71,7 @@ class GlobalStore {
     bgVolume: 0.5,
     clickVolume: 0.5,
   };
+  // 主画布
   gameApp: PIXI.Application | null = null;
   constructor() {
     makeAutoObservable(this);
@@ -92,25 +97,11 @@ class GlobalStore {
 
       const app = _app || this.gameApp;
       if (app) {
+        await buyStage({ app });
         app.stage.removeChildren();
-        // 创建一个 PIXI.Text 对象
-        const text = new PIXI.Text(`关卡：${this.level}`, {
-          fontFamily: 'IPix', // 字体
-          fontSize: parseInt(document.body.style.fontSize) * 3, // 字体大小
-          fill: 'white', // 字体颜色
-          align: 'center', // 对齐方式
-        });
-
-        // 设置文本对象的位置
-        text.x = app.renderer.width / 2;
-        text.y = app.renderer.height / 2;
-        // 设置文本对象的锚点为中心点
-        text.anchor.set(0.5);
-        app.stage.addChild(text);
-        await sleep(1500);
-        app.stage.removeChild(text);
       }
 
+      // await sleep(50000000);
       const dataJson = levelMap[this.level];
       for (let i = 0; i < dataJson.length; i++) {
         for (let j = 0; j < dataJson[i].length; j++) {

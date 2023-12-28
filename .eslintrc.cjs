@@ -22,5 +22,6 @@ module.exports = {
     'react/no-unknown-property': 'off',
     'prefer-const': 'off',
     '@typescript-eslint/no-non-null-assertion': 'off',
+    'no-async-promise-executor': 'off',
   },
 };

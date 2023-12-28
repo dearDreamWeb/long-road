@@ -22,6 +22,8 @@ import { BgLayoutItemType, Status, TextureCacheObj } from '@/typings';
 import message from '@/components/message/message';
 import { WIDTH, HEIGHT, GRIDROWS, GRIDWIDTH, GRIDHEIGHT, RATE } from '@/const';
 import heroImg from '@/assets/images/hero.png';
+import viewImg from '@/assets/images/view.png';
+import purifyImg from '@/assets/images/purify.png';
 import settingsIcon from '@/assets/images/settings-icon.png';
 import StatusComponent from './statusComponent/statusComponent';
 import InfoComponent from './infoComponent/infoComponent';
@@ -72,6 +74,7 @@ const Index = () => {
         backgroundColor: 0x000000,
         view: document.getElementById('mainCanvas') as HTMLCanvasElement,
       });
+      loaderShopResources();
       store.gameApp = _app;
       await store.init(_app);
       setApp(_app);
@@ -114,6 +117,7 @@ const Index = () => {
     if (!roleStore.heroTextures.down || !roleStore.heroTextures.down.length) {
       return;
     }
+
     if (roleStore.animatedSprite.textures) {
       roleStore.animatedSprite.textures =
         roleStore.heroTextures[roleStore.direction || 'down'];
@@ -195,7 +199,7 @@ const Index = () => {
       // BgLayoutItemType.end,
       BgLayoutItemType.protect,
     ];
-    if (import.meta.env.MODE !== 'development') {
+    if (import.meta.env.MODE === 'development') {
       rectangle.beginFill(colorMap[type]);
     } else {
       if (disabledShowColorList.includes(type)) {
@@ -375,6 +379,24 @@ const Index = () => {
     //   }),
     //   type: BgLayoutItemType.route,
     // });
+  };
+
+  /**加载商品图片资源 */
+  const loaderShopResources = () => {
+    const loaders = new PIXI.Loader();
+    loaders.add('viewImg', viewImg);
+    loaders.add('purifyImg', purifyImg);
+    loaders.load();
+    loaders.onComplete.add(() => {
+      console.log('---', loaders);
+      const viewTexture = new PIXI.Texture(
+        loaders.resources.viewImg.texture!.baseTexture
+      );
+      const purifyTexture = new PIXI.Texture(
+        loaders.resources.purifyImg.texture!.baseTexture
+      );
+      store.toolsTextures = [viewTexture, purifyTexture];
+    });
   };
 
   /**
