@@ -107,7 +107,7 @@ class GlobalStore {
         // 设置文本对象的锚点为中心点
         text.anchor.set(0.5);
         app.stage.addChild(text);
-        await new Promise((resolve) => setTimeout(resolve, 1500));
+        await sleep(1500);
         app.stage.removeChild(text);
       }
 
@@ -231,6 +231,11 @@ class GlobalStore {
     return typeof type === 'number' && type !== BgLayoutItemType.obstacle;
   };
 
+  /**加减金币 */
+  rangeCoins(min = 1, max = 20) {
+    return Math.floor(Math.random() * (max - min) + min);
+  }
+
   /**失败处理 */
   failHandler() {
     if (roleStore.purifyCount) {
@@ -264,6 +269,10 @@ class GlobalStore {
     } else if (value === PunishEnum.reverse) {
       message.warning('方向混乱');
       roleStore.isReverse = true;
+    } else if (value === PunishEnum.reduceCoins) {
+      const coins = this.rangeCoins();
+      message.warning(`扣除 ${coins} 金币`);
+      roleStore.coins = Math.min(roleStore.coins - coins, 0);
     }
     console.log('Punish---', value);
   }
@@ -294,6 +303,10 @@ class GlobalStore {
     } else if (value === AwardEnum.purify) {
       message.warning('获得保护罩');
       roleStore.purifyCount++;
+    } else if (value === AwardEnum.addCoins) {
+      const coins = this.rangeCoins();
+      message.warning(`增加 ${coins} 金币`);
+      roleStore.coins += coins;
     }
     console.log('Award---', value);
   }

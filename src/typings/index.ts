@@ -38,18 +38,22 @@ export interface TextureCacheObj {
 
 /**惩罚 */
 export enum PunishEnum {
-  // 减少视野
+  /**减少视野 */
   reduceView = 0,
-  // 方向是反的
+  /**方向是反的 */
   reverse = 1,
+  /**减少金币 */
+  reduceCoins = 2,
 }
 
 /**奖励 */
 export enum AwardEnum {
-  // 增加视野
+  /**增加视野 */
   addView = 0,
-  // 方向正常
+  /**方向正常 */
   reverse = 1,
-  // 净化
+  /**净化 */
   purify = 2,
+  /**增加金币 */
+  addCoins = 3,
 }
