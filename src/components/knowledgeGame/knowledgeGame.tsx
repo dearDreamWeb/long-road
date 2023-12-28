@@ -5,7 +5,7 @@ import styles from './knowledgeGame.module.less';
 import Typewriter from '../typewriter/typewriter';
 import classNames from 'classnames';
 import CloseIcon from '../closeIcon/closeIcon';
-import store from '@/store/store';
+import globalStore from '@/store/store';
 import { GameResultStatus } from '@/typings';
 
 interface KnowledgeGameProps {
@@ -90,7 +90,9 @@ const KnowledgeGame = (props: KnowledgeGameProps) => {
     const result =
       resultList.filter((item) => item.right).length >=
       questionsList.length / 2;
-    store.gameSettlement(result ? GameResultStatus.win : GameResultStatus.loss);
+    globalStore.gameSettlement(
+      result ? GameResultStatus.win : GameResultStatus.loss
+    );
     return result;
   }, [gameOver, resultList, questionsList]);
 

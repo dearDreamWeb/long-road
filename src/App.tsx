@@ -5,7 +5,7 @@ import { renderRoutes } from 'react-router-config';
 import DisableDevtool from 'disable-devtool';
 import { createPortal } from 'react-dom';
 import { RATE } from '@/const';
-import store from '@/store/store';
+import globalStore from '@/store/store';
 import { observer } from 'mobx-react';
 import classnames from 'classnames';
 import { HashRouter } from 'react-router-dom';
@@ -22,11 +22,11 @@ function App() {
 
   const buttonClick = (e: MouseEvent) => {
     if (
-      store.settings.switchAudio &&
+      globalStore.settings.switchAudio &&
       ((e as any).target?.nodeName === 'BUTTON' ||
         (e as any).target?.parentElement.nodeName === 'BUTTON')
     ) {
-      store.audioResources.buttonClickAudio.play();
+      globalStore.audioResources.buttonClickAudio.play();
     }
   };
 
@@ -41,7 +41,7 @@ function App() {
       });
     }
     (async () => {
-      const res = await store.loadResource();
+      const res = await globalStore.loadResource();
       if (!res) {
         return;
       }
@@ -61,7 +61,7 @@ function App() {
           </>
         )}
 
-        {store.loadResources && (
+        {globalStore.loadResources && (
           <div
             className={classnames(
               'fixed left-0 top-0 w-screen h-screen  flex flex-col justify-center items-center theme-bg'
@@ -75,11 +75,13 @@ function App() {
             >
               漫长之路
             </h1>
-            <h1 className="font-bold text-2xl mb-4">{store.loadingText}...</h1>
+            <h1 className="font-bold text-2xl mb-4">
+              {globalStore.loadingText}...
+            </h1>
             <div className="w-1/2">
               <progress
                 className="nes-progress is-primary"
-                value={store.loadResourcesProgress}
+                value={globalStore.loadResourcesProgress}
                 max="100"
               ></progress>
             </div>

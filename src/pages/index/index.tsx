@@ -28,7 +28,6 @@ import settingsIcon from '@/assets/images/settings-icon.png';
 import StatusComponent from './statusComponent/statusComponent';
 import InfoComponent from './infoComponent/infoComponent';
 import { mosaicFilter } from '@/utils/filters';
-import store from '@/store/store';
 import MosaicImg from '@/components/mosaicImg/mosaicImg';
 import SettingsModal from './settingsModal/settingsModal';
 import GameRender from '@/components/gameRender/gameRender';
@@ -75,8 +74,8 @@ const Index = () => {
         view: document.getElementById('mainCanvas') as HTMLCanvasElement,
       });
       loaderShopResources();
-      store.gameApp = _app;
-      await store.init(_app);
+      globalStore.gameApp = _app;
+      await globalStore.init(_app);
       setApp(_app);
       loaderResources();
       rectContainer.current.filters = [new PIXI.filters.NoiseFilter(0.3)];
@@ -337,8 +336,8 @@ const Index = () => {
 
     if (rectType === BgLayoutItemType.duel) {
       globalStore.status = Status.stop;
-      if (store.settings.switchAudio) {
-        store.audioResources.duelAudio.play();
+      if (globalStore.settings.switchAudio) {
+        globalStore.audioResources.duelAudio.play();
       }
       setFlash(Math.random());
       setTimeout(() => {
@@ -395,7 +394,7 @@ const Index = () => {
       const purifyTexture = new PIXI.Texture(
         loaders.resources.purifyImg.texture!.baseTexture
       );
-      store.toolsTextures = [viewTexture, purifyTexture];
+      globalStore.toolsTextures = [viewTexture, purifyTexture];
     });
   };
 

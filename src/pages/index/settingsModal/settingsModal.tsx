@@ -1,7 +1,7 @@
 import { ChangeEvent } from 'react';
 import Modal from '@/components/modal/modal';
 import CloseIcon from '@/components/closeIcon/closeIcon';
-import store from '@/store/store';
+import globalStore from '@/store/store';
 import { observer, useObserver } from 'mobx-react';
 import config, { Audios, Config } from '@/config';
 import classNames from 'classnames';
@@ -14,19 +14,19 @@ interface SettingsModalProps {
 
 const SettingsModal = (props: SettingsModalProps) => {
   const { isOpen, onClose } = props;
-  const switchAudio = useObserver(() => store.settings.switchAudio);
-  const volume = useObserver(() => store.settings.volume);
-  const bgVolume = useObserver(() => store.settings.bgVolume);
-  const clickVolume = useObserver(() => store.settings.clickVolume);
+  const switchAudio = useObserver(() => globalStore.settings.switchAudio);
+  const volume = useObserver(() => globalStore.settings.volume);
+  const bgVolume = useObserver(() => globalStore.settings.bgVolume);
+  const clickVolume = useObserver(() => globalStore.settings.clickVolume);
 
   const changeSwitch = () => {
     if (!switchAudio) {
-      store.audioResources.bgAudio.play();
+      globalStore.audioResources.bgAudio.play();
     } else {
-      store.audioResources.bgAudio.stop();
+      globalStore.audioResources.bgAudio.stop();
     }
-    store.setSettings({
-      ...store.settings,
+    globalStore.setSettings({
+      ...globalStore.settings,
       switchAudio: !switchAudio,
     });
   };
@@ -36,17 +36,17 @@ const SettingsModal = (props: SettingsModalProps) => {
     type?: 'bg' | 'click'
   ) => {
     const volumeValue = Number((Number(e.target.value) / 100).toFixed(2));
-    for (let key in store.audioResources) {
+    for (let key in globalStore.audioResources) {
       if (type === 'bg' && key === 'bgAudio') {
-        store.audioResources[key as keyof Audios].volume = volumeValue;
+        globalStore.audioResources[key as keyof Audios].volume = volumeValue;
       }
       if (type === 'click' && key !== 'bgAudio') {
         console.log(key);
-        store.audioResources[key as keyof Audios].volume = volumeValue;
+        globalStore.audioResources[key as keyof Audios].volume = volumeValue;
       }
     }
-    store.setSettings({
-      ...store.settings,
+    globalStore.setSettings({
+      ...globalStore.settings,
       [type === 'bg' ? 'bgVolume' : 'clickVolume']: volumeValue,
     });
   };
@@ -58,7 +58,7 @@ const SettingsModal = (props: SettingsModalProps) => {
         <div className="flex items-center p-4 bg-cyan-200">
           <div className="text-3xl font-bold">音效</div>
           <div className="flex items-center ml-auto font-bold text-inherit">
-            {store.settings.switchAudio ? '开' : '关'}
+            {globalStore.settings.switchAudio ? '开' : '关'}
             <input
               type="checkbox"
               className={classNames(
@@ -70,7 +70,7 @@ const SettingsModal = (props: SettingsModalProps) => {
             />
           </div>
         </div>
-        {store.settings.switchAudio && (
+        {globalStore.settings.switchAudio && (
           <>
             <div className="flex items-center pt-4 pl-8 bg-cyan-200">
               背景音量：

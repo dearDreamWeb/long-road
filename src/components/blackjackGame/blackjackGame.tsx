@@ -5,7 +5,7 @@ import Modal from '../modal/modal';
 import styles from './blackjackGame.module.less';
 import classNames from 'classnames';
 import Typewriter from '../typewriter/typewriter';
-import store from '@/store/store';
+import globalStore from '@/store/store';
 import { GameResultStatus } from '@/typings';
 import CloseIcon from '@/components/closeIcon/closeIcon';
 
@@ -36,7 +36,7 @@ const BlackjackGame = (props: BlackjackGamProps) => {
     }
     blackjackGameStore.addCard(true, blackjackGameStore.getRandomNum());
     if (blackjackGameStore.isOver) {
-      store.gameSettlement(
+      globalStore.gameSettlement(
         blackjackGameStore.isWin ? GameResultStatus.win : GameResultStatus.loss
       );
     }
@@ -49,7 +49,7 @@ const BlackjackGame = (props: BlackjackGamProps) => {
     }
     setPlayerTurn(false);
     await blackjackGameStore.autoCard();
-    store.gameSettlement(
+    globalStore.gameSettlement(
       blackjackGameStore.isWin ? GameResultStatus.win : GameResultStatus.loss
     );
   };

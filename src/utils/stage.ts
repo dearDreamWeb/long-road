@@ -1,5 +1,5 @@
 import * as PIXI from 'pixi.js';
-import store from '@/store/store';
+import globalStore from '@/store/store';
 import roleStore from '@/store/roleStore';
 import { sleep } from '.';
 import { GlowFilter } from '@pixi/filter-glow';
@@ -11,7 +11,7 @@ export const buyStage = async ({ app }: { app: PIXI.Application }) => {
     try {
       app.stage.removeChildren();
       // 创建一个 PIXI.Text 对象
-      const text = new PIXI.Text(`关卡：${store.level}`, {
+      const text = new PIXI.Text(`关卡：${globalStore.level}`, {
         fontFamily: 'IPix', // 字体
         fontSize: parseInt(document.body.style.fontSize) * 3, // 字体大小
         fill: 'white', // 字体颜色
@@ -27,8 +27,8 @@ export const buyStage = async ({ app }: { app: PIXI.Application }) => {
       await sleep(1500);
       app.stage.removeChild(text);
       // console.log(this.toolsTextures)
-      const spriteView = new PIXI.Sprite(store.toolsTextures[0]);
-      const spritePurify = new PIXI.Sprite(store.toolsTextures[1]);
+      const spriteView = new PIXI.Sprite(globalStore.toolsTextures[0]);
+      const spritePurify = new PIXI.Sprite(globalStore.toolsTextures[1]);
       const list = [spriteView, spritePurify];
       const glowFilter = new GlowFilter({ distance: 5, innerStrength: 1 });
       const shopContainer = new PIXI.Container();
