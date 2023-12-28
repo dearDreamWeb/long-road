@@ -334,16 +334,7 @@ const Index = () => {
     globalStore.bgLayout[roleStore.endRect.y][roleStore.endRect.x] =
       BgLayoutItemType.end;
 
-    if (rectType === BgLayoutItemType.duel) {
-      globalStore.status = Status.stop;
-      if (globalStore.settings.switchAudio) {
-        globalStore.audioResources.duelAudio.play();
-      }
-      setFlash(Math.random());
-      setTimeout(() => {
-        globalStore.showGameModal = true;
-      }, 500);
-    } else if (rectType === BgLayoutItemType.backTo) {
+    if (rectType === BgLayoutItemType.backTo) {
       globalStore.status = Status.stop;
       await message.warning('糟糕，踩到了传送门，回到了原点！');
       globalStore.bgLayout[roleStore.mainPosition.y][roleStore.mainPosition.x] =
@@ -357,6 +348,19 @@ const Index = () => {
       globalStore.status = Status.normal;
     } else if (rectType === BgLayoutItemType.end) {
       globalStore.winGame();
+    } else {
+      // 随机遇怪
+      const isDuel = Math.random() > 0.99;
+      if (rectType === BgLayoutItemType.duel || isDuel) {
+        globalStore.status = Status.stop;
+        if (globalStore.settings.switchAudio) {
+          globalStore.audioResources.duelAudio.play();
+        }
+        setFlash(Math.random());
+        setTimeout(() => {
+          globalStore.showGameModal = true;
+        }, 500);
+      }
     }
     // createRect({
     //   position: translatePosition({
