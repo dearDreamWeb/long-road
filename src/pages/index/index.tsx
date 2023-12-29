@@ -441,6 +441,9 @@ const Index = () => {
           className={classNames('nes-btn is-primary', styles.testBtn)}
           onClick={() => {
             message.info('收到12313收拾收拾');
+            message.success('收到12313收拾收拾');
+            message.warning('收到12313收拾收拾');
+            message.error('收到12313收拾收拾');
             console.log(JSON.parse(JSON.stringify(globalStore.bgLayout)));
           }}
         >

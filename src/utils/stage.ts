@@ -4,6 +4,7 @@ import roleStore from '@/store/roleStore';
 import { sleep } from '.';
 import { GlowFilter } from '@pixi/filter-glow';
 import { WIDTH, HEIGHT } from '@/const';
+import message from '@/components/message/message';
 
 /**购买界面 */
 export const buyStage = async ({ app }: { app: PIXI.Application }) => {
@@ -59,8 +60,14 @@ export const buyStage = async ({ app }: { app: PIXI.Application }) => {
         // 添加鼠标点击事件
         sprite.on('click', function () {
           if (roleStore.coins < 20) {
+            message.error('金币不足！');
             return;
           }
+          message.success({
+            content: '购买成功',
+            position: 'top',
+            single: true,
+          });
           if (index === 0) {
             roleStore.viewDistance++;
           } else if (index === 1) {

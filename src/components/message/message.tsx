@@ -1,14 +1,20 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import ReactDOM from 'react-dom/client';
 import { createPortal } from 'react-dom';
 import classNames from 'classnames';
 import './message.less';
 
+type Position = 'top';
+
 type RenderReturn = (
-  content: string,
+  content: string | RenderProps,
   duration?: number,
   onClose?: () => void
-) => void;
+) => Promise<void>;
+
+// type RenderReturn2 = (params: RenderProps) => void;
+
+// type RenderReturn = RenderReturn1 | RenderReturn2;
 
 interface MessageProps {
   info: RenderReturn;
@@ -25,15 +31,30 @@ interface RenderProps {
   content: string;
   duration?: number;
   onClose?(): void;
-  type: string;
+  position?: Position;
+  single?: boolean;
 }
 
 function MessageComponent(props: MessageComponentProps) {
   const { type, content } = props;
+  const typeIconClassName = useMemo(() => {
+    switch (type) {
+      case 'info':
+        return 'nes-bcrikko';
+      case 'success':
+        return 'nes-bulbasaur';
+      case 'warning':
+        return 'nes-squirtle';
+      case 'error':
+        return 'nes-charmander';
+      default:
+        return 'nes-bcrikko';
+    }
+  }, [type]);
   return (
     <div>
       <section className="flex">
-        <i className="nes-bcrikko mr-4"></i>
+        <i className={classNames(typeIconClassName, 'mr-4')}></i>
         <div className="nes-balloon from-left is-dark">
           <span className="tracking-3">{content}</span>
         </div>
@@ -58,11 +79,57 @@ function MessageComponent(props: MessageComponentProps) {
   );
 }
 
+const handlerParams = <T extends RenderProps>(
+  params: string | T,
+  duration: number,
+  onClose?: () => void
+) => {
+  if (typeof params === 'string') {
+    return { content: params, duration, onClose } as T;
+  }
+  return {
+    ...(params as RenderProps),
+    duration: params.duration || duration,
+  } as T;
+};
+
 const render = (type: string) => {
-  return (content: string, duration = 3000, onClose?: () => void) => {
+  function messageRender(
+    options: string | RenderProps,
+    duration?: number,
+    onClose?: () => void
+  ): Promise<void>;
+
+  function messageRender(
+    options: string | RenderProps,
+    duration = 3000,
+    onCloseFunction?: () => void
+  ) {
+    const {
+      content,
+      onClose,
+      duration: handlerDuration,
+      position,
+      single,
+    } = handlerParams<RenderProps>(options, duration, onCloseFunction);
+
+    duration = handlerDuration || duration;
+
     return new Promise((resolve) => {
+      const messageWrapperDom = document.getElementById('message-wrapper')!;
+      if (position === 'top') {
+        messageWrapperDom.style.top = `20%`;
+      } else {
+        messageWrapperDom.style.top = `50%`;
+      }
+
+      if (single) {
+        const messageDomList = document.querySelectorAll('.messageBox');
+        messageDomList.forEach((dom) => dom.remove());
+      }
+
       const el = document.createElement('div');
-      document.getElementById('message-wrapper')!.append(el);
+      messageWrapperDom.append(el);
       el.setAttribute('class', 'messageBox');
       el.style.animationDuration = `${duration}ms`;
       const root = ReactDOM.createRoot(el);
@@ -73,7 +140,8 @@ const render = (type: string) => {
         onClose && onClose();
       }, duration);
     });
-  };
+  }
+  return messageRender;
 };
 
 const message: MessageProps = {
