@@ -46,7 +46,10 @@ const StatusComponent = () => {
           !!item.show && (
             <div
               key={item.key}
-              className="card w-32 bg-base-100 shadow-xl mb-4"
+              className={classNames([
+                'card w-32 bg-base-100 shadow-xl mb-4',
+                item.key === '0' && item.count === 1 ? 'card-error' : '',
+              ])}
             >
               <div className="tooltip" data-tip={item.desc}>
                 <div className="card-body">

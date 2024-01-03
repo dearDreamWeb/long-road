@@ -30,19 +30,27 @@ export const buyStage = async ({ app }: { app: PIXI.Application }) => {
       // console.log(this.toolsTextures)
       const spriteView = new PIXI.Sprite(globalStore.toolsTextures[0]);
       const spritePurify = new PIXI.Sprite(globalStore.toolsTextures[1]);
-      const list = [spriteView, spritePurify];
+      const confusion = new PIXI.Sprite(globalStore.toolsTextures[2]);
+      const list = [
+        { sprite: spriteView, price: 50 },
+        { sprite: spritePurify, price: 30 },
+      ];
+      if (roleStore.isReverse) {
+        list.push({ sprite: confusion, price: 20 });
+      }
       const glowFilter = new GlowFilter({ distance: 5, innerStrength: 1 });
       const shopContainer = new PIXI.Container();
       let shopContainerW = 0;
       let shopContainerH = 0;
 
-      list.forEach((sprite, index) => {
+      list.forEach((item, index) => {
+        const { sprite, price } = item;
         sprite.width = 60;
         sprite.height = 60;
-        sprite.x = (index + 1) * 60;
+        sprite.x = index * sprite.width;
         sprite.y = 30;
-        if (index === 1) {
-          sprite.x += 50;
+        if (index !== 0) {
+          sprite.x += sprite.width * index;
         }
         sprite.anchor.set(0.5);
         // 设置精灵对象的交互属性
@@ -59,7 +67,7 @@ export const buyStage = async ({ app }: { app: PIXI.Application }) => {
 
         // 添加鼠标点击事件
         sprite.on('click', function () {
-          if (roleStore.coins < 20) {
+          if (roleStore.coins < price) {
             message.error('金币不足！');
             return;
           }
@@ -72,8 +80,14 @@ export const buyStage = async ({ app }: { app: PIXI.Application }) => {
             roleStore.viewDistance++;
           } else if (index === 1) {
             roleStore.purifyCount++;
+          } else if (index === 2) {
+            roleStore.isReverse = false;
           }
-          roleStore.coins = Math.max(roleStore.coins - 20, 0);
+          roleStore.coins = Math.max(roleStore.coins - price, 0);
+          if (index === 2) {
+            shopContainer.removeChild(sprite);
+            app.renderer.render(app.stage);
+          }
         });
         shopContainerW += sprite.width;
         shopContainerH += sprite.height;

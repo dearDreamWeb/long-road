@@ -36,8 +36,6 @@ export const mosaicFilter = () => {
       
       gl_FragColor = color;
     }
-    
-    
   `;
   return new PIXI.Filter(undefined, fragStr, {
     brightnessRange: 0.8,

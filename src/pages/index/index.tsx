@@ -24,6 +24,7 @@ import { WIDTH, HEIGHT, GRIDROWS, GRIDWIDTH, GRIDHEIGHT, RATE } from '@/const';
 import heroImg from '@/assets/images/hero.png';
 import viewImg from '@/assets/images/view.png';
 import purifyImg from '@/assets/images/purify.png';
+import confusionImg from '@/assets/images/confusion.png';
 import settingsIcon from '@/assets/images/settings-icon.png';
 import StatusComponent from './statusComponent/statusComponent';
 import InfoComponent from './infoComponent/infoComponent';
@@ -389,6 +390,7 @@ const Index = () => {
     const loaders = new PIXI.Loader();
     loaders.add('viewImg', viewImg);
     loaders.add('purifyImg', purifyImg);
+    loaders.add('confusionImg', confusionImg);
     loaders.load();
     loaders.onComplete.add(() => {
       console.log('---', loaders);
@@ -398,7 +400,14 @@ const Index = () => {
       const purifyTexture = new PIXI.Texture(
         loaders.resources.purifyImg.texture!.baseTexture
       );
-      globalStore.toolsTextures = [viewTexture, purifyTexture];
+      const confusionTexture = new PIXI.Texture(
+        loaders.resources.confusionImg.texture!.baseTexture
+      );
+      globalStore.toolsTextures = [
+        viewTexture,
+        purifyTexture,
+        confusionTexture,
+      ];
     });
   };
 

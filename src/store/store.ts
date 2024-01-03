@@ -223,8 +223,21 @@ class GlobalStore {
   };
 
   /**加减金币 */
-  rangeCoins(min = 1, max = 20) {
-    return Math.floor(Math.random() * (max - min) + min);
+  rangeCoins(min = 40, max = 200) {
+    const random = Math.random();
+    let coinsRate = 1;
+    if (random < 0.65) {
+      coinsRate = 0;
+    } else if (random < 0.8) {
+      coinsRate = 0.3;
+    } else if (random < 0.9) {
+      coinsRate = 0.5;
+    } else if (random < 0.95) {
+      coinsRate = 0.8;
+    } else {
+      return max;
+    }
+    return Math.floor((max - min) * coinsRate + min);
   }
 
   /**失败处理 */
@@ -246,6 +259,8 @@ class GlobalStore {
     console.log(valuesArr, roleStore.isReverse);
     if (!valuesArr.length) {
       message.error('游戏结束');
+      // TODO 后续根据每关的死亡情况扣除，每一关第一次扣除10%，第二次20%，第三次30%，后续都是30%
+      roleStore.coins = Math.max(Math.floor(roleStore.coins * 0.8), 0);
       roleStore.initRole();
       this.init();
       return;
@@ -261,7 +276,7 @@ class GlobalStore {
       message.warning('方向混乱');
       roleStore.isReverse = true;
     } else if (value === PunishEnum.reduceCoins) {
-      const coins = this.rangeCoins();
+      const coins = this.rangeCoins(30, 80);
       message.warning(`扣除 ${coins} 金币`);
       roleStore.coins = Math.min(roleStore.coins - coins, 0);
     }
