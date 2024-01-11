@@ -22,9 +22,10 @@ import level1 from '@/assets/levels/level-1.json';
 import level2 from '@/assets/levels/level-2.json';
 import level3 from '@/assets/levels/level-3.json';
 import level4 from '@/assets/levels/level-4.json';
-import { sleep } from '@/utils';
+import { randomRange, sleep } from '@/utils';
 import { GlowFilter } from '@pixi/filter-glow';
 import { buyStage } from '@/utils/stage';
+import dbStore from './dbStore';
 
 export type AudioResources = Record<keyof Audios, Sound>;
 interface Settings {
@@ -138,16 +139,20 @@ class GlobalStore {
       this.loadResourcesProgress = 0;
       this.loadingText = '本地配置加载中';
       this.initConfig();
-      await sleep(500);
-      this.loadResourcesProgress = 5;
+      await sleep(200);
+      this.loadResourcesProgress = randomRange(3, 10);
       this.loadingText = '字体资源加载中';
       await this.loadFontResource();
-      this.loadResourcesProgress = 50;
+      this.loadResourcesProgress = randomRange(45, 65);
       this.loadingText = '音频资源加载中';
       await this.loadAudioResources();
+      this.loadResourcesProgress = randomRange(70, 95);
+      await sleep(200);
+      this.loadingText = '进度数据加载中';
+      await dbStore.init();
       this.loadResourcesProgress = 100;
       this.loadingText = '资源加载完成';
-      await sleep(500);
+      await sleep(200);
       this.loadResources = false;
       this.status = Status.normal;
       return true;

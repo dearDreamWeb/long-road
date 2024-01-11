@@ -210,3 +210,8 @@ export function debounce<T extends Function>(func: T, delay: number): T {
     }, delay);
   } as unknown as T;
 }
+
+/**随机数区间 */
+export function randomRange(min = 0, max = 1) {
+  return Math.floor(Math.random() * (max - min)) + min;
+}
