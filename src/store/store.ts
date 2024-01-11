@@ -26,6 +26,7 @@ import { randomRange, sleep } from '@/utils';
 import { GlowFilter } from '@pixi/filter-glow';
 import { buyStage } from '@/utils/stage';
 import dbStore from './dbStore';
+import { TypeEnum } from '@/db/db';
 
 export type AudioResources = Record<keyof Audios, Sound>;
 interface Settings {
@@ -250,6 +251,10 @@ class GlobalStore {
     if (roleStore.purifyCount) {
       message.warning('保护罩抵消本次处罚');
       roleStore.purifyCount--;
+      dbStore.addLogger({
+        type: TypeEnum.LoseDuel,
+        content: `游戏失败，保护罩抵消本次处罚`,
+      });
       return;
     }
     let valuesArr = Object.values(PunishEnum);
@@ -266,6 +271,10 @@ class GlobalStore {
       message.error('游戏结束');
       // TODO 后续根据每关的死亡情况扣除，每一关第一次扣除10%，第二次20%，第三次30%，后续都是30%
       roleStore.coins = Math.max(Math.floor(roleStore.coins * 0.8), 0);
+      dbStore.addLogger({
+        type: TypeEnum.LoseLevel,
+        content: `游戏失败，游戏结束`,
+      });
       roleStore.initRole();
       this.init();
       return;
@@ -277,13 +286,25 @@ class GlobalStore {
     if (value === PunishEnum.reduceView) {
       roleStore.getNewView('reduce');
       message.warning('视野范围减小');
+      dbStore.addLogger({
+        type: TypeEnum.LoseDuel,
+        content: `游戏失败，失败惩罚：视野范围减小`,
+      });
     } else if (value === PunishEnum.reverse) {
       message.warning('方向混乱');
       roleStore.isReverse = true;
+      dbStore.addLogger({
+        type: TypeEnum.LoseDuel,
+        content: `游戏失败，失败惩罚：方向混乱`,
+      });
     } else if (value === PunishEnum.reduceCoins) {
       const coins = this.rangeCoins(30, 80);
       message.warning(`扣除 ${coins} 金币`);
       roleStore.coins = Math.min(roleStore.coins - coins, 0);
+      dbStore.addLogger({
+        type: TypeEnum.LoseDuel,
+        content: `游戏失败，失败惩罚：${`扣除 ${coins} 金币`}`,
+      });
     }
     console.log('Punish---', value);
   }
@@ -308,16 +329,32 @@ class GlobalStore {
     if (value === AwardEnum.addView) {
       roleStore.getNewView('add');
       message.warning('视野范围增大');
+      dbStore.addLogger({
+        type: TypeEnum.WinDuel,
+        content: `游戏胜利，胜利奖励：视野范围增大`,
+      });
     } else if (value === AwardEnum.reverse) {
       message.warning('方向恢复正常');
       roleStore.isReverse = false;
+      dbStore.addLogger({
+        type: TypeEnum.WinDuel,
+        content: `游戏胜利，胜利奖励：方向恢复正常`,
+      });
     } else if (value === AwardEnum.purify) {
       message.warning('获得保护罩');
       roleStore.purifyCount++;
+      dbStore.addLogger({
+        type: TypeEnum.WinDuel,
+        content: `游戏胜利，胜利奖励：获得保护罩`,
+      });
     } else if (value === AwardEnum.addCoins) {
       const coins = this.rangeCoins();
       message.warning(`增加 ${coins} 金币`);
       roleStore.coins += coins;
+      dbStore.addLogger({
+        type: TypeEnum.WinDuel,
+        content: `游戏胜利，胜利奖励：${`增加 ${coins} 金币`}`,
+      });
     }
     console.log('Award---', value);
   }
@@ -338,10 +375,15 @@ class GlobalStore {
 
   /**游戏通关 */
   @action
-  winGame() {
+  async winGame() {
+    await dbStore.addLogger({
+      type: TypeEnum.WinLevel,
+      content: `恭喜通关，关卡${this.level}通关！！！`,
+    });
     // this.status = Status.stop;
-    message.success('恭喜通关', 2000, () => {
+    message.success('恭喜通关', 2000, async () => {
       this.level++;
+      await dbStore.saveProgress();
       this.init();
     });
   }

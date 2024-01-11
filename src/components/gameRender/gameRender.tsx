@@ -4,6 +4,8 @@ import BlackjackGame from '../blackjackGame/blackjackGame';
 import RockGame from '../rockGame/rockGame';
 import KnowledgeGame from '../knowledgeGame/knowledgeGame';
 import { observer } from 'mobx-react';
+import dbStore from '@/store/dbStore';
+import { TypeEnum } from '@/db/db';
 
 const GameRender = () => {
   const [startGame, setStartGame] = useState(false);
@@ -60,6 +62,10 @@ const GameRender = () => {
     console.log('random game', randomIndex, gameList.length);
     setStartGame(true);
     setGameIndex(randomIndex);
+    dbStore.addLogger({
+      type: TypeEnum.Logger,
+      content: `决斗游戏名：${gameList[randomIndex].name}`,
+    });
   }, [gameList, globalStore.showGameModal, startGame, gameIndex]);
 
   if (!globalStore.showGameModal) {

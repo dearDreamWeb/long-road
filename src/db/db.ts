@@ -1,8 +1,20 @@
 import Dexie, { Table } from 'dexie';
 
+export enum TypeEnum {
+  Buy = 0,
+  FindProtect = 1,
+  FindBackTo = 2,
+  FindDuel = 3,
+  Logger = 4,
+  WinLevel = 5,
+  WinDuel = 6,
+  LoseDuel = 7,
+  LoseLevel = 8,
+}
+
 export interface LoggerTableItem {
   id?: number;
-  type: number;
+  type: TypeEnum;
   content: string;
   level: number;
   createdAt: Date;

@@ -5,6 +5,8 @@ import { sleep } from '.';
 import { GlowFilter } from '@pixi/filter-glow';
 import { WIDTH, HEIGHT } from '@/const';
 import message from '@/components/message/message';
+import dbStore from '@/store/dbStore';
+import { TypeEnum } from '@/db/db';
 
 /**购买界面 */
 export const buyStage = async ({ app }: { app: PIXI.Application }) => {
@@ -78,10 +80,13 @@ export const buyStage = async ({ app }: { app: PIXI.Application }) => {
           });
           if (index === 0) {
             roleStore.viewDistance++;
+            dbStore.addLogger({ type: TypeEnum.Buy, content: '购买视野' });
           } else if (index === 1) {
             roleStore.purifyCount++;
+            dbStore.addLogger({ type: TypeEnum.Buy, content: '购买保护罩' });
           } else if (index === 2) {
             roleStore.isReverse = false;
+            dbStore.addLogger({ type: TypeEnum.Buy, content: '购买解除反向' });
           }
           roleStore.coins = Math.max(roleStore.coins - price, 0);
           if (index === 2) {

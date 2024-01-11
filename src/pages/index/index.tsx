@@ -34,6 +34,8 @@ import SettingsModal from './settingsModal/settingsModal';
 import GameRender from '@/components/gameRender/gameRender';
 import { GlowFilter } from '@pixi/filter-glow';
 import BgComponent from '@/components/bgComponent/bgComponent';
+import dbStore from '@/store/dbStore';
+import { TypeEnum } from '@/db/db';
 
 interface RectGraphics extends PIXI.Graphics {
   rectType: BgLayoutItemType;
@@ -338,6 +340,10 @@ const Index = () => {
     if (rectType === BgLayoutItemType.backTo) {
       globalStore.status = Status.stop;
       await message.warning('糟糕，踩到了传送门，回到了原点！');
+      dbStore.addLogger({
+        type: TypeEnum.FindBackTo,
+        content: '糟糕，踩到了传送门，回到了原点！',
+      });
       globalStore.bgLayout[roleStore.mainPosition.y][roleStore.mainPosition.x] =
         BgLayoutItemType.empty;
       globalStore.backToLevelOrigin();
@@ -345,6 +351,10 @@ const Index = () => {
     } else if (rectType === BgLayoutItemType.protect) {
       globalStore.status = Status.stop;
       await message.success('找到了保护罩，嘻嘻嘻!');
+      dbStore.addLogger({
+        type: TypeEnum.FindProtect,
+        content: '找到了保护罩，嘻嘻嘻!',
+      });
       globalStore.getProtectTool();
       globalStore.status = Status.normal;
     } else if (rectType === BgLayoutItemType.end) {
@@ -357,6 +367,10 @@ const Index = () => {
         if (globalStore.settings.switchAudio) {
           globalStore.audioResources.duelAudio.play();
         }
+        dbStore.addLogger({
+          type: TypeEnum.FindDuel,
+          content: '遇怪，进行决斗',
+        });
         setFlash(Math.random());
         setTimeout(() => {
           globalStore.showGameModal = true;

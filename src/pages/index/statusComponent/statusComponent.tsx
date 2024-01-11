@@ -57,13 +57,8 @@ const StatusComponent = () => {
                     <div className={styles.titleBox}>
                       <title>{item.title}</title>
                       {!!item.count && (
-                        <div
-                          className={classNames([
-                            'badge',
-                            'badge-secondary',
-                            styles.badgeBox,
-                          ])}
-                        >
+                        <div className={classNames([styles.badgeBox])}>
+                          <i>+</i>
                           {item.count}
                         </div>
                       )}

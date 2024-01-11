@@ -117,6 +117,9 @@ const render = (type: string) => {
 
     return new Promise((resolve) => {
       const messageWrapperDom = document.getElementById('message-wrapper')!;
+      if (!messageWrapperDom) {
+        return;
+      }
       if (position === 'top') {
         messageWrapperDom.style.top = `20%`;
       } else {
