@@ -56,6 +56,53 @@ export const bgTexture = (size: number, width: number, height: number) => {
   ctx.lineWidth = lineWidth;
   ctx.strokeStyle = '#acd2be';
   ctx.strokeRect(0, 0, canvas.width, canvas.height);
-
   return canvas;
+};
+
+interface MosaicImgProps {
+  imgUrl: string;
+  width?: number;
+  height?: number;
+  compressTimes?: number;
+}
+
+export const translateMosaicImg = (props: MosaicImgProps): Promise<string> => {
+  return new Promise((resolve) => {
+    const { imgUrl, width = 60, height = 60, compressTimes } = props;
+    const img = new Image();
+    const canvas = document.createElement('canvas');
+    canvas.width = 60;
+    canvas.height = 60;
+    canvas.style.imageRendering = 'pixelated';
+    const compressTimesConfig = compressTimes || 3;
+    const ctx = canvas.getContext('2d')!;
+    const canvasW = (width || 60) * RATE;
+    const canvasH = (height || 60) * RATE;
+    canvas.style.width = canvasW + 'px';
+    canvas.style.height = canvasH + 'px';
+
+    ctx.save();
+    ctx.fillStyle = '#eee';
+    ctx.fillRect(0, 0, canvasW, canvasH);
+    ctx.restore();
+
+    img.onload = () => {
+      let w = img.width;
+      let h = img.height;
+      if (w > canvasW || h > canvasH) {
+        let radio = Math.max(h / canvasH, w / canvasW);
+        radio = Number(radio.toFixed(2));
+        img.width = Math.floor(w / radio);
+        img.height = Math.floor(h / radio);
+      }
+
+      ctx.clearRect(0, 0, canvasW, canvasH);
+
+      canvas.width = Math.floor(canvasW / compressTimesConfig);
+      canvas.height = Math.floor(canvasH / compressTimesConfig);
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      resolve(canvas.toDataURL());
+    };
+    img.src = imgUrl;
+  });
 };

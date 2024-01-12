@@ -28,7 +28,7 @@ import confusionImg from '@/assets/images/confusion.png';
 import settingsIcon from '@/assets/images/settings-icon.png';
 import StatusComponent from './statusComponent/statusComponent';
 import InfoComponent from './infoComponent/infoComponent';
-import { mosaicFilter } from '@/utils/filters';
+import { mosaicFilter, translateMosaicImg } from '@/utils/filters';
 import MosaicImg from '@/components/mosaicImg/mosaicImg';
 import SettingsModal from './settingsModal/settingsModal';
 import GameRender from '@/components/gameRender/gameRender';
@@ -361,7 +361,7 @@ const Index = () => {
       globalStore.winGame();
     } else {
       // 随机遇怪
-      const isDuel = Math.random() > 0.99;
+      const isDuel = Math.random() > 0.98;
       if (rectType === BgLayoutItemType.duel || isDuel) {
         globalStore.status = Status.stop;
         if (globalStore.settings.switchAudio) {
@@ -400,11 +400,23 @@ const Index = () => {
   };
 
   /**加载商品图片资源 */
-  const loaderShopResources = () => {
+  const loaderShopResources = async () => {
     const loaders = new PIXI.Loader();
-    loaders.add('viewImg', viewImg);
-    loaders.add('purifyImg', purifyImg);
-    loaders.add('confusionImg', confusionImg);
+    const viewImgMosaic = await translateMosaicImg({
+      imgUrl: viewImg,
+      compressTimes: 5,
+    });
+    const purifyImgMosaic = await translateMosaicImg({
+      imgUrl: purifyImg,
+      compressTimes: 5,
+    });
+    const confusionImgMosaic = await translateMosaicImg({
+      imgUrl: confusionImg,
+      compressTimes: 5,
+    });
+    loaders.add('viewImg', viewImgMosaic);
+    loaders.add('purifyImg', purifyImgMosaic);
+    loaders.add('confusionImg', confusionImgMosaic);
     loaders.load();
     loaders.onComplete.add(() => {
       console.log('---', loaders);
