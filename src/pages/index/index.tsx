@@ -25,6 +25,7 @@ import heroImg from '@/assets/images/hero.png';
 import viewImg from '@/assets/images/view.png';
 import purifyImg from '@/assets/images/purify.png';
 import confusionImg from '@/assets/images/confusion.png';
+import coinImg from '@/assets/images/coin.png';
 import settingsIcon from '@/assets/images/settings-icon.png';
 import StatusComponent from './statusComponent/statusComponent';
 import InfoComponent from './infoComponent/infoComponent';
@@ -417,6 +418,7 @@ const Index = () => {
     loaders.add('viewImg', viewImgMosaic);
     loaders.add('purifyImg', purifyImgMosaic);
     loaders.add('confusionImg', confusionImgMosaic);
+    loaders.add('coinImg', coinImg);
     loaders.load();
     loaders.onComplete.add(() => {
       console.log('---', loaders);
@@ -429,10 +431,14 @@ const Index = () => {
       const confusionTexture = new PIXI.Texture(
         loaders.resources.confusionImg.texture!.baseTexture
       );
+      const coinTexture = new PIXI.Texture(
+        loaders.resources.coinImg.texture!.baseTexture
+      );
       globalStore.toolsTextures = [
         viewTexture,
         purifyTexture,
         confusionTexture,
+        coinTexture,
       ];
     });
   };

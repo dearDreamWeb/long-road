@@ -79,7 +79,7 @@ class DbStore {
   @action
   async getProgress() {
     try {
-      const res = await db.progress.orderBy('createdAt').reverse().toArray();
+      const res = await db.progress.orderBy('createdAt').toArray();
       if (!res.length) {
         await this.addProgress(dayjs().format('YYYYMMDDHHmmss'));
       } else {

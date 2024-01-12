@@ -63,7 +63,6 @@ export const bgTexture = (size: number, width: number, height: number) => {
   const columns = Math.ceil(window.innerWidth / width) + 1;
   for (let i = 0; i < rows; i++) {
     for (let j = 0; j < columns; j++) {
-      console.log(3232232, j * width - width * (i % 2 ? 0.5 : 1), i * height);
       drawItem(j * width - width * (i % 2 ? 0.5 : 1), i * height);
     }
   }

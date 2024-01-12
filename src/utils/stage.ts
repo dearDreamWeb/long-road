@@ -3,11 +3,12 @@ import globalStore from '@/store/store';
 import roleStore from '@/store/roleStore';
 import { sleep } from '.';
 import { GlowFilter } from '@pixi/filter-glow';
-import { WIDTH, HEIGHT } from '@/const';
+import { WIDTH, HEIGHT, RATE } from '@/const';
 import message from '@/components/message/message';
 import dbStore from '@/store/dbStore';
 import { TypeEnum } from '@/db/db';
 
+/**商品圆角 */
 const spriteMask = (sprite: PIXI.Sprite) => {
   // 创建一个遮罩图形
   const mask = new PIXI.Graphics();
@@ -21,11 +22,9 @@ const spriteMask = (sprite: PIXI.Sprite) => {
   return mask;
 };
 
+/**商品区域背景 */
 const drawGraphicsRadius = () => {
-  // 创建一个图形对象
   const graphics = new PIXI.Graphics();
-
-  // 设置绘制样式
   graphics.beginFill(0xffffff); // 填充颜色
   // graphics.lineStyle(2, 0xff0000); // 边框样式
 
@@ -45,8 +44,8 @@ const drawGraphicsRadius = () => {
   return graphics;
 };
 
+/**显示关卡 */
 const showLevel = async (app: PIXI.Application) => {
-  // 创建一个 PIXI.Text 对象
   const text = new PIXI.Text(`关卡：${globalStore.level}`, {
     fontFamily: 'IPix', // 字体
     fontSize: parseInt(document.body.style.fontSize) * 3, // 字体大小
@@ -54,15 +53,76 @@ const showLevel = async (app: PIXI.Application) => {
     align: 'center', // 对齐方式
   });
 
-  // 设置文本对象的位置
   text.x = app.renderer.width / 2;
   text.y = app.renderer.height / 2;
-  // 设置文本对象的锚点为中心点
+
   text.anchor.set(0.5);
   app.stage.addChild(text);
   await sleep(1500);
   app.stage.removeChild(text);
   return;
+};
+
+/**花费金币区域 */
+const speedCoins = (coins: number) => {
+  const coinsContainer = new PIXI.Container();
+  const coinSprite = new PIXI.Sprite(globalStore.toolsTextures[3]);
+  const text = new PIXI.Text(coins, {
+    fontFamily: 'IPix', // 字体
+    fontSize: parseInt(document.body.style.fontSize) * 2, // 字体大小
+    fill: 'black', // 字体颜色
+    align: 'center', // 对齐方式
+  });
+  coinsContainer.addChild(coinSprite);
+  coinsContainer.addChild(text);
+
+  coinSprite.scale.set(0.2 * RATE);
+  coinSprite.y = (coinsContainer.height - coinSprite.height) / 2;
+
+  text.x = coinSprite.width + 6 * RATE;
+  text.y = (coinsContainer.height - text.height) / 2;
+
+  return coinsContainer;
+};
+
+/**购买按钮 */
+const buyButton = () => {
+  const container = new PIXI.Container();
+  const graphics = new PIXI.Graphics();
+  container.addChild(graphics);
+  const text = new PIXI.Text('购买', {
+    fontFamily: 'IPix', // 字体
+    fontSize: parseInt(document.body.style.fontSize) * 2, // 字体大小
+    fill: 'black', // 字体颜色
+    align: 'center', // 对齐方式
+  });
+  container.addChild(text);
+  text.zIndex = 1;
+
+  graphics.beginFill(0xffffff); // 填充颜色
+  const width = text.width * 1.5;
+  const height = text.height * 1.2;
+  const cornerRadius = 8 * RATE;
+  graphics.lineStyle(2 * RATE, 0x000000); // 边框样式
+  graphics.drawRoundedRect(0, 0, width, height, cornerRadius);
+  graphics.endFill();
+
+  text.anchor.set(0.5);
+  text.x = width / 2;
+  text.y = height / 2;
+
+  container.interactive = true;
+  container.buttonMode = true;
+  container.pivot.set(width / 2, height / 2);
+  container.on('mouseover', function () {
+    container.scale.set(1.05);
+  });
+
+  container.on('mouseout', () => {
+    container.scale.set(1);
+  });
+
+  return container;
 };
 
 /**购买界面 */
@@ -102,7 +162,8 @@ export const buyStage = async ({ app }: { app: PIXI.Application }) => {
         sprite.x = spriteItemContainerW / 2;
         sprite.y = sprite.height;
         if (index !== 0) {
-          spriteItemContainer.x += spriteItemContainerW * index + 30;
+          spriteItemContainer.x +=
+            spriteItemContainerW * index + 30 * RATE * index;
         }
         sprite.anchor.set(0.5);
 
@@ -120,10 +181,31 @@ export const buyStage = async ({ app }: { app: PIXI.Application }) => {
         //   sprite.filters = [];
         // });
 
-        // 添加鼠标点击事件
-        sprite.on('click', function () {
+        shopContainerW += radiusGround.width;
+        shopContainerH = radiusGround.height;
+        spriteItemContainer.addChild(radiusGround);
+        spriteItemContainer.addChild(sprite);
+        spriteItemContainer.addChild(mask);
+
+        // 金币价格
+        const coinContainer = speedCoins(price);
+        coinContainer.x = sprite.x - coinContainer.width / 2;
+        coinContainer.y = sprite.y + sprite.height;
+        spriteItemContainer.addChild(coinContainer);
+
+        // 购买按钮
+        const buyButtonContainer = buyButton();
+        spriteItemContainer.addChild(buyButtonContainer);
+        buyButtonContainer.x = radiusGround.width / 2;
+        buyButtonContainer.y =
+          spriteItemContainer.height - buyButtonContainer.height - 20;
+        buyButtonContainer.on('click', function () {
           if (roleStore.coins < price) {
-            message.error('金币不足！');
+            message.error({
+              content: '金币不足！',
+              position: 'top',
+              single: true,
+            });
             return;
           }
           message.success({
@@ -140,18 +222,12 @@ export const buyStage = async ({ app }: { app: PIXI.Application }) => {
           } else if (index === 2) {
             roleStore.isReverse = false;
             dbStore.addLogger({ type: TypeEnum.Buy, content: '购买解除反向' });
-          }
-          roleStore.coins = Math.max(roleStore.coins - price, 0);
-          if (index === 2) {
-            shopContainer.removeChild(sprite);
+            spriteItemContainer.removeChild(buyButtonContainer);
             app.renderer.render(app.stage);
           }
+          roleStore.coins = Math.max(roleStore.coins - price, 0);
         });
-        shopContainerW += radiusGround.width;
-        shopContainerH = radiusGround.height;
-        spriteItemContainer.addChild(radiusGround);
-        spriteItemContainer.addChild(sprite);
-        spriteItemContainer.addChild(mask);
+
         shopContainer.addChild(spriteItemContainer);
       });
       shopContainerW += (list.length - 1) * 30;
@@ -165,10 +241,8 @@ export const buyStage = async ({ app }: { app: PIXI.Application }) => {
         fill: 'white', // 字体颜色
         align: 'center', // 对齐方式
       });
-      // 设置文本对象的位置
       buyText.x = app.renderer.width / 2;
       buyText.y = parseInt(document.body.style.fontSize) * 10;
-      // 设置文本对象的锚点为中心点
       buyText.anchor.set(0.5);
       app.stage.addChild(buyText);
 
@@ -179,11 +253,9 @@ export const buyStage = async ({ app }: { app: PIXI.Application }) => {
         fill: 'white', // 字体颜色
         align: 'center', // 对齐方式
       });
-      // 设置文本对象的位置
       skipText.x = app.renderer.width / 2;
       skipText.y =
         app.renderer.height - parseInt(document.body.style.fontSize) * 10;
-      // 设置文本对象的锚点为中心点
       skipText.anchor.set(0.5);
       skipTextContainer.addChild(skipText);
       skipTextContainer.interactive = true;
