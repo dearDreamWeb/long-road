@@ -29,7 +29,6 @@ const MosaicImg = (props: MosaicImgProps) => {
     ctx.fillStyle = '#eee';
     ctx.fillRect(0, 0, canvasW, canvasH);
     ctx.restore();
-
     img.onload = () => {
       let w = img.width;
       let h = img.height;
@@ -44,6 +43,7 @@ const MosaicImg = (props: MosaicImgProps) => {
 
       canvasRef.current!.width = Math.floor(canvasW / compressTimesConfig);
       canvasRef.current!.height = Math.floor(canvasH / compressTimesConfig);
+
       ctx.drawImage(
         img,
         0,

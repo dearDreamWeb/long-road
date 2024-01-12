@@ -4,6 +4,7 @@ import { debounce } from '@/utils';
 import { RATE, WIDTH } from '@/const';
 import { bgTexture } from '@/utils/filters';
 import { ShockwaveFilter } from '@pixi/filter-shockwave';
+import textureImg from '@/assets/images/hVKo63B.jpg';
 
 function BgComponent() {
   const bgAppRef = useRef<PIXI.Application>();
@@ -24,16 +25,16 @@ function BgComponent() {
     });
     renderBgStage(null, null, _app);
     bgAppRef.current = _app;
-    document.addEventListener('mousemove', moveHandler);
+    document.addEventListener('click', clickHandler);
     window.addEventListener('resize', renderBgStage);
     return () => {
       window.removeEventListener('resize', renderBgStage);
-      document.removeEventListener('mousemove', moveHandler);
+      document.removeEventListener('click', clickHandler);
     };
   }, []);
 
-  /**鼠标移动 */
-  const moveHandler = debounce((e: MouseEvent) => {
+  /**鼠标点击 */
+  const clickHandler = debounce((e: MouseEvent) => {
     mousePosition.current = {
       x: e.clientX,
       y: e.clientY,
@@ -49,21 +50,10 @@ function BgComponent() {
     const rootSize = RATE * 16 * 1.5;
     const width = rootSize * 7;
     const height = rootSize * 3;
-    const createGradTexture = PIXI.Texture.from(
-      bgTexture(rootSize, width, height)
-    );
-    const rows = Math.ceil(window.innerHeight / height);
-    const columns = Math.ceil(window.innerWidth / width) + 1;
     const container = new PIXI.Container();
-    for (let i = 0; i < rows; i++) {
-      for (let j = 0; j < columns; j++) {
-        const sprite = new PIXI.Sprite(createGradTexture);
-        sprite.position.set(j * width - width * (i % 2 ? 0.5 : 1), i * height);
-        sprite.width = width;
-        sprite.height = height;
-        container.addChild(sprite);
-      }
-    }
+    const sprite = PIXI.Sprite.from(bgTexture(rootSize, width, height));
+    container.addChild(sprite);
+
     const shockwaveFilter = new ShockwaveFilter(
       [mousePosition.current.x, mousePosition.current.y],
       {
@@ -74,9 +64,24 @@ function BgComponent() {
       0
     );
 
-    container.filters = [shockwaveFilter];
+    // container.filters = [shockwaveFilter];
+
+    const displacementSprite = PIXI.Sprite.from(textureImg);
+    const displacementFilter = new PIXI.filters.DisplacementFilter(
+      displacementSprite
+    );
+
+    displacementSprite.texture.baseTexture.wrapMode = PIXI.WRAP_MODES.REPEAT;
+    displacementSprite.scale.set(0.5);
+    container.addChild(displacementSprite);
+    container.filters = [shockwaveFilter, displacementFilter];
+
     app.stage.addChild(container);
     app.ticker.add(() => {
+      displacementSprite.x++;
+      if (displacementSprite.x > 500) {
+        displacementSprite.x = 0;
+      }
       shockwaveFilter.time += 0.01;
       if (window.innerWidth / 10 < shockwaveFilter.time / 0.02) {
         shockwaveFilter.time = 0;

@@ -47,15 +47,26 @@ export const mosaicFilter = () => {
 export const bgTexture = (size: number, width: number, height: number) => {
   const rootSize = size || RATE * 16 * 1.5;
   const canvas = document.createElement('canvas');
-  canvas.width = width; // 设置canvas的宽度
-  canvas.height = height; // 设置canvas的高度
+  canvas.width = window.innerWidth; // 设置canvas的宽度
+  canvas.height = window.innerHeight; // 设置canvas的高度
   const ctx = canvas.getContext('2d')!;
-  const lineWidth = rootSize * 0.4;
-  ctx.fillStyle = '#d1fae5';
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-  ctx.lineWidth = lineWidth;
-  ctx.strokeStyle = '#acd2be';
-  ctx.strokeRect(0, 0, canvas.width, canvas.height);
+  const drawItem = (x: number, y: number) => {
+    const lineWidth = rootSize * 0.4;
+    ctx.fillStyle = '#d1fae5';
+    ctx.fillRect(x, y, canvas.width, canvas.height);
+    ctx.lineWidth = lineWidth;
+    ctx.strokeStyle = '#acd2be';
+    ctx.strokeRect(x, y, canvas.width, canvas.height);
+  };
+
+  const rows = Math.ceil(window.innerHeight / height);
+  const columns = Math.ceil(window.innerWidth / width) + 1;
+  for (let i = 0; i < rows; i++) {
+    for (let j = 0; j < columns; j++) {
+      console.log(3232232, j * width - width * (i % 2 ? 0.5 : 1), i * height);
+      drawItem(j * width - width * (i % 2 ? 0.5 : 1), i * height);
+    }
+  }
   return canvas;
 };
 
@@ -68,7 +79,7 @@ interface MosaicImgProps {
 
 export const translateMosaicImg = (props: MosaicImgProps): Promise<string> => {
   return new Promise((resolve) => {
-    const { imgUrl, width = 60, height = 60, compressTimes } = props;
+    const { imgUrl, width = 50, height = 50, compressTimes } = props;
     const img = new Image();
     const canvas = document.createElement('canvas');
     canvas.width = 60;
@@ -80,7 +91,6 @@ export const translateMosaicImg = (props: MosaicImgProps): Promise<string> => {
     const canvasH = (height || 60) * RATE;
     canvas.style.width = canvasW + 'px';
     canvas.style.height = canvasH + 'px';
-
     ctx.save();
     ctx.fillStyle = '#eee';
     ctx.fillRect(0, 0, canvasW, canvasH);

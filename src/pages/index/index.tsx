@@ -404,15 +404,15 @@ const Index = () => {
     const loaders = new PIXI.Loader();
     const viewImgMosaic = await translateMosaicImg({
       imgUrl: viewImg,
-      compressTimes: 5,
+      compressTimes: 2,
     });
     const purifyImgMosaic = await translateMosaicImg({
       imgUrl: purifyImg,
-      compressTimes: 5,
+      compressTimes: 2,
     });
     const confusionImgMosaic = await translateMosaicImg({
       imgUrl: confusionImg,
-      compressTimes: 5,
+      compressTimes: 2,
     });
     loaders.add('viewImg', viewImgMosaic);
     loaders.add('purifyImg', purifyImgMosaic);
