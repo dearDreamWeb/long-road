@@ -47,23 +47,27 @@ function BgComponent() {
     app.renderer.resize(window.innerWidth, window.innerHeight);
     app.stage.removeChildren();
     const rootSize = RATE * 16 * 1.5;
-    const createGradTexture = PIXI.Texture.from(bgTexture(rootSize));
-    const rows = Math.ceil(window.innerHeight / rootSize);
-    const columns = Math.ceil(window.innerWidth / rootSize);
+    const width = rootSize * 7;
+    const height = rootSize * 3;
+    const createGradTexture = PIXI.Texture.from(
+      bgTexture(rootSize, width, height)
+    );
+    const rows = Math.ceil(window.innerHeight / height);
+    const columns = Math.ceil(window.innerWidth / width) + 1;
     const container = new PIXI.Container();
     for (let i = 0; i < rows; i++) {
       for (let j = 0; j < columns; j++) {
         const sprite = new PIXI.Sprite(createGradTexture);
-        sprite.position.set(j * rootSize, i * rootSize);
-        sprite.width = rootSize;
-        sprite.height = rootSize;
+        sprite.position.set(j * width - width * (i % 2 ? 0.5 : 1), i * height);
+        sprite.width = width;
+        sprite.height = height;
         container.addChild(sprite);
       }
     }
     const shockwaveFilter = new ShockwaveFilter(
       [mousePosition.current.x, mousePosition.current.y],
       {
-        amplitude: 10, // 振幅
+        amplitude: 5, // 振幅
         wavelength: WIDTH / 2, // 波长
         // brightness: 1, // 亮度
       },
