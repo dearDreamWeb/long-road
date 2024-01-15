@@ -7,6 +7,7 @@ import { WIDTH, HEIGHT, RATE } from '@/const';
 import message from '@/components/message/message';
 import dbStore from '@/store/dbStore';
 import { TypeEnum } from '@/db/db';
+// import { Button } from '@/components/pixiComponents';
 
 /**商品圆角 */
 const spriteMask = (sprite: PIXI.Sprite) => {
