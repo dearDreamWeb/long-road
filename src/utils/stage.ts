@@ -7,7 +7,7 @@ import { WIDTH, HEIGHT, RATE } from '@/const';
 import message from '@/components/message/message';
 import dbStore from '@/store/dbStore';
 import { TypeEnum } from '@/db/db';
-// import { Button } from '@/components/pixiComponents';
+import { Button } from '@/components/pixiComponents';
 
 /**商品圆角 */
 const spriteMask = (sprite: PIXI.Sprite) => {
@@ -88,33 +88,8 @@ const speedCoins = (coins: number) => {
 
 /**购买按钮 */
 const buyButton = () => {
-  const container = new PIXI.Container();
-  const graphics = new PIXI.Graphics();
-  container.addChild(graphics);
-  const text = new PIXI.Text('购买', {
-    fontFamily: 'IPix', // 字体
-    fontSize: parseInt(document.body.style.fontSize) * 2, // 字体大小
-    fill: 'black', // 字体颜色
-    align: 'center', // 对齐方式
-  });
-  container.addChild(text);
-  text.zIndex = 1;
-
-  graphics.beginFill(0xffffff); // 填充颜色
-  const width = text.width * 1.5;
-  const height = text.height * 1.2;
-  const cornerRadius = 8 * RATE;
-  graphics.lineStyle(2 * RATE, 0x000000); // 边框样式
-  graphics.drawRoundedRect(0, 0, width, height, cornerRadius);
-  graphics.endFill();
-
-  text.anchor.set(0.5);
-  text.x = width / 2;
-  text.y = height / 2;
-
-  container.interactive = true;
-  container.buttonMode = true;
-  container.pivot.set(width / 2, height / 2);
+  const container = new Button('购买');
+  container.pivot.set(container.width / 2, container.height / 2);
   container.on('mouseover', function () {
     container.scale.set(1.05);
   });
@@ -263,7 +238,7 @@ export const buyStage = async ({ app }: { app: PIXI.Application }) => {
       skipTextContainer.buttonMode = true;
       skipTextContainer.on('mouseover', function () {
         skipTextContainer.filters = [
-          new GlowFilter({ distance: 5, innerStrength: 1, color: 0x209cee }),
+          new GlowFilter({ distance: 2, innerStrength: 1, color: 0xffffff }),
         ];
       });
 

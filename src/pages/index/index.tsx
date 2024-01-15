@@ -421,7 +421,6 @@ const Index = () => {
     loaders.add('coinImg', coinImg);
     loaders.load();
     loaders.onComplete.add(() => {
-      console.log('---', loaders);
       const viewTexture = new PIXI.Texture(
         loaders.resources.viewImg.texture!.baseTexture
       );

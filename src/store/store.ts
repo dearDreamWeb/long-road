@@ -367,6 +367,11 @@ class GlobalStore {
       this.winHandler();
     } else if (status === GameResultStatus.loss) {
       this.failHandler();
+    } else {
+      dbStore.addLogger({
+        type: TypeEnum.TieDuel,
+        content: `游戏平局！`,
+      });
     }
     this.isEnd = true;
     // this.showGameModal = false;

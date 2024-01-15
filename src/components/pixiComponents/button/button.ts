@@ -1,3 +1,4 @@
+import { RATE } from '@/const';
 import * as PIXI from 'pixi.js';
 
 type ContainerChild = PIXI.Sprite | PIXI.Text | PIXI.Graphics;
@@ -7,6 +8,7 @@ interface Params {
   bgWidth?: number;
   bgHeight?: number;
   buttonMode?: boolean;
+  interactive?: boolean;
   textConfig?: PIXI.ITextStyle;
 }
 
@@ -15,11 +17,21 @@ class Button extends PIXI.Container<ContainerChild> {
   backgroundLayer: PIXI.Graphics;
   childrenList: Array<ContainerChild>;
   params: Params;
-  constructor(text = '', params = { bgColor: 0xffffff, buttonMode: true }) {
+  constructor(
+    text = '',
+    params = { bgColor: 0xffffff, interactive: true, buttonMode: true }
+  ) {
     super();
     this.params = params;
     this.text = text;
-    this.buttonMode = !!this.params.buttonMode;
+    this.interactive =
+      typeof this.params.interactive === 'boolean'
+        ? this.params.interactive
+        : true;
+    this.buttonMode =
+      typeof this.params.buttonMode === 'boolean'
+        ? this.params.buttonMode
+        : true;
     this.backgroundLayer = new PIXI.Graphics();
     this.addChild(this.backgroundLayer);
     this.childrenList = [];
@@ -50,13 +62,13 @@ class Button extends PIXI.Container<ContainerChild> {
     const padding = 8;
     let allWidth = widthList.reduce((pre, next) => (next += pre), 0);
     allWidth += widthList.length - 1 * 8;
-    const width = this.params.bgWidth || allWidth * 2;
-    const height = this.params.bgHeight || Math.max(...heightList) * 1.5;
+    const width = this.params.bgWidth || allWidth * 1.5;
+    const height = this.params.bgHeight || Math.max(...heightList) * 1.2;
     const lrWidth = (width - allWidth) / 2;
 
     this.backgroundLayer.beginFill(this.params.bgColor); // 填充颜色
-    const cornerRadius = 8;
-    this.backgroundLayer.lineStyle(4, 0x000000); // 边框样式
+    const cornerRadius = 8 * RATE;
+    this.backgroundLayer.lineStyle(2 * RATE, 0x000000); // 边框样式
     this.backgroundLayer.drawRoundedRect(0, 0, width, height, cornerRadius);
     this.backgroundLayer.endFill();
     // this.backgroundLayer.addChild()

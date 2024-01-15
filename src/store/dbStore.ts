@@ -31,7 +31,7 @@ class DbStore {
   @action
   async getLogger() {
     try {
-      const res = await db.logger.orderBy('createdAt').reverse().toArray();
+      const res = await db.logger.orderBy('createdAt').toArray();
       this.loggerList = res || [];
       return;
     } catch (e) {

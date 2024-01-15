@@ -10,6 +10,7 @@ export enum TypeEnum {
   WinDuel = 6,
   LoseDuel = 7,
   LoseLevel = 8,
+  TieDuel = 9,
 }
 
 export interface LoggerTableItem {
