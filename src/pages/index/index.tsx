@@ -74,7 +74,7 @@ const Index = () => {
         antialias: true,
         transparent: false,
         resolution: 1,
-        backgroundColor: 0x000000,
+        backgroundColor: 0x333333,
         view: document.getElementById('mainCanvas') as HTMLCanvasElement,
       });
       loaderShopResources();
@@ -505,7 +505,7 @@ const Index = () => {
 
         <div className={styles.main}>
           <StatusComponent />
-          <div className={styles.canvasMain}>
+          <div className={classNames([styles.canvasMain, 'nes-diy-border'])}>
             <canvas id="mainCanvas"></canvas>
             <div
               className={`${styles.flashBox} ${flash ? styles.flash : ''}`}
