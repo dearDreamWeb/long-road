@@ -39,7 +39,7 @@ const StatusComponent = () => {
     ];
   }, [roleStore.viewDistance, roleStore.purifyCount, roleStore.isReverse]);
   return (
-    <div className={classNames(styles.statusBox, 'backdrop-blur-sm')}>
+    <div className={classNames('nes-diy-border', styles.statusBox)}>
       <h1>状态栏</h1>
       {statusList.map(
         (item) =>

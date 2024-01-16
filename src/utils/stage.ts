@@ -191,13 +191,25 @@ export const buyStage = async ({ app }: { app: PIXI.Application }) => {
           });
           if (index === 0) {
             roleStore.viewDistance++;
-            dbStore.addLogger({ type: TypeEnum.Buy, content: '购买视野' });
+            dbStore.addLogger({
+              type: TypeEnum.Buy,
+              content: '购买视野',
+              focus: '视野',
+            });
           } else if (index === 1) {
             roleStore.purifyCount++;
-            dbStore.addLogger({ type: TypeEnum.Buy, content: '购买保护罩' });
+            dbStore.addLogger({
+              type: TypeEnum.Buy,
+              content: '购买保护罩',
+              focus: '保护罩',
+            });
           } else if (index === 2) {
             roleStore.isReverse = false;
-            dbStore.addLogger({ type: TypeEnum.Buy, content: '购买解除反向' });
+            dbStore.addLogger({
+              type: TypeEnum.Buy,
+              content: '购买解除反向',
+              focus: '解除反向',
+            });
             spriteItemContainer.removeChild(buyButtonContainer);
             app.renderer.render(app.stage);
           }

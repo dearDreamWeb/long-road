@@ -295,6 +295,9 @@ const Index = () => {
     }
     let nextStep = { ...roleStore.mainPosition };
     const step = roleStore.isReverse ? -1 : 1;
+    if (!['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
+      return;
+    }
     switch (e.key) {
       case 'ArrowUp':
         roleStore.direction = roleStore.isReverse ? 'down' : 'up';
@@ -479,31 +482,33 @@ const Index = () => {
   return (
     <div className="relative">
       <div className={classNames(styles.indexMain)}>
-        <button
-          className={classNames('nes-btn is-primary', styles.testBtn)}
-          onClick={() => {
-            message.info('收到12313收拾收拾');
-            message.success('收到12313收拾收拾');
-            message.warning('收到12313收拾收拾');
-            message.error('收到12313收拾收拾');
-            console.log(JSON.parse(JSON.stringify(globalStore.bgLayout)));
-          }}
-        >
-          Button
-        </button>
+        <div className="flex justify-center items-center">
+          <button
+            className={classNames('nes-btn is-primary', styles.testBtn)}
+            onClick={() => {
+              message.info('收到12313收拾收拾');
+              message.success('收到12313收拾收拾');
+              message.warning('收到12313收拾收拾');
+              message.error('收到12313收拾收拾');
+              console.log(JSON.parse(JSON.stringify(globalStore.bgLayout)));
+            }}
+          >
+            Button
+          </button>
 
-        <button
-          className="nes-btn absolute right-4 top-4 flex items-center"
-          onClick={() => setOpenSettings(true)}
-        >
-          <MosaicImg
-            imgUrl={settingsIcon}
-            width={40}
-            height={40}
-            compressTimes={2}
-          />
-          <span className="text-2xl">设置</span>
-        </button>
+          <button
+            className="nes-btn right-4 flex items-center"
+            onClick={() => setOpenSettings(true)}
+          >
+            <MosaicImg
+              imgUrl={settingsIcon}
+              width={40}
+              height={40}
+              compressTimes={2}
+            />
+            <span className="text-2xl font-bold">设置</span>
+          </button>
+        </div>
 
         <div className={styles.main}>
           <StatusComponent />

@@ -57,7 +57,7 @@ const SettingsModal = (props: SettingsModalProps) => {
         <h1 className=" text-center font-bold text-4xl mb-8">设置</h1>
         <div className="flex items-center p-4 bg-cyan-200">
           <div className="text-3xl font-bold">音效</div>
-          <div className="flex items-center ml-auto font-bold text-inherit">
+          <div className="flex items-center ml-auto font-bold text-inherit ">
             {globalStore.settings.switchAudio ? '开' : '关'}
             <input
               type="checkbox"
@@ -72,7 +72,7 @@ const SettingsModal = (props: SettingsModalProps) => {
         </div>
         {globalStore.settings.switchAudio && (
           <>
-            <div className="flex items-center pt-4 pl-8 bg-cyan-200">
+            <div className="flex items-center pt-4 pl-8 bg-cyan-200 font-bold">
               背景音量：
               <input
                 type="range"
@@ -85,7 +85,7 @@ const SettingsModal = (props: SettingsModalProps) => {
               />
               <span className="ml-4">{Math.floor(bgVolume * 100)}</span>
             </div>
-            <div className="flex items-center pt-4 pl-8 bg-cyan-200">
+            <div className="flex items-center pt-4 pl-8 bg-cyan-200 font-bold">
               音效音量：
               <input
                 type="range"

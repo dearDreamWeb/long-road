@@ -394,6 +394,7 @@ class GlobalStore {
       content: `恭喜通关，关卡${this.level}通关！！！`,
       focus: `关卡${this.level}`,
     });
+    roleStore.coins += 50;
     // this.status = Status.stop;
     message.success('恭喜通关', 2000, async () => {
       this.level++;
