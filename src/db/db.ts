@@ -1,15 +1,25 @@
 import Dexie, { Table } from 'dexie';
 
 export enum TypeEnum {
+  /**购买 */
   Buy = 0,
+  /**保护罩 */
   FindProtect = 1,
+  /**回到过去 */
   FindBackTo = 2,
+  /** 遇怪 */
   FindDuel = 3,
-  Logger = 4,
+  /**日志 */
+  Info = 4,
+  /**过了一关 */
   WinLevel = 5,
+  /**游戏赢了 */
   WinDuel = 6,
+  /**游戏输了 */
   LoseDuel = 7,
+  /**游戏结束 */
   LoseLevel = 8,
+  /**平局 */
   TieDuel = 9,
 }
 
@@ -20,6 +30,7 @@ export interface LoggerTableItem {
   level: number;
   createdAt: Date;
   updateAt: Date;
+  focus?: string;
 }
 
 export interface ProgressTableItem {

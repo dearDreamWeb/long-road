@@ -8,7 +8,7 @@ import {
 import { TextureCacheObj, PunishEnum } from '@/typings';
 import message from '@/components/message/message';
 import { MINVIEWDISTANCE } from '@/const';
-import { db, ProgressTableItem, LoggerTableItem } from '@/db/db';
+import { db, ProgressTableItem, LoggerTableItem, TypeEnum } from '@/db/db';
 import roleStore from '@/store/roleStore';
 import globalStore from '@/store/store';
 import dayjs from 'dayjs';

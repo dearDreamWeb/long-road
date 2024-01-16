@@ -344,6 +344,7 @@ const Index = () => {
       dbStore.addLogger({
         type: TypeEnum.FindBackTo,
         content: '糟糕，踩到了传送门，回到了原点！',
+        focus: '传送门',
       });
       globalStore.bgLayout[roleStore.mainPosition.y][roleStore.mainPosition.x] =
         BgLayoutItemType.empty;
@@ -355,6 +356,7 @@ const Index = () => {
       dbStore.addLogger({
         type: TypeEnum.FindProtect,
         content: '找到了保护罩，嘻嘻嘻!',
+        focus: '保护罩',
       });
       globalStore.getProtectTool();
       globalStore.status = Status.normal;

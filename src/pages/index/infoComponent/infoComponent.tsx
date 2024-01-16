@@ -4,7 +4,50 @@ import roleStore from '@/store/roleStore';
 import coinImg from '@/assets/images/coin.png';
 import dbStore from '@/store/dbStore';
 import dayjs from 'dayjs';
-import { LoggerTableItem } from '@/db/db';
+import { LoggerTableItem, TypeEnum } from '@/db/db';
+import classNames from 'classnames';
+
+function DisplayContent({ info }: { info: LoggerTableItem }) {
+  const { focus, content, type } = info;
+
+  let classNameStr = useMemo(() => {
+    let str = '';
+    switch (type) {
+      case TypeEnum.LoseDuel:
+        str = 'text-error';
+        break;
+      case TypeEnum.TieDuel:
+        str = 'text-warning';
+        break;
+      default:
+        str = '';
+        break;
+    }
+    return str;
+  }, [type]);
+
+  if (focus && content.includes(focus)) {
+    const startIndex = content.indexOf(focus);
+    const endIndex = startIndex + focus.length;
+
+    return (
+      <div className="flex items-center">
+        {content.slice(0, startIndex)}
+        <span
+          className={classNames([
+            'inline-block mx-2 text-success',
+            classNameStr,
+          ])}
+        >
+          {focus}
+        </span>
+        {content.slice(endIndex + 1)}
+      </div>
+    );
+  } else {
+    return <div className={classNameStr}>{content}</div>;
+  }
+}
 
 function InfoComponent() {
   const loggerList = useObserver(() => dbStore.loggerList);
@@ -45,7 +88,7 @@ function InfoComponent() {
             <img src={coinImg} alt="coin" className="h-8 ml-4" />
           </div>
           <div
-            className="bg-base-content text-accent px-4 py-2 mt-8 text-base h-96 overflow-y-auto flex-1 font-bold"
+            className="bg-base-content text-white px-4 py-2 mt-8 text-base h-96 overflow-y-auto flex-1 font-bold"
             ref={parentRef}
           >
             {infoList.map((list) => (
@@ -60,7 +103,7 @@ function InfoComponent() {
                     <title className="inline-block text-xs text-primary">
                       {dayjs(item.createdAt).format('YYYY-MM-DD HH:mm:ss')}
                     </title>
-                    <div>{item.content}</div>
+                    <DisplayContent info={item} />
                   </div>
                 ))}
               </div>

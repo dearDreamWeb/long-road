@@ -63,8 +63,9 @@ const GameRender = () => {
     setStartGame(true);
     setGameIndex(randomIndex);
     dbStore.addLogger({
-      type: TypeEnum.Logger,
+      type: TypeEnum.Info,
       content: `决斗游戏名：${gameList[randomIndex].name}`,
+      focus: gameList[randomIndex].name,
     });
   }, [gameList, globalStore.showGameModal, startGame, gameIndex]);
 

@@ -254,6 +254,7 @@ class GlobalStore {
       dbStore.addLogger({
         type: TypeEnum.LoseDuel,
         content: `游戏失败，保护罩抵消本次处罚`,
+        focus: `保护罩`,
       });
       return;
     }
@@ -289,6 +290,7 @@ class GlobalStore {
       dbStore.addLogger({
         type: TypeEnum.LoseDuel,
         content: `游戏失败，失败惩罚：视野范围减小`,
+        focus: `视野范围减小`,
       });
     } else if (value === PunishEnum.reverse) {
       message.warning('方向混乱');
@@ -296,6 +298,7 @@ class GlobalStore {
       dbStore.addLogger({
         type: TypeEnum.LoseDuel,
         content: `游戏失败，失败惩罚：方向混乱`,
+        focus: `方向混乱`,
       });
     } else if (value === PunishEnum.reduceCoins) {
       const coins = this.rangeCoins(30, 80);
@@ -304,6 +307,7 @@ class GlobalStore {
       dbStore.addLogger({
         type: TypeEnum.LoseDuel,
         content: `游戏失败，失败惩罚：${`扣除 ${coins} 金币`}`,
+        focus: `${`${coins} 金币`}`,
       });
     }
     console.log('Punish---', value);
@@ -332,6 +336,7 @@ class GlobalStore {
       dbStore.addLogger({
         type: TypeEnum.WinDuel,
         content: `游戏胜利，胜利奖励：视野范围增大`,
+        focus: `视野范围增大`,
       });
     } else if (value === AwardEnum.reverse) {
       message.warning('方向恢复正常');
@@ -339,6 +344,7 @@ class GlobalStore {
       dbStore.addLogger({
         type: TypeEnum.WinDuel,
         content: `游戏胜利，胜利奖励：方向恢复正常`,
+        focus: `方向恢复正常`,
       });
     } else if (value === AwardEnum.purify) {
       message.warning('获得保护罩');
@@ -346,6 +352,7 @@ class GlobalStore {
       dbStore.addLogger({
         type: TypeEnum.WinDuel,
         content: `游戏胜利，胜利奖励：获得保护罩`,
+        focus: `保护罩`,
       });
     } else if (value === AwardEnum.addCoins) {
       const coins = this.rangeCoins();
@@ -354,6 +361,7 @@ class GlobalStore {
       dbStore.addLogger({
         type: TypeEnum.WinDuel,
         content: `游戏胜利，胜利奖励：${`增加 ${coins} 金币`}`,
+        focus: `${coins} 金币`,
       });
     }
     console.log('Award---', value);
@@ -384,6 +392,7 @@ class GlobalStore {
     await dbStore.addLogger({
       type: TypeEnum.WinLevel,
       content: `恭喜通关，关卡${this.level}通关！！！`,
+      focus: `关卡${this.level}`,
     });
     // this.status = Status.stop;
     message.success('恭喜通关', 2000, async () => {
