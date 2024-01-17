@@ -79,9 +79,9 @@ class DbStore {
   @action
   async getProgress() {
     try {
-      const res = await db.progress.orderBy('createdAt').toArray();
+      const res = await db.progress.orderBy('updateAt').reverse().toArray();
       if (!res.length) {
-        await this.addProgress(dayjs().format('YYYYMMDDHHmmss'));
+        await this.addProgress();
       } else {
         this.progressList = res || [];
       }
@@ -94,10 +94,10 @@ class DbStore {
 
   /**添加进度 */
   @action
-  async addProgress(name: string) {
+  async addProgress(name?: string) {
     const nowDate = new Date();
     const data: ProgressTableItem = {
-      name,
+      name: name || dayjs().format('YYYYMMDDHHmmss'),
       level: globalStore.level,
       coins: roleStore.coins,
       purifyCount: roleStore.purifyCount,
@@ -113,9 +113,17 @@ class DbStore {
   }
 
   /**清除进度 */
+  // @action
+  // async clearProgress() {
+  //   await db.progress.clear();
+  //   await this.getProgress();
+  //   return;
+  // }
+
+  /**删除进度 */
   @action
-  async clearProgress() {
-    await db.progress.clear();
+  async deleteProgress(id: number) {
+    await db.progress.delete(id);
     await this.getProgress();
     return;
   }
@@ -140,6 +148,7 @@ class DbStore {
         return;
       }
       await db.progress.update(id, JSON.parse(JSON.stringify(data)));
+      await this.getProgress();
     } catch (e) {
       console.error(e);
       message.error('保存进度失败');

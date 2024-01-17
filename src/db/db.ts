@@ -53,9 +53,9 @@ export class DB extends Dexie {
   constructor() {
     super('LongLoad');
 
-    this.version(1).stores({
-      progress: '++id,createdAt',
-      logger: '++id,createdAt',
+    this.version(1.1).stores({
+      progress: '++id,createdAt,updateAt',
+      logger: '++id,createdAt,updateAt',
     });
   }
 }

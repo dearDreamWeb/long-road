@@ -9,6 +9,7 @@ import styles from './settingsModal.module.less';
 import { WIDTH, HEIGHT } from '@/const';
 import modalStore, { NewModalProps } from '@/store/modalStore';
 import AudioSettings from './components/audioSettings/audioSettings';
+import ProgressManage from './components/progressManage/progressManage';
 
 type SettingsModalProps = NewModalProps<void>;
 
@@ -47,7 +48,7 @@ const SettingsModal = (props: SettingsModalProps) => {
   const settingsList = useMemo(() => {
     return [
       { key: '0', label: '音效设置', component: AudioSettings },
-      { key: '1', label: '存档设置', component: AudioSettings },
+      { key: '1', label: '存档设置', component: ProgressManage },
     ];
   }, []);
 
