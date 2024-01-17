@@ -97,12 +97,6 @@ class GlobalStore {
         message.success('恭喜你，通关完成！！！');
         return true;
       }
-      if (this.level === 1) {
-        dbStore.addLogger({
-          type: TypeEnum.Info,
-          content: `欢迎来到异世界，找到异世界的出口回到自己的世界吧。`,
-        });
-      }
       const app = _app || this.gameApp;
       if (app) {
         await buyStage({ app });
@@ -158,11 +152,18 @@ class GlobalStore {
       await sleep(200);
       this.loadingText = '进度数据加载中';
       await dbStore.init();
+      if (this.level === 1) {
+        dbStore.addLogger({
+          type: TypeEnum.Info,
+          content: `欢迎来到异世界，找到异世界的出口回到自己的世界吧。`,
+        });
+      }
       this.loadResourcesProgress = 100;
       this.loadingText = '资源加载完成';
       await sleep(200);
       this.loadResources = false;
       this.status = Status.normal;
+
       return true;
     } catch (e) {
       message.error('加载资源错误');

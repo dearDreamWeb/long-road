@@ -29,10 +29,12 @@ function App() {
 
   const buttonClick = (e?: MouseEvent) => {
     if (globalStore.settings.switchAudio) {
-      const isPlay = e
-        ? (e as any)?.target?.nodeName === 'BUTTON' ||
-          (e as any)?.target?.parentElement.nodeName === 'BUTTON'
-        : true;
+      const isPlay =
+        e?.type !== 'btnClick'
+          ? (e as any)?.target?.nodeName === 'BUTTON' ||
+            (e as any)?.target?.parentElement?.nodeName === 'BUTTON'
+          : true;
+
       if (isPlay) {
         globalStore.audioResources.buttonClickAudio.play();
       }
@@ -57,6 +59,7 @@ function App() {
       }
       setIsRender(true);
     })();
+
     return () => {
       document.removeEventListener('click', buttonClick as any);
       document.removeEventListener('btnClick', buttonClick as any);
