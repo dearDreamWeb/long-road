@@ -215,3 +215,9 @@ export function debounce<T extends Function>(func: T, delay: number): T {
 export function randomRange(min = 0, max = 1) {
   return Math.floor(Math.random() * (max - min)) + min;
 }
+
+/**触发自定义click事件 */
+export function dispatchBtnClickEvent() {
+  const btnClickEvent = new Event('btnClick');
+  document.dispatchEvent(btnClickEvent);
+}

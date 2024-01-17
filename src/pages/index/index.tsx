@@ -284,6 +284,13 @@ const Index = () => {
     }, 1000);
   }, [flash]);
 
+  const randomDuel = () => {
+    let perNum = 0.01 * globalStore.level;
+    return (
+      Math.random() > Math.max(0, 0.98 - roleStore.duelIntervalSteps * perNum)
+    );
+  };
+
   /**
    * 移动主角
    * @param e
@@ -337,6 +344,7 @@ const Index = () => {
     if (!globalStore.isCanWalk(nextStep.x, nextStep.y)) {
       return;
     }
+    roleStore.duelIntervalSteps++;
     const rectType = globalStore.bgLayout[nextStep.y][nextStep.x];
     globalStore.bgLayout[roleStore.mainPosition.y][roleStore.mainPosition.x] =
       BgLayoutItemType.route;
@@ -357,12 +365,14 @@ const Index = () => {
         content: '糟糕，踩到了传送门，回到了原点！',
         focus: '传送门',
       });
+      roleStore.duelIntervalSteps = 0;
       globalStore.bgLayout[roleStore.mainPosition.y][roleStore.mainPosition.x] =
         BgLayoutItemType.empty;
       globalStore.backToLevelOrigin();
       globalStore.status = Status.normal;
     } else if (rectType === BgLayoutItemType.protect) {
       globalStore.status = Status.stop;
+      roleStore.duelIntervalSteps = 0;
       await message.success('找到了保护罩，嘻嘻嘻!');
       dbStore.addLogger({
         type: TypeEnum.FindProtect,
@@ -372,11 +382,13 @@ const Index = () => {
       globalStore.getProtectTool();
       globalStore.status = Status.normal;
     } else if (rectType === BgLayoutItemType.end) {
+      roleStore.duelIntervalSteps = 0;
       globalStore.winGame();
     } else {
       // 随机遇怪
-      const isDuel = Math.random() > 0.98;
+      const isDuel = randomDuel();
       if (rectType === BgLayoutItemType.duel || isDuel) {
+        roleStore.duelIntervalSteps = 0;
         globalStore.status = Status.stop;
         if (globalStore.settings.switchAudio) {
           globalStore.audioResources.duelAudio.play();

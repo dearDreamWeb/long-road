@@ -11,8 +11,8 @@
     "lint": "npx --no -- lint-staged",
     "prepare": "husky install",
     "fix": "eslint src/**/*.*  --fix",
-    "lint:style": "stylelint \"src/**/*.(less|scss|css)\"",
-    "lint:style-fix": "stylelint \"src/**/*.(less|scss|css)\" --fix"
+    "lint:style": "stylelint \"src/**/*.(less|scss|css)\" --cache",
+    "lint:style-fix": "stylelint \"src/**/*.(less|scss|css)\" --cache --fix"
   },
   "dependencies": {
     "@pixi/filter-glow": "4.1.5",

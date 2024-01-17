@@ -27,18 +27,21 @@ function App() {
     document.documentElement.style.fontSize = `${rootSize}px`;
   };
 
-  const buttonClick = (e: MouseEvent) => {
-    if (
-      globalStore.settings.switchAudio &&
-      ((e as any).target?.nodeName === 'BUTTON' ||
-        (e as any).target?.parentElement.nodeName === 'BUTTON')
-    ) {
-      globalStore.audioResources.buttonClickAudio.play();
+  const buttonClick = (e?: MouseEvent) => {
+    if (globalStore.settings.switchAudio) {
+      const isPlay = e
+        ? (e as any)?.target?.nodeName === 'BUTTON' ||
+          (e as any)?.target?.parentElement.nodeName === 'BUTTON'
+        : true;
+      if (isPlay) {
+        globalStore.audioResources.buttonClickAudio.play();
+      }
     }
   };
 
   useEffect(() => {
     document.addEventListener('click', buttonClick as any);
+    document.addEventListener('btnClick', buttonClick as any);
     setRootRem();
     if (import.meta.env.MODE !== 'development') {
       DisableDevtool({
@@ -54,6 +57,10 @@ function App() {
       }
       setIsRender(true);
     })();
+    return () => {
+      document.removeEventListener('click', buttonClick as any);
+      document.removeEventListener('btnClick', buttonClick as any);
+    };
   }, []);
 
   return (

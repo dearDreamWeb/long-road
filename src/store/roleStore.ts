@@ -36,6 +36,8 @@ class RoleStore {
     x: 12,
     y: 0,
   };
+  /**每次遇怪的步数间隔 */
+  duelIntervalSteps = 0;
 
   constructor() {
     makeAutoObservable(this);

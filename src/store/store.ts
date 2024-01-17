@@ -75,6 +75,7 @@ class GlobalStore {
   };
   // 主画布
   gameApp: PIXI.Application | null = null;
+
   constructor() {
     makeAutoObservable(this);
     this.init();
@@ -95,6 +96,12 @@ class GlobalStore {
       if (this.level >= Object.keys(levelMap).length) {
         message.success('恭喜你，通关完成！！！');
         return true;
+      }
+      if (this.level === 1) {
+        dbStore.addLogger({
+          type: TypeEnum.Info,
+          content: `欢迎来到异世界，找到异世界的出口回到自己的世界吧。`,
+        });
       }
       const app = _app || this.gameApp;
       if (app) {

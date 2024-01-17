@@ -1,7 +1,7 @@
 import * as PIXI from 'pixi.js';
 import globalStore from '@/store/store';
 import roleStore from '@/store/roleStore';
-import { sleep } from '.';
+import { dispatchBtnClickEvent, sleep } from '.';
 import { GlowFilter } from '@pixi/filter-glow';
 import { WIDTH, HEIGHT, RATE } from '@/const';
 import message from '@/components/message/message';
@@ -176,6 +176,7 @@ export const buyStage = async ({ app }: { app: PIXI.Application }) => {
         buyButtonContainer.y =
           spriteItemContainer.height - buyButtonContainer.height - 20;
         buyButtonContainer.on('click', function () {
+          dispatchBtnClickEvent();
           if (roleStore.coins < price) {
             message.error({
               content: '金币不足！',
@@ -259,6 +260,7 @@ export const buyStage = async ({ app }: { app: PIXI.Application }) => {
       });
 
       skipTextContainer.on('click', () => {
+        dispatchBtnClickEvent();
         resolve(null);
       });
       app.stage.addChild(skipTextContainer);
