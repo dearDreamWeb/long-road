@@ -1,4 +1,10 @@
-import { useEffect, useState, MouseEvent, Suspense, useRef } from 'react';
+import React, {
+  useEffect,
+  useState,
+  MouseEvent,
+  Suspense,
+  useRef,
+} from 'react';
 import styles from './App.module.less';
 import routes from '../config/routes';
 import { renderRoutes } from 'react-router-config';
@@ -10,6 +16,7 @@ import { observer } from 'mobx-react';
 import classnames from 'classnames';
 import { HashRouter } from 'react-router-dom';
 import titleLogo from '@/assets/images/title-logo2.png';
+import modalStore from '@/store/modalStore';
 
 function App() {
   const [isRender, setIsRender] = useState(false);
@@ -52,6 +59,9 @@ function App() {
   return (
     <Suspense>
       <div className="relative">
+        {modalStore.currentModal && (
+          <modalStore.currentModal {...modalStore.props} />
+        )}
         {isRender && (
           <>
             <div className={styles.app}>

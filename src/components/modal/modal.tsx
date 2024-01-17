@@ -4,7 +4,7 @@ import { randomHash } from '@/utils';
 import './modal.less';
 import classnames from 'classnames';
 
-interface ModalProps extends PropsWithChildren {
+export interface ModalProps extends PropsWithChildren {
   isOpen: boolean;
   moreStyle?: CSSProperties;
   mainAnimation?: boolean;

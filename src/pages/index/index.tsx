@@ -31,12 +31,13 @@ import StatusComponent from './statusComponent/statusComponent';
 import InfoComponent from './infoComponent/infoComponent';
 import { mosaicFilter, translateMosaicImg } from '@/utils/filters';
 import MosaicImg from '@/components/mosaicImg/mosaicImg';
-import SettingsModal from './settingsModal/settingsModal';
+import { openSettingsModal } from './settingsModal/settingsModal';
 import GameRender from '@/components/gameRender/gameRender';
 import { GlowFilter } from '@pixi/filter-glow';
 import BgComponent from '@/components/bgComponent/bgComponent';
 import dbStore from '@/store/dbStore';
 import { TypeEnum } from '@/db/db';
+import modalStore from '@/store/modalStore';
 
 interface RectGraphics extends PIXI.Graphics {
   rectType: BgLayoutItemType;
@@ -64,7 +65,6 @@ const Index = () => {
   // 路径容器
   const routeContainer = useRef<PIXI.Container>(new PIXI.Container());
   const [flash, setFlash] = useState(0);
-  const [openSettings, setOpenSettings] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -78,12 +78,12 @@ const Index = () => {
         view: document.getElementById('mainCanvas') as HTMLCanvasElement,
       });
       loaderShopResources();
+      document.addEventListener('keydown', characterMove);
       globalStore.gameApp = _app;
       await globalStore.init(_app);
       setApp(_app);
       loaderResources();
       rectContainer.current.filters = [new PIXI.filters.NoiseFilter(0.3)];
-      document.addEventListener('keydown', characterMove);
       // _app!.renderer.plugins.interaction.removeAllListeners();
       // // 点击事件生成障碍物，再次点击障碍物将障碍物消掉，也可以生成开始点和结束点
       // _app!.renderer.plugins.interaction.on(
@@ -290,9 +290,17 @@ const Index = () => {
    * @returns
    */
   const characterMove = async (e: KeyboardEvent) => {
+    if (e.key === 'Escape') {
+      if (!modalStore.currentModal) {
+        openSettings();
+      }
+      return;
+    }
+
     if (globalStore.status === Status.stop) {
       return;
     }
+
     let nextStep = { ...roleStore.mainPosition };
     const step = roleStore.isReverse ? -1 : 1;
     if (!['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
@@ -479,6 +487,12 @@ const Index = () => {
     });
   };
 
+  const openSettings = async () => {
+    globalStore.status = Status.stop;
+    await openSettingsModal();
+    globalStore.status = Status.normal;
+  };
+
   return (
     <div className="relative">
       <div className={classNames(styles.indexMain)}>
@@ -498,7 +512,7 @@ const Index = () => {
 
           <button
             className="nes-btn right-4 flex items-center"
-            onClick={() => setOpenSettings(true)}
+            onClick={openSettings}
           >
             <MosaicImg
               imgUrl={settingsIcon}
@@ -520,11 +534,6 @@ const Index = () => {
           </div>
           <InfoComponent />
         </div>
-
-        <SettingsModal
-          isOpen={openSettings}
-          onClose={() => setOpenSettings(false)}
-        />
 
         <GameRender />
       </div>

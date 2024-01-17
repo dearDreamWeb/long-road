@@ -91,12 +91,11 @@ class GlobalStore {
   @action
   async init(_app?: PIXI.Application) {
     try {
+      this.status = Status.stop;
       if (this.level >= Object.keys(levelMap).length) {
         message.success('恭喜你，通关完成！！！');
-        console.log('通关了');
         return true;
       }
-
       const app = _app || this.gameApp;
       if (app) {
         await buyStage({ app });
@@ -117,6 +116,7 @@ class GlobalStore {
         }
       }
       this.bgLayout = dataJson;
+      this.status = Status.normal;
       return true;
     } catch (e) {
       this.status = Status.stop;
@@ -271,10 +271,11 @@ class GlobalStore {
     if (!valuesArr.length) {
       message.error('游戏结束');
       // TODO 后续根据每关的死亡情况扣除，每一关第一次扣除10%，第二次20%，第三次30%，后续都是30%
-      roleStore.coins = Math.max(Math.floor(roleStore.coins * 0.8), 0);
+      const coins = Math.max(Math.floor(roleStore.coins * 0.8), 0);
+      roleStore.coins = coins;
       dbStore.addLogger({
         type: TypeEnum.LoseLevel,
-        content: `游戏失败，游戏结束`,
+        content: `游戏失败，扣除${coins}金币`,
       });
       roleStore.initRole();
       this.init();
@@ -386,21 +387,20 @@ class GlobalStore {
     this.status = Status.normal;
   }
 
-  /**游戏通关 */
+  /**游戏过关 */
   @action
   async winGame() {
+    const coins = 50;
+    roleStore.coins += coins;
     await dbStore.addLogger({
       type: TypeEnum.WinLevel,
-      content: `恭喜通关，关卡${this.level}通关！！！`,
+      content: `恭喜过关，关卡${this.level}过关成功，奖励${coins}金币！！！`,
       focus: `关卡${this.level}`,
     });
-    roleStore.coins += 50;
-    // this.status = Status.stop;
-    message.success('恭喜通关', 2000, async () => {
-      this.level++;
-      await dbStore.saveProgress();
-      this.init();
-    });
+    await message.success('恭喜过关', 1200);
+    this.level++;
+    await dbStore.saveProgress();
+    this.init();
   }
 
   /**回到原点，清除走过的路径 */
