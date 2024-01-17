@@ -527,16 +527,6 @@ const Index = () => {
         />
 
         <GameRender />
-
-        {/* <BlackjackGame
-        isOpen={globalStore.showGameModal}
-        onChange={(value) => (globalStore.showGameModal = value)}
-      /> */}
-
-        {/* <RockGame
-        isOpen={globalStore.showGameModal}
-        onChange={(value) => (globalStore.showGameModal = value)}
-      /> */}
       </div>
       <BgComponent />
     </div>

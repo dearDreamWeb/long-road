@@ -1,4 +1,4 @@
-import { ChangeEvent } from 'react';
+import { ChangeEvent, useMemo } from 'react';
 import Modal from '@/components/modal/modal';
 import CloseIcon from '@/components/closeIcon/closeIcon';
 import globalStore from '@/store/store';
@@ -6,6 +6,7 @@ import { observer, useObserver } from 'mobx-react';
 import config, { Audios, Config } from '@/config';
 import classNames from 'classnames';
 import styles from './settingsModal.module.less';
+import { WIDTH, HEIGHT } from '@/const';
 
 interface SettingsModalProps {
   isOpen: boolean;
@@ -51,11 +52,32 @@ const SettingsModal = (props: SettingsModalProps) => {
     });
   };
 
+  const moreStyleHandler = (): React.CSSProperties => {
+    const mainCanvasDom = document.querySelector('#mainCanvas');
+    if (!mainCanvasDom) {
+      return {};
+    }
+    const { x, y, width, height } = mainCanvasDom.getBoundingClientRect();
+    return {
+      position: 'absolute',
+      left: `${x}px`,
+      top: `${y}px`,
+      width: `${width}px`,
+      height: `${height}px`,
+    };
+  };
+
   return (
-    <Modal isOpen={isOpen} height={200} className={styles.settingsModalBox}>
-      <div className="py-4 flex flex-col bg-cyan-100">
-        <h1 className=" text-center font-bold text-4xl mb-8">设置</h1>
-        <div className="flex items-center p-4 bg-cyan-200">
+    <Modal
+      isOpen={isOpen}
+      className={styles.settingsModalBox}
+      moreStyle={moreStyleHandler()}
+    >
+      <div className="px-4 py-4 flex flex-col text-black h-full">
+        <h1 className=" text-center font-bold text-4xl mb-8 text-white">
+          设置
+        </h1>
+        <div className="flex items-center p-4">
           <div className="text-3xl font-bold">音效</div>
           <div className="flex items-center ml-auto font-bold text-inherit ">
             {globalStore.settings.switchAudio ? '开' : '关'}
@@ -72,7 +94,7 @@ const SettingsModal = (props: SettingsModalProps) => {
         </div>
         {globalStore.settings.switchAudio && (
           <>
-            <div className="flex items-center pt-4 pl-8 bg-cyan-200 font-bold">
+            <div className="flex items-center pt-4 pl-8 bg-base-300 font-bold">
               背景音量：
               <input
                 type="range"
@@ -85,7 +107,7 @@ const SettingsModal = (props: SettingsModalProps) => {
               />
               <span className="ml-4">{Math.floor(bgVolume * 100)}</span>
             </div>
-            <div className="flex items-center pt-4 pl-8 bg-cyan-200 font-bold">
+            <div className="flex items-center py-4 pl-8 bg-base-300 font-bold">
               音效音量：
               <input
                 type="range"
@@ -100,6 +122,7 @@ const SettingsModal = (props: SettingsModalProps) => {
             </div>
           </>
         )}
+        <div className="flex items-center p-4 bg-base-300">存档管理</div>
         <div className="flex justify-center items-center mt-auto">
           <button
             className="nes-btn flex items-center px-8 text-xl m-auto mt-4 ml-auto"

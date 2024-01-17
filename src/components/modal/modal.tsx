@@ -15,9 +15,10 @@ interface ModalProps extends PropsWithChildren {
 
 export default function Modal(props: ModalProps) {
   const { isOpen, className, width, height, moreStyle, mainAnimation } = props;
+  const rootSize = parseInt(document.body.style.fontSize);
   const styles = {
-    ...(width ? { width: `${width / 16}rem` } : {}),
-    ...(height ? { height: `${height / 16}rem` } : {}),
+    ...(width ? { width: `${width / rootSize}rem` } : {}),
+    ...(height ? { height: `${height / rootSize}rem` } : {}),
     ...(moreStyle || {}),
   };
 
