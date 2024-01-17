@@ -78,6 +78,7 @@ const SettingsModal = (props: SettingsModalProps) => {
               {settingsList.map((item, index) => (
                 <div
                   key={item.key}
+                  data-click="true"
                   className="flex items-center p-4 mb-4 bg-base-300 font-bold hover:bg-base-200"
                   onClick={() => {
                     setSelectedIndex(index);

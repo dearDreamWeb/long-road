@@ -32,7 +32,8 @@ function App() {
       const isPlay =
         e?.type !== 'btnClick'
           ? (e as any)?.target?.nodeName === 'BUTTON' ||
-            (e as any)?.target?.parentElement?.nodeName === 'BUTTON'
+            (e as any)?.target?.parentElement?.nodeName === 'BUTTON' ||
+            (e as any)?.target?.dataset?.click
           : true;
 
       if (isPlay) {
