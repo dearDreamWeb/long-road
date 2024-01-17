@@ -8,7 +8,7 @@
     "build": "rimraf ./dist && tsc && vite build",
     "preview": "vite preview",
     "tailwind": "npx tailwindcss -i ./src/tailwindCss/input.css -o ./src/tailwindCss/output.css --watch",
-    "lint": "npx --no -- lint-staged",
+    "lint": "lint-staged",
     "prepare": "husky install",
     "fix": "eslint src/**/*.*  --fix",
     "lint:style": "stylelint \"src/**/*.(less|scss|css)\" --cache",
