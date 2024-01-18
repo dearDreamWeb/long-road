@@ -36,6 +36,12 @@ class ModalStore {
       };
     });
   }
+
+  @action
+  clear() {
+    this.currentModal = null;
+    this.props = {};
+  }
 }
 
 const modalStore = new ModalStore();

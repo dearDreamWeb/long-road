@@ -177,7 +177,7 @@ class DbStore {
     if (typeof id === 'number') {
       this.currentProgressId = id;
     }
-
+    localStorage.setItem('currentProgressId', String(this.currentProgressId));
     const data = this.progressList.find(
       (item) => item.id === this.currentProgressId
     );

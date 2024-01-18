@@ -54,6 +54,7 @@ function AudioSettings({ onClose }: { onClose: () => void }) {
           {globalStore.settings.switchAudio ? '开' : '关'}
           <input
             type="checkbox"
+            data-click="true"
             className={classNames(
               'toggle toggle-success ml-2',
               styles.toggleSwitch
@@ -72,6 +73,7 @@ function AudioSettings({ onClose }: { onClose: () => void }) {
               min="0"
               max="100"
               step="1"
+              data-click="true"
               defaultValue={Math.floor(bgVolume * 100)}
               className="range range-xs w-3/5"
               onChange={(e) => volumeChange(e, 'bg')}
@@ -85,6 +87,7 @@ function AudioSettings({ onClose }: { onClose: () => void }) {
               min="0"
               max="100"
               step="1"
+              data-click="true"
               defaultValue={Math.floor(clickVolume * 100)}
               className="range range-xs w-3/5"
               onChange={(e) => volumeChange(e, 'click')}

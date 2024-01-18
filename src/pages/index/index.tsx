@@ -508,37 +508,38 @@ const Index = () => {
   return (
     <div className="relative">
       <div className={classNames(styles.indexMain)}>
-        <div className="flex justify-center items-center">
-          <button
-            className={classNames('nes-btn is-primary', styles.testBtn)}
-            onClick={() => {
-              message.info('收到12313收拾收拾');
-              message.success('收到12313收拾收拾');
-              message.warning('收到12313收拾收拾');
-              message.error('收到12313收拾收拾');
-              console.log(JSON.parse(JSON.stringify(globalStore.bgLayout)));
-            }}
-          >
-            Button
-          </button>
-
-          <button
-            className="nes-btn right-4 flex items-center"
-            onClick={openSettings}
-          >
-            <MosaicImg
-              imgUrl={settingsIcon}
-              width={40}
-              height={40}
-              compressTimes={2}
-            />
-            <span className="text-2xl font-bold">设置</span>
-          </button>
-        </div>
-
         <div className={styles.main}>
           <StatusComponent />
           <div className={classNames([styles.canvasMain, 'nes-diy-border'])}>
+            <div className="flex justify-between items-center font-bold py-4">
+              <div className="text-xl">关卡：{globalStore.level}</div>
+              <div className="text-6xl flex-1">漫长之路</div>
+              {/* <button
+                className={classNames('nes-btn is-primary', styles.testBtn)}
+                onClick={() => {
+                  message.info('收到12313收拾收拾');
+                  message.success('收到12313收拾收拾');
+                  message.warning('收到12313收拾收拾');
+                  message.error('收到12313收拾收拾');
+                  console.log(JSON.parse(JSON.stringify(globalStore.bgLayout)));
+                }}
+              >
+                Button
+              </button> */}
+
+              <button
+                className="nes-btn nes-btn-sm right-4 flex items-center"
+                onClick={openSettings}
+              >
+                <MosaicImg
+                  imgUrl={settingsIcon}
+                  width={40}
+                  height={40}
+                  compressTimes={2}
+                />
+                <span className="text-2xl font-bold">设置</span>
+              </button>
+            </div>
             <canvas id="mainCanvas"></canvas>
             <div
               className={`${styles.flashBox} ${flash ? styles.flash : ''}`}
