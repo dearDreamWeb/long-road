@@ -12,6 +12,7 @@ import { db, ProgressTableItem, LoggerTableItem, TypeEnum } from '@/db/db';
 import roleStore from '@/store/roleStore';
 import globalStore from '@/store/store';
 import dayjs from 'dayjs';
+import { sleep } from '@/utils';
 
 configure({ enforceActions: 'never' });
 
@@ -20,8 +21,8 @@ class DbStore {
   loggerList: LoggerTableItem[] = [];
   /**进度列表*/
   progressList: ProgressTableItem[] = [];
-
-  currentProgressIndex = -1;
+  /**当前进度的id */
+  currentProgressId = -1;
 
   constructor() {
     makeAutoObservable(this);
@@ -48,7 +49,7 @@ class DbStore {
       | Omit<LoggerTableItem, 'level' | 'createdAt' | 'updateAt'>
       | LoggerTableItem[]
   ) {
-    const now = dayjs();
+    const now = dayjs().toDate();
     await db.logger.bulkAdd(
       Array.isArray(data)
         ? JSON.parse(JSON.stringify(data))
@@ -112,6 +113,20 @@ class DbStore {
     return;
   }
 
+  @action
+  async updateProgress(id: number, data: Partial<ProgressTableItem> = {}) {
+    try {
+      await db.progress.update(
+        id,
+        JSON.parse(JSON.stringify({ ...data, updateAt: dayjs().toDate() }))
+      );
+      await this.getProgress();
+    } catch (e) {
+      console.error('updateProgress error', e);
+    }
+    return;
+  }
+
   /**清除进度 */
   // @action
   // async clearProgress() {
@@ -142,8 +157,8 @@ class DbStore {
       logger: this.loggerList,
     };
     try {
-      const id = this.progressList[this.currentProgressIndex]?.id;
-      if (!id) {
+      const id = this.currentProgressId;
+      if (id < 0) {
         message.error('保存进度失败');
         return;
       }
@@ -160,15 +175,26 @@ class DbStore {
   @action
   async loadingProgress(id?: number) {
     if (typeof id === 'number') {
-      this.currentProgressIndex = id;
+      this.currentProgressId = id;
     }
 
-    const data = this.progressList[this.currentProgressIndex];
+    const data = this.progressList.find(
+      (item) => item.id === this.currentProgressId
+    );
+    if (!data) {
+      console.error('读取进度失败...');
+      return;
+    }
     const { level, coins, purifyCount, isReverse, viewDistance, logger } = data;
+
     await this.clearLogger();
+
     if (logger.length) {
       await this.addLogger(logger);
     }
+
+    await this.updateProgress(this.currentProgressId);
+
     globalStore.level = level;
     roleStore.coins = coins;
     roleStore.purifyCount = purifyCount;
@@ -180,15 +206,21 @@ class DbStore {
   /**初始化配置 */
   async init() {
     await this.getProgress();
-    const currentProgressIdLocal = localStorage.getItem('currentProgressIndex');
+    if (!this.progressList.length) {
+      await sleep(1000);
+    }
+    const currentProgressIdLocal = localStorage.getItem('currentProgressId');
     if (
       typeof currentProgressIdLocal === 'string' &&
       typeof Number(currentProgressIdLocal) === 'number'
     ) {
-      this.currentProgressIndex = Number(currentProgressIdLocal);
+      this.currentProgressId = Number(currentProgressIdLocal);
     } else {
-      localStorage.setItem('currentProgressIndex', '0');
-      this.currentProgressIndex = 0;
+      localStorage.setItem(
+        'currentProgressId',
+        String(this.progressList[0].id!)
+      );
+      this.currentProgressId = this.progressList[0].id!;
     }
 
     await this.loadingProgress();
