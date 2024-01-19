@@ -92,6 +92,7 @@ class GlobalStore {
   @action
   async init(_app?: PIXI.Application) {
     try {
+      roleStore.duelIntervalSteps = 0;
       this.status = Status.stop;
       if (this.level >= Object.keys(levelMap).length) {
         message.success('恭喜你，通关完成！！！');
