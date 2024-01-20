@@ -78,7 +78,6 @@ const Index = () => {
         view: document.getElementById('mainCanvas') as HTMLCanvasElement,
       });
       loaderShopResources();
-      document.addEventListener('keydown', characterMove);
       globalStore.gameApp = _app;
       await globalStore.init(_app);
       setApp(_app);
@@ -233,6 +232,17 @@ const Index = () => {
     rectContainer.current?.addChild(rectangle);
     app?.stage.addChild(rectContainer.current!);
   };
+
+  useEffect(() => {
+    if (!globalStore.showGameModal) {
+      document.addEventListener('keydown', characterMove);
+    } else {
+      document.removeEventListener('keydown', characterMove);
+    }
+    return () => {
+      document.removeEventListener('keydown', characterMove);
+    };
+  }, [globalStore.showGameModal]);
 
   /**
    * 绘制画布
