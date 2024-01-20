@@ -58,7 +58,7 @@ function App() {
       if (!res) {
         return;
       }
-      setIsRender(true);
+      // setIsRender(true);
     })();
 
     return () => {
@@ -73,7 +73,7 @@ function App() {
         {modalStore.currentModal && (
           <modalStore.currentModal {...modalStore.props} />
         )}
-        {isRender && (
+        {globalStore.isRender && (
           <>
             <div className={styles.app}>
               <HashRouter>{renderRoutes(routes)}</HashRouter>

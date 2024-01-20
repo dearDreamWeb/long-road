@@ -62,6 +62,7 @@ class GlobalStore {
   loadingText = '';
   // 显示加载
   loadResources = false;
+  isRender = false;
   // 加载进度
   loadResourcesProgress = 0;
   // 道具材质
@@ -139,6 +140,7 @@ class GlobalStore {
     try {
       this.status = Status.stop;
       this.loadResources = true;
+      this.isRender = false;
       this.loadResourcesProgress = 0;
       this.loadingText = '本地配置加载中';
       this.initConfig();
@@ -163,6 +165,7 @@ class GlobalStore {
       this.loadingText = '资源加载完成';
       await sleep(200);
       this.loadResources = false;
+      this.isRender = true;
       this.status = Status.normal;
 
       return true;
