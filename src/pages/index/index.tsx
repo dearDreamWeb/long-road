@@ -295,7 +295,7 @@ const Index = () => {
   }, [flash]);
 
   const randomDuel = () => {
-    let perNum = 0.01 * globalStore.level;
+    let perNum = 0.002 * globalStore.level;
     return (
       Math.random() > Math.max(0, 0.98 - roleStore.duelIntervalSteps * perNum)
     );
@@ -450,9 +450,9 @@ const Index = () => {
       imgUrl: confusionImg,
       compressTimes: 2,
     });
-    loaders.add('viewImg', viewImgMosaic);
-    loaders.add('purifyImg', purifyImgMosaic);
-    loaders.add('confusionImg', confusionImgMosaic);
+    loaders.add('viewImg', viewImg);
+    loaders.add('purifyImg', purifyImg);
+    loaders.add('confusionImg', confusionImg);
     loaders.add('coinImg', coinImg);
     loaders.load();
     loaders.onComplete.add(() => {
@@ -541,12 +541,13 @@ const Index = () => {
                 className="nes-btn nes-btn-sm right-4 flex items-center"
                 onClick={openSettings}
               >
-                <MosaicImg
+                <img src={settingsIcon} width={40} height={40} alt="" />
+                {/* <MosaicImg
                   imgUrl={settingsIcon}
                   width={40}
                   height={40}
                   compressTimes={2}
-                />
+                /> */}
                 <span className="text-2xl font-bold">设置</span>
               </button>
             </div>

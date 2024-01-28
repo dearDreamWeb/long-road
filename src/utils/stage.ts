@@ -132,8 +132,8 @@ export const buyStage = async ({ app }: { app: PIXI.Application }) => {
         const spriteItemContainerH = radiusGround.height;
 
         sprite.zIndex = 2;
-        sprite.width = sprite.texture.width * 2;
-        sprite.height = sprite.texture.height * 2;
+        sprite.width = 50 * RATE ;
+        sprite.height = 50 * RATE ;
 
         sprite.x = spriteItemContainerW / 2;
         sprite.y = sprite.height;
