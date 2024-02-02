@@ -23,6 +23,7 @@ import message from '@/components/message/message';
 import { WIDTH, HEIGHT, GRIDROWS, GRIDWIDTH, GRIDHEIGHT, RATE } from '@/const';
 import heroImg from '@/assets/images/hero.png';
 import viewImg from '@/assets/images/view.png';
+import roadImg from '@/assets/images/road.png';
 import purifyImg from '@/assets/images/purify.png';
 import confusionImg from '@/assets/images/confusion.png';
 import coinImg from '@/assets/images/coin.png';
