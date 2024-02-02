@@ -95,22 +95,22 @@ class DbStore {
 
   /**添加进度 */
   @action
-  async addProgress(name?: string) {
+  async addProgress(name?: string, config: any = {}) {
     const nowDate = new Date();
     const data: ProgressTableItem = {
       name: name || dayjs().format('YYYYMMDDHHmmss'),
-      level: globalStore.level,
-      coins: roleStore.coins,
-      purifyCount: roleStore.purifyCount,
-      isReverse: roleStore.isReverse,
-      viewDistance: roleStore.viewDistance,
+      level: config.level || globalStore.level,
+      coins: config.coins || roleStore.coins,
+      purifyCount: config.purifyCount || roleStore.purifyCount,
+      isReverse: config.isReverse || roleStore.isReverse,
+      viewDistance: config.viewDistance || roleStore.viewDistance,
       createdAt: nowDate,
       updateAt: nowDate,
-      logger: this.loggerList,
+      logger: config.loggerList || this.loggerList,
     };
-    await db.progress.bulkAdd(JSON.parse(JSON.stringify([data])));
+    const res = await db.progress.bulkAdd(JSON.parse(JSON.stringify([data])));
     await this.getProgress();
-    return;
+    return res;
   }
 
   @action

@@ -6,9 +6,16 @@ import * as PIXI from 'pixi.js';
 
 configure({ enforceActions: 'never' });
 
+export const DEDAULTVALUES = {
+  coins: 100,
+  purifyCount: 0,
+  isReverse: false,
+  viewDistance: 5,
+};
+
 class RoleStore {
   /**视野距离 */
-  viewDistance = 5;
+  viewDistance = DEDAULTVALUES.viewDistance;
   /**人物textures */
   heroTextures: TextureCacheObj = { left: [], right: [], up: [], down: [] };
   /**人物组帧动画精灵图 */
@@ -16,11 +23,11 @@ class RoleStore {
   /**人物方向 */
   direction: keyof TextureCacheObj = 'down';
   /**是否反向 */
-  isReverse = false;
+  isReverse = DEDAULTVALUES.isReverse;
   /**净化次数 */
-  purifyCount = 0;
+  purifyCount = DEDAULTVALUES.purifyCount;
   /**金币 */
-  coins = 100;
+  coins = DEDAULTVALUES.coins;
   /**主角当前位置 */
   mainPosition = {
     x: 12,

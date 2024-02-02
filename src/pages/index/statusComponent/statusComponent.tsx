@@ -66,13 +66,13 @@ const StatusComponent = () => {
                     <div className={styles.avatarBox}>
                       <div className="avatar">
                         <div className="w-12 rounded-full">
-                          {/* <img src={item.img} /> */}
-                          <MosaicImg
+                          <img src={item.img} />
+                          {/* <MosaicImg
                             imgUrl={item.img}
                             width={50}
                             height={50}
                             compressTimes={5}
-                          />
+                          /> */}
                         </div>
                       </div>
                     </div>

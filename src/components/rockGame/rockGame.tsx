@@ -191,7 +191,6 @@ const RockGame = (props: RockGameProps) => {
       isOpen={isOpen}
       className={styles.modalBox}
       width={700}
-      height={700}
       mainAnimation
     >
       <div className={styles.gameBox}>

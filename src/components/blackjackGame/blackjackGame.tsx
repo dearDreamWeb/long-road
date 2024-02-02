@@ -59,7 +59,6 @@ const BlackjackGame = (props: BlackjackGamProps) => {
       isOpen={isOpen}
       className={styles.modalBox}
       width={700}
-      height={700}
       mainAnimation
     >
       <div className={classNames(styles.blackjackGameBox, 'flex flex-col')}>

@@ -81,7 +81,7 @@ function InfoComponent() {
   return (
     <Observer>
       {() => (
-        <div className=" relative !ml-8 w-128 px-4 py-8 h-full flex flex-col">
+        <div className=" relative !ml-8 w-128 px-4 pb-8 h-full flex flex-col">
           <div className="nes-diy-border !flex !items-center !justify-center">
             <span className="text-2xl font-bold text-black">
               金币：<span>{roleStore.coins}</span>

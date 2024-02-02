@@ -3,8 +3,7 @@ import ReactDOM from 'react-dom/client';
 import { createPortal } from 'react-dom';
 import classNames from 'classnames';
 import './message.less';
-
-type Position = 'top';
+import globalStore from '@/store/store';
 
 type RenderReturn = (
   content: string | RenderProps,
@@ -31,8 +30,7 @@ interface RenderProps {
   content: string;
   duration?: number;
   onClose?(): void;
-  position?: Position;
-  single?: boolean;
+  globalShow?: boolean;
 }
 
 function MessageComponent(props: MessageComponentProps) {
@@ -109,8 +107,7 @@ const render = (type: string) => {
       content,
       onClose,
       duration: handlerDuration,
-      position,
-      single,
+      globalShow,
     } = handlerParams<RenderProps>(options, duration, onCloseFunction);
 
     duration = handlerDuration || duration;
@@ -120,15 +117,23 @@ const render = (type: string) => {
       if (!messageWrapperDom) {
         return;
       }
-      if (position === 'top') {
-        messageWrapperDom.style.top = `20%`;
-      } else {
-        messageWrapperDom.style.top = `50%`;
-      }
 
-      if (single) {
-        const messageDomList = document.querySelectorAll('.messageBox');
-        messageDomList.forEach((dom) => dom.remove());
+      const messageDomList = document.querySelectorAll('.messageBox');
+      messageDomList.forEach((dom) => dom.remove());
+
+      if (!globalShow && !globalStore.showGameModal) {
+        const mainCanvasDom = document.querySelector('#mainCanvas');
+        if (!mainCanvasDom) {
+          return;
+        }
+        const { x, y, width } = mainCanvasDom.getBoundingClientRect();
+        messageWrapperDom.style.left = `${x + width / 2}px`;
+        messageWrapperDom.style.top = `${y + 10}px`;
+        messageWrapperDom.style.transform = `translate(-50%,0)`;
+      } else {
+        messageWrapperDom.style.left = `50%`;
+        messageWrapperDom.style.top = `50%`;
+        messageWrapperDom.style.transform = `translate(-50%,-50%)`;
       }
 
       const el = document.createElement('div');

@@ -49,6 +49,7 @@ const SettingsModal = (props: SettingsModalProps) => {
     return [
       { key: '0', label: '音效设置', component: AudioSettings },
       { key: '1', label: '存档设置', component: ProgressManage },
+      // { key: '2', label: '新游戏', component: () => <></> },
     ];
   }, []);
 

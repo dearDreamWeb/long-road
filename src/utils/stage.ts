@@ -132,8 +132,8 @@ export const buyStage = async ({ app }: { app: PIXI.Application }) => {
         const spriteItemContainerH = radiusGround.height;
 
         sprite.zIndex = 2;
-        sprite.width = sprite.texture.width * 2;
-        sprite.height = sprite.texture.height * 2;
+        sprite.width = 50 * RATE ;
+        sprite.height = 50 * RATE ;
 
         sprite.x = spriteItemContainerW / 2;
         sprite.y = sprite.height;
@@ -180,15 +180,11 @@ export const buyStage = async ({ app }: { app: PIXI.Application }) => {
           if (roleStore.coins < price) {
             message.error({
               content: '金币不足！',
-              position: 'top',
-              single: true,
             });
             return;
           }
           message.success({
             content: '购买成功',
-            position: 'top',
-            single: true,
           });
           if (index === 0) {
             roleStore.viewDistance++;

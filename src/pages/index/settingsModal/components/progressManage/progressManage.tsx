@@ -7,12 +7,14 @@ import { ProgressTableItem } from '@/db/db';
 import classNames from 'classnames';
 import modalStore from '@/store/modalStore';
 import globalStore from '@/store/store';
+import { DEDAULTVALUES } from '@/store/roleStore';
 
 function ProgressManage({ onClose }: { onClose: () => void }) {
   const progressList = useObserver(() => dbStore.progressList);
   const currentProgressId = useObserver(() => dbStore.currentProgressId);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [confirmDeleteModal, setConfirmDeleteModal] = useState(false);
+  const [createGameModal, setCreateGameModal] = useState(false);
   const [progressData, setProgressData] = useState<ProgressTableItem>();
 
   return (
@@ -93,6 +95,19 @@ function ProgressManage({ onClose }: { onClose: () => void }) {
               message.info('存档最多为8个');
               return;
             }
+            setCreateGameModal(true);
+          }}
+        >
+          新建游戏
+        </button>
+        <button
+          className="nes-btn flex items-center px-8 text-xl mr-8"
+          data-click="true"
+          onClick={async () => {
+            if (progressList.length >= 8) {
+              message.info('存档最多为8个');
+              return;
+            }
             await dbStore.addProgress();
             message.success('新建存档成功');
           }}
@@ -144,6 +159,7 @@ function ProgressManage({ onClose }: { onClose: () => void }) {
                     message.info('存档名不能为空');
                     return;
                   }
+
                   if (progressData?.name.length > 16) {
                     message.info('存档名不能超过16个字');
                     return;
@@ -193,6 +209,42 @@ function ProgressManage({ onClose }: { onClose: () => void }) {
                   await dbStore.deleteProgress(progressData!.id!);
                   message.success('删除成功');
                   setConfirmDeleteModal(false);
+                }}
+              >
+                确认
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {createGameModal && (
+        <div className="absolute w-full h-full top-0 left-0 bg-black bg-opacity-30 flex justify-center items-center">
+          <div className="px-4 py-8 bg-white">
+            <div>新建游戏将重新开始，是否新建游戏？</div>
+            <div className="flex justify-center items-center mt-8">
+              <button
+                className="nes-btn flex items-center px-8 text-xl mr-8"
+                data-click="true"
+                onClick={() => {
+                  setCreateGameModal(false);
+                }}
+              >
+                取消
+              </button>
+              <button
+                className="nes-btn flex items-center px-8 text-xl"
+                data-click="true"
+                onClick={async () => {
+                  const newId = await dbStore.addProgress(void 0, {
+                    ...DEDAULTVALUES,
+                    level: 1,
+                    loggerList: [],
+                  });
+                  localStorage.setItem('currentProgressId', String(newId));
+                  setCreateGameModal(false);
+                  modalStore.clear();
+                  globalStore.loadResource();
                 }}
               >
                 确认
