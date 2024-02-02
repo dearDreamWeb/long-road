@@ -202,6 +202,9 @@ const Index = () => {
       // BgLayoutItemType.end,
       BgLayoutItemType.protect,
     ];
+    if (!roleStore.isRoad) {
+      disabledShowColorList.push(BgLayoutItemType.route);
+    }
     if (import.meta.env.MODE === 'development') {
       rectangle.beginFill(colorMap[type]);
     } else {
@@ -455,6 +458,7 @@ const Index = () => {
     loaders.add('purifyImg', purifyImg);
     loaders.add('confusionImg', confusionImg);
     loaders.add('coinImg', coinImg);
+    loaders.add('roadImg', roadImg);
     loaders.load();
     loaders.onComplete.add(() => {
       const viewTexture = new PIXI.Texture(
@@ -469,11 +473,15 @@ const Index = () => {
       const coinTexture = new PIXI.Texture(
         loaders.resources.coinImg.texture!.baseTexture
       );
+      const roadTexture = new PIXI.Texture(
+        loaders.resources.roadImg.texture!.baseTexture
+      );
       globalStore.toolsTextures = [
         viewTexture,
         purifyTexture,
         confusionTexture,
         coinTexture,
+        roadTexture,
       ];
     });
   };

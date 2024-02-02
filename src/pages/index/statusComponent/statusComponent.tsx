@@ -5,6 +5,7 @@ import roleStore from '@/store/roleStore';
 import viewImg from '@/assets/images/view.png';
 import confusionImg from '@/assets/images/confusion.png';
 import purifyImg from '@/assets/images/purify.png';
+import roadImg from '@/assets/images/road.png';
 import classNames from 'classnames';
 import MosaicImg from '@/components/mosaicImg/mosaicImg';
 
@@ -36,8 +37,21 @@ const StatusComponent = () => {
         show: roleStore.purifyCount,
         count: roleStore.purifyCount,
       },
+      {
+        key: '3',
+        title: '印迹',
+        desc: '会显示走过的路',
+        img: roadImg,
+        show: roleStore.isRoad,
+        count: roleStore.isRoad ? 1 : 0,
+      },
     ];
-  }, [roleStore.viewDistance, roleStore.purifyCount, roleStore.isReverse]);
+  }, [
+    roleStore.viewDistance,
+    roleStore.purifyCount,
+    roleStore.isReverse,
+    roleStore.isRoad,
+  ]);
   return (
     <div className={classNames('nes-diy-border', styles.statusBox)}>
       <h1>状态栏</h1>

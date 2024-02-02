@@ -103,6 +103,7 @@ class DbStore {
       coins: config.coins || roleStore.coins,
       purifyCount: config.purifyCount || roleStore.purifyCount,
       isReverse: config.isReverse || roleStore.isReverse,
+      isRoad: config.isRoad || roleStore.isRoad,
       viewDistance: config.viewDistance || roleStore.viewDistance,
       createdAt: nowDate,
       updateAt: nowDate,
@@ -152,6 +153,7 @@ class DbStore {
       level: globalStore.level,
       purifyCount: roleStore.purifyCount,
       isReverse: roleStore.isReverse,
+      isRoad: roleStore.isRoad,
       viewDistance: roleStore.viewDistance,
       updateAt: nowDate,
       logger: this.loggerList,
@@ -185,7 +187,15 @@ class DbStore {
       console.error('读取进度失败...');
       return;
     }
-    const { level, coins, purifyCount, isReverse, viewDistance, logger } = data;
+    const {
+      level,
+      coins,
+      purifyCount,
+      isReverse,
+      isRoad,
+      viewDistance,
+      logger,
+    } = data;
 
     await this.clearLogger();
 
@@ -199,6 +209,7 @@ class DbStore {
     roleStore.coins = coins;
     roleStore.purifyCount = purifyCount;
     roleStore.isReverse = isReverse;
+    roleStore.isRoad = isRoad;
     roleStore.viewDistance = viewDistance;
     return;
   }

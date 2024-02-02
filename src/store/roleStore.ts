@@ -10,6 +10,7 @@ export const DEDAULTVALUES = {
   coins: 100,
   purifyCount: 0,
   isReverse: false,
+  isRoad: false,
   viewDistance: 5,
 };
 
@@ -28,6 +29,8 @@ class RoleStore {
   purifyCount = DEDAULTVALUES.purifyCount;
   /**金币 */
   coins = DEDAULTVALUES.coins;
+  /** 印迹 */
+  isRoad = DEDAULTVALUES.isRoad;
   /**主角当前位置 */
   mainPosition = {
     x: 12,
@@ -65,6 +68,7 @@ class RoleStore {
   initRole() {
     this.viewDistance = 5;
     this.isReverse = false;
+    this.isRoad = false;
     this.purifyCount = 0;
     this.direction = 'down';
   }

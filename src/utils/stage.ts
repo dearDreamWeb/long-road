@@ -111,9 +111,11 @@ export const buyStage = async ({ app }: { app: PIXI.Application }) => {
       const spriteView = new PIXI.Sprite(globalStore.toolsTextures[0]);
       const spritePurify = new PIXI.Sprite(globalStore.toolsTextures[1]);
       const confusion = new PIXI.Sprite(globalStore.toolsTextures[2]);
+      const roadTexture = new PIXI.Sprite(globalStore.toolsTextures[3]);
       const list = [
         { sprite: spriteView, price: 50 },
         { sprite: spritePurify, price: 30 },
+        { sprite: roadTexture, price: 80 },
       ];
       if (roleStore.isReverse) {
         list.push({ sprite: confusion, price: 20 });
@@ -132,8 +134,8 @@ export const buyStage = async ({ app }: { app: PIXI.Application }) => {
         const spriteItemContainerH = radiusGround.height;
 
         sprite.zIndex = 2;
-        sprite.width = 50 * RATE ;
-        sprite.height = 50 * RATE ;
+        sprite.width = 50 * RATE;
+        sprite.height = 50 * RATE;
 
         sprite.x = spriteItemContainerW / 2;
         sprite.y = sprite.height;
@@ -201,6 +203,15 @@ export const buyStage = async ({ app }: { app: PIXI.Application }) => {
               focus: '保护罩',
             });
           } else if (index === 2) {
+            roleStore.isRoad = true;
+            dbStore.addLogger({
+              type: TypeEnum.Buy,
+              content: '购买印迹成功',
+              focus: '会显示走过的路',
+            });
+            spriteItemContainer.removeChild(buyButtonContainer);
+            app.renderer.render(app.stage);
+          } else if (index === 3) {
             roleStore.isReverse = false;
             dbStore.addLogger({
               type: TypeEnum.Buy,
