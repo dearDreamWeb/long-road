@@ -248,7 +248,7 @@ const RockGame = (props: RockGameProps) => {
                   </span>
                 </div>
                 <button
-                  className="nes-btn px-8 text-xl mt-4"
+                  className="nes-btn px-8 text-xl mt-4 flex"
                   onClick={() => onChange(false)}
                 >
                   关闭

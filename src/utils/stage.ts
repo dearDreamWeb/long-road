@@ -111,7 +111,7 @@ export const buyStage = async ({ app }: { app: PIXI.Application }) => {
       const spriteView = new PIXI.Sprite(globalStore.toolsTextures[0]);
       const spritePurify = new PIXI.Sprite(globalStore.toolsTextures[1]);
       const confusion = new PIXI.Sprite(globalStore.toolsTextures[2]);
-      const roadTexture = new PIXI.Sprite(globalStore.toolsTextures[3]);
+      const roadTexture = new PIXI.Sprite(globalStore.toolsTextures[4]);
       const list = [
         { sprite: spriteView, price: 50 },
         { sprite: spritePurify, price: 30 },

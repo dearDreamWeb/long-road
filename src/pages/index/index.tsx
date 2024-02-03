@@ -108,19 +108,22 @@ const Index = () => {
   }, []);
 
   useEffect(() => {
-    if (!app) {
+    if (!app || globalStore.status === Status.stop) {
       return;
     }
     initLine();
     drawLayout();
-  }, [app, globalStore.bgLayout, roleStore.viewDistance]);
+  }, [app, globalStore.status, globalStore.bgLayout, roleStore.viewDistance]);
 
   // 人物移动动画
   useEffect(() => {
-    if (!roleStore.heroTextures.down || !roleStore.heroTextures.down.length) {
+    if (
+      globalStore.status === Status.stop ||
+      !roleStore.heroTextures.down ||
+      !roleStore.heroTextures.down.length
+    ) {
       return;
     }
-
     if (roleStore.animatedSprite.textures) {
       roleStore.animatedSprite.textures =
         roleStore.heroTextures[roleStore.direction || 'down'];
@@ -147,6 +150,7 @@ const Index = () => {
     app?.stage.addChild(roleStore.animatedSprite);
     // app?.stage.addChild(graphics);
   }, [
+    globalStore.status,
     globalStore.bgLayout,
     roleStore.heroTextures,
     roleStore.direction,

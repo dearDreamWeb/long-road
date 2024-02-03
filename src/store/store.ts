@@ -279,6 +279,9 @@ class GlobalStore {
     if (roleStore.isReverse) {
       valuesArr.splice(valuesArr.indexOf(PunishEnum.reverse), 1);
     }
+    if (roleStore.coins <= 0) {
+      valuesArr.splice(valuesArr.indexOf(PunishEnum.reduceCoins), 1);
+    }
     console.log(valuesArr, roleStore.isReverse);
     if (!valuesArr.length) {
       message.error('游戏结束');
@@ -289,7 +292,12 @@ class GlobalStore {
         type: TypeEnum.LoseLevel,
         content: `游戏失败，扣除${coins}金币`,
       });
+      dbStore.addLogger({
+        type: TypeEnum.LoseLevel,
+        content: `被噶腰子死了，重新开始本关`,
+      });
       roleStore.initRole();
+      dbStore.saveProgress();
       this.init();
       return;
     }
@@ -314,9 +322,10 @@ class GlobalStore {
         focus: `方向混乱`,
       });
     } else if (value === PunishEnum.reduceCoins) {
-      const coins = this.rangeCoins(30, 80);
+      const coins =
+        roleStore.coins <= 30 ? roleStore.coins : this.rangeCoins(30, 80);
       message.warning(`扣除 ${coins} 金币`);
-      roleStore.coins = Math.min(roleStore.coins - coins, 0);
+      roleStore.coins = roleStore.coins - coins;
       dbStore.addLogger({
         type: TypeEnum.LoseDuel,
         content: `游戏失败，失败惩罚：${`扣除 ${coins} 金币`}`,
