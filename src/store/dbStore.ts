@@ -156,7 +156,8 @@ class DbStore {
       level: globalStore.level,
       purifyCount: roleStore.purifyCount,
       isReverse: roleStore.isReverse,
-      isRoad: roleStore.isRoad,
+      isRoad: false,
+      // isRoad: roleStore.isRoad,
       viewDistance: roleStore.viewDistance,
       updateAt: nowDate,
       logger: this.loggerList,
@@ -214,8 +215,12 @@ class DbStore {
     roleStore.coins = coins;
     roleStore.purifyCount = purifyCount;
     roleStore.isReverse = isReverse;
-    roleStore.isRoad = isRoad;
+    // roleStore.isRoad = isRoad;
     roleStore.viewDistance = viewDistance;
+    roleStore.direction = 'down';
+    roleStore.mainPosition = { x: 12, y: 24 };
+    // globalStore.weeks = 2;
+    // roleStore.viewDistance = 25;
     return;
   }
 

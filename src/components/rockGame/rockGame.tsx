@@ -270,20 +270,14 @@ const RockGame = (props: RockGameProps) => {
               </div>
             ) : (
               <div className={styles.operationBox}>
-                <button
-                  className="btn btn-outline btn-info"
-                  onClick={goBackHandler}
-                >
+                <button className="nes-btn" onClick={goBackHandler}>
                   撤回
                 </button>
-                <button
-                  className="btn btn-outline btn-success"
-                  onClick={confirmHandler}
-                >
+                <button className="nes-btn is-success" onClick={confirmHandler}>
                   确定
                 </button>
                 <button
-                  className="btn btn-outline btn-error"
+                  className="nes-btn is-error"
                   onClick={() => {
                     setResult(-1);
                     globalStore.gameSettlement(GameResultStatus.loss);

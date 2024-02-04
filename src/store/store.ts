@@ -122,8 +122,10 @@ class GlobalStore {
           }
         }
       } else {
-        const list = createdLevel(dataJson, this.level);
+        const [list, mainP] = createdLevel(dataJson, this.level);
         dataJson = list;
+        roleStore.mainPosition = mainP;
+        roleStore.mainInitPosition = mainP;
       }
 
       this.bgLayout = dataJson;

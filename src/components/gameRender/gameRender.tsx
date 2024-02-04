@@ -57,8 +57,8 @@ const GameRender = () => {
     if (!globalStore.showGameModal || startGame) {
       return;
     }
-    const randomIndex = 0;
-    // const randomIndex = Math.floor(Math.random() * gameList.length);
+    // const randomIndex = 0;
+    const randomIndex = Math.floor(Math.random() * gameList.length);
     console.log('random game', randomIndex, gameList.length);
     setStartGame(true);
     setGameIndex(randomIndex);

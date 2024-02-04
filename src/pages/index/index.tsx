@@ -53,7 +53,7 @@ const colorMap = {
   [BgLayoutItemType.end]: 0x67c23a,
   [BgLayoutItemType.main]: 0xe4393c,
   [BgLayoutItemType.obstacle]: 0xcccccc,
-  [BgLayoutItemType.protect]: 0x6bd09e,
+  [BgLayoutItemType.protect]: 0xf28260,
   [BgLayoutItemType.route]: 0xe6a23c,
 };
 
@@ -118,7 +118,7 @@ const Index = () => {
   // 人物移动动画
   useEffect(() => {
     if (
-      globalStore.status === Status.stop ||
+      // globalStore.status === Status.stop ||
       !roleStore.heroTextures.down ||
       !roleStore.heroTextures.down.length
     ) {
@@ -206,11 +206,16 @@ const Index = () => {
       // BgLayoutItemType.end,
       BgLayoutItemType.protect,
     ];
+    console.log('roleStore.isRoad', roleStore.isRoad);
     if (!roleStore.isRoad) {
       disabledShowColorList.push(BgLayoutItemType.route);
     }
     if (import.meta.env.MODE === 'development') {
-      rectangle.beginFill(colorMap[type]);
+      if (type === BgLayoutItemType.route) {
+        rectangle.beginFill(colorMap[BgLayoutItemType.empty]);
+      } else {
+        rectangle.beginFill(colorMap[type]);
+      }
     } else {
       if (disabledShowColorList.includes(type)) {
         rectangle.beginFill(colorMap[BgLayoutItemType.empty]);
@@ -535,8 +540,12 @@ const Index = () => {
           <StatusComponent />
           <div className={classNames([styles.canvasMain, 'nes-diy-border'])}>
             <div className="flex justify-between items-center font-bold py-4">
-              <div className="text-xl">周目：{globalStore.weeks}</div>
-              <div className="text-xl">关卡：{globalStore.level}</div>
+              <div className="text-xl mr-8">
+                周目：<span className="text-3xl">{globalStore.weeks}</span>
+              </div>
+              <div className="text-xl">
+                关卡：<span className="text-3xl">{globalStore.level}</span>
+              </div>
               <div className="text-6xl flex-1">漫长之路</div>
               {/* <button
                 className={classNames('nes-btn is-primary', styles.testBtn)}

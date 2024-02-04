@@ -1,7 +1,7 @@
 import { BgLayoutItemType } from '@/typings';
 import { randomRange } from '.';
 
-interface Position {
+export interface Position {
   x: number;
   y: number;
 }
@@ -123,18 +123,20 @@ export const routePlanDijkstra = ({
 /**随机终点 */
 export const randomEnd = (
   bgArr: BgLayoutItemType[][],
-  canUserList: Position[]
+  canUserList: Position[],
+  mainP: Position
 ): Position => {
   const randomPosition = randomRange(0, canUserList.length - 1);
   const result = routePlanDijkstra({
-    start: { x: 12, y: 24 },
+    start: mainP,
     end: canUserList[randomPosition],
     obstacleAll: bgArr,
   });
   if (!result.length) {
     return randomEnd(
       bgArr,
-      JSON.parse(JSON.stringify(canUserList.splice(randomPosition, 1)))
+      JSON.parse(JSON.stringify(canUserList.splice(randomPosition, 1))),
+      mainP
     );
   }
   return canUserList[randomPosition];
@@ -147,25 +149,33 @@ export const randomTools = (canUserList: Position[], level: number) => {
   for (let i = 0; i < canUserList.length; i++) {
     const { x, y } = canUserList[i];
     const random = Math.random();
-    if (random > 0.8 && random < 0.9) {
+    if (random > 0.87 && random < 0.97) {
       toolsList.push({ x, y, value: BgLayoutItemType.duel });
-    } else if (random >= 0.9 && random < 0.98) {
-      toolsList.push({ x, y, value: BgLayoutItemType.backTo });
-    } else if (random >= 0.98) {
+    } else if (random >= 0.97 && random < 0.99) {
       toolsList.push({ x, y, value: BgLayoutItemType.protect });
+    } else if (random >= 0.99) {
+      toolsList.push({ x, y, value: BgLayoutItemType.backTo });
     }
   }
   return toolsList;
 };
 
-export const createdLevel = (bgArr: BgLayoutItemType[][], level: number) => {
+export const createdLevel = (
+  bgArr: BgLayoutItemType[][],
+  level: number
+): [BgLayoutItemType[][], Position] => {
   let newList: BgLayoutItemType[][] = JSON.parse(JSON.stringify(bgArr));
   let canUserList: Position[] = [];
+  let mainP: Position = { x: 0, y: 0 };
   for (let y = 0; y < newList.length; y++) {
     const itemArr = newList[y];
     for (let x = 0; x < itemArr.length; x++) {
       if (newList[y][x] === BgLayoutItemType.empty) {
         canUserList.push({ x, y });
+      }
+
+      if (newList[y][x] === BgLayoutItemType.main) {
+        mainP = { x, y };
       }
 
       if (
@@ -183,7 +193,8 @@ export const createdLevel = (bgArr: BgLayoutItemType[][], level: number) => {
     newList,
     JSON.parse(
       JSON.stringify(canUserList.slice(0, Math.floor(canUserList.length / 2)))
-    )
+    ),
+    mainP
   );
   newList[endPosition.y][endPosition.x] = BgLayoutItemType.end;
 
@@ -198,5 +209,5 @@ export const createdLevel = (bgArr: BgLayoutItemType[][], level: number) => {
     newList[item.y][item.x] = item.value;
   });
 
-  return newList;
+  return [newList, mainP];
 };

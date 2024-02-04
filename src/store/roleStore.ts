@@ -3,6 +3,7 @@ import { TextureCacheObj, PunishEnum } from '@/typings';
 import message from '@/components/message/message';
 import { MINVIEWDISTANCE } from '@/const';
 import * as PIXI from 'pixi.js';
+import { Position } from '@/utils/createdLevel';
 
 configure({ enforceActions: 'never' });
 
@@ -32,12 +33,12 @@ class RoleStore {
   /** 印迹 */
   isRoad = DEDAULTVALUES.isRoad;
   /**主角当前位置 */
-  mainPosition = {
+  mainPosition: Position = {
     x: 12,
     y: 24,
   };
   /**主角一开始的位置 */
-  mainInitPosition = {
+  mainInitPosition: Position = {
     x: 0,
     y: 0,
   };

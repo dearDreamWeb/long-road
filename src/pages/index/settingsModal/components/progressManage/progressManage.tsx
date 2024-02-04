@@ -37,7 +37,7 @@ function ProgressManage({ onClose }: { onClose: () => void }) {
                 时间：{dayjs(item.updateAt).format('YYYY-MM-DD HH:mm:ss')}
               </div>
               <ul>
-                <li>周目：{item.weeks}</li>
+                <li>周目：{item.weeks || 1}</li>
                 <li>关卡：{item.level}</li>
                 <li>视野：{item.viewDistance}</li>
                 <li>保护罩：{item.purifyCount}</li>
