@@ -27,6 +27,7 @@ export interface LoggerTableItem {
   id?: number;
   type: TypeEnum;
   content: string;
+  weeks: number;
   level: number;
   createdAt: Date;
   updateAt: Date;
@@ -37,6 +38,7 @@ export interface ProgressTableItem {
   id?: number;
   name: string;
   coins: number;
+  weeks: number;
   level: number;
   viewDistance: number;
   purifyCount: number;

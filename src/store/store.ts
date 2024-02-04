@@ -27,6 +27,7 @@ import { GlowFilter } from '@pixi/filter-glow';
 import { buyStage } from '@/utils/stage';
 import dbStore from './dbStore';
 import { TypeEnum } from '@/db/db';
+import { createdLevel } from '@/utils/createdLevel';
 
 export type AudioResources = Record<keyof Audios, Sound>;
 interface Settings {
@@ -46,6 +47,7 @@ const levelMap: any = {
 };
 
 class GlobalStore {
+  weeks = 1;
   // 关卡
   level = 1;
   // 游戏状态
@@ -95,10 +97,10 @@ class GlobalStore {
     try {
       roleStore.duelIntervalSteps = 0;
       this.status = Status.stop;
-      if (this.level >= Object.keys(levelMap).length) {
-        message.success('恭喜你，通关完成！！！');
-        return true;
-      }
+      // if (this.level >= Object.keys(levelMap).length) {
+      //   message.success('恭喜你，通关完成！！！');
+      //   return true;
+      // }
       const app = _app || this.gameApp;
       if (app) {
         await buyStage({ app });
@@ -106,18 +108,24 @@ class GlobalStore {
       }
 
       // await sleep(50000000);
-      const dataJson = levelMap[this.level];
-      for (let i = 0; i < dataJson.length; i++) {
-        for (let j = 0; j < dataJson[i].length; j++) {
-          if (dataJson[i][j] === BgLayoutItemType.main) {
-            const position = { x: j, y: i };
-            roleStore.mainPosition = position;
-            roleStore.mainInitPosition = position;
-          } else if (dataJson[i][j] === BgLayoutItemType.end) {
-            roleStore.endRect = { x: j, y: i };
+      let dataJson = JSON.parse(JSON.stringify(levelMap[this.level]));
+      if (this.weeks === 1) {
+        for (let i = 0; i < dataJson.length; i++) {
+          for (let j = 0; j < dataJson[i].length; j++) {
+            if (dataJson[i][j] === BgLayoutItemType.main) {
+              const position = { x: j, y: i };
+              roleStore.mainPosition = position;
+              roleStore.mainInitPosition = position;
+            } else if (dataJson[i][j] === BgLayoutItemType.end) {
+              roleStore.endRect = { x: j, y: i };
+            }
           }
         }
+      } else {
+        const list = createdLevel(dataJson, this.level);
+        dataJson = list;
       }
+
       this.bgLayout = dataJson;
       this.status = Status.normal;
       return true;
@@ -420,6 +428,10 @@ class GlobalStore {
     });
     await message.success('恭喜过关', 1200);
     this.level++;
+    if (this.level >= Object.keys(levelMap).length) {
+      this.weeks++;
+      this.level = 1;
+    }
     await dbStore.saveProgress();
     this.init();
   }

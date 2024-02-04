@@ -46,7 +46,7 @@ class DbStore {
   @action
   async addLogger(
     data:
-      | Omit<LoggerTableItem, 'level' | 'createdAt' | 'updateAt'>
+      | Omit<LoggerTableItem, 'level' | 'weeks' | 'createdAt' | 'updateAt'>
       | LoggerTableItem[]
   ) {
     const now = dayjs().toDate();
@@ -57,6 +57,7 @@ class DbStore {
             JSON.stringify([
               {
                 ...data,
+                weeks: globalStore.weeks,
                 level: globalStore.level,
                 createdAt: now,
                 updateAt: now,
@@ -99,6 +100,7 @@ class DbStore {
     const nowDate = new Date();
     const data: ProgressTableItem = {
       name: name || dayjs().format('YYYYMMDDHHmmss'),
+      weeks: config.weeks || globalStore.weeks,
       level: config.level || globalStore.level,
       coins: config.coins || roleStore.coins,
       purifyCount: config.purifyCount || roleStore.purifyCount,
@@ -150,6 +152,7 @@ class DbStore {
     const nowDate = new Date();
     const data: Omit<ProgressTableItem, 'name' | 'createdAt'> = {
       coins: roleStore.coins,
+      weeks: globalStore.weeks,
       level: globalStore.level,
       purifyCount: roleStore.purifyCount,
       isReverse: roleStore.isReverse,
@@ -188,6 +191,7 @@ class DbStore {
       return;
     }
     const {
+      weeks,
       level,
       coins,
       purifyCount,
@@ -205,7 +209,8 @@ class DbStore {
 
     await this.updateProgress(this.currentProgressId);
 
-    globalStore.level = level;
+    globalStore.weeks = weeks || 1;
+    globalStore.level = level || 1;
     roleStore.coins = coins;
     roleStore.purifyCount = purifyCount;
     roleStore.isReverse = isReverse;

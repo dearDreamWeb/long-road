@@ -535,6 +535,7 @@ const Index = () => {
           <StatusComponent />
           <div className={classNames([styles.canvasMain, 'nes-diy-border'])}>
             <div className="flex justify-between items-center font-bold py-4">
+              <div className="text-xl">周目：{globalStore.weeks}</div>
               <div className="text-xl">关卡：{globalStore.level}</div>
               <div className="text-6xl flex-1">漫长之路</div>
               {/* <button
