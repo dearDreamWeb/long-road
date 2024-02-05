@@ -101,6 +101,7 @@ function InfoComponent() {
                   <div className="my-2" key={item.id}>
                     {index === 0 && (
                       <h1 className="py-4 flex justify-center text-2xl font-bold text-black">
+                        <span className="mr-8">周目：{item.weeks || 1}</span>{' '}
                         关卡：{item.level}
                       </h1>
                     )}

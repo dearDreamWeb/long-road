@@ -43,7 +43,7 @@ export interface ProgressTableItem {
   viewDistance: number;
   purifyCount: number;
   isReverse: boolean;
-  isRoad: boolean;
+  // isRoad: boolean;
   createdAt: Date;
   updateAt: Date;
   logger: LoggerTableItem[];

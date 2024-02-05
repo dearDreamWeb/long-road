@@ -113,12 +113,12 @@ export const buyStage = async ({ app }: { app: PIXI.Application }) => {
       const confusion = new PIXI.Sprite(globalStore.toolsTextures[2]);
       const roadTexture = new PIXI.Sprite(globalStore.toolsTextures[4]);
       const list = [
-        { sprite: spriteView, price: 50 },
-        { sprite: spritePurify, price: 30 },
-        { sprite: roadTexture, price: 80 },
+        { sprite: spriteView, price: 50, desc: '角色可见的范围' },
+        { sprite: spritePurify, price: 30, desc: '可抵消一次失败处罚' },
+        { sprite: roadTexture, price: 80, desc: '会显示走过的路' },
       ];
       if (roleStore.isReverse) {
-        list.push({ sprite: confusion, price: 20 });
+        list.push({ sprite: confusion, price: 20, desc: '解除混乱状态' });
       }
       const glowFilter = new GlowFilter({ distance: 5, innerStrength: 1 });
       const shopContainer = new PIXI.Container();
@@ -151,9 +151,10 @@ export const buyStage = async ({ app }: { app: PIXI.Application }) => {
         sprite.interactive = true;
         sprite.buttonMode = true;
         // 添加鼠标悬停事件
-        // sprite.on('mouseover', function () {
-        //   sprite.filters = [glowFilter];
-        // });
+        sprite.on('mouseover', function () {
+          // sprite.filters = [glowFilter];
+          message.info({ content: item.desc });
+        });
 
         // sprite.on('mouseout', () => {
         //   sprite.filters = [];
