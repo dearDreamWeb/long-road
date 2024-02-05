@@ -122,7 +122,7 @@ class GlobalStore {
           }
         }
       } else {
-        const [list, mainP] = createdLevel(dataJson, this.level);
+        const [list, mainP] = createdLevel(this.level);
         dataJson = list;
         roleStore.mainPosition = mainP;
         roleStore.mainInitPosition = mainP;
@@ -282,7 +282,7 @@ class GlobalStore {
     }
     let valuesArr = Object.values(PunishEnum);
     valuesArr.splice(0, valuesArr.length / 2);
-    console.log(3333, [...valuesArr]);
+
     if (roleStore.viewDistance <= MINVIEWDISTANCE) {
       valuesArr.splice(valuesArr.indexOf(PunishEnum.reduceView), 1);
     }
@@ -430,7 +430,7 @@ class GlobalStore {
     });
     await message.success('恭喜过关', 1200);
     this.level++;
-    if (this.level >= Object.keys(levelMap).length) {
+    if (this.level >= Object.keys(levelMap).length && this.weeks === 1) {
       this.weeks++;
       this.level = 1;
     }

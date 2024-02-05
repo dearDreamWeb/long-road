@@ -12,6 +12,7 @@ import {
 } from '@/utils';
 import Modal from '@/components/modal/modal';
 import message from '@/components/message/message';
+import { createdLevel, routePlanDijkstra } from '@/utils/createdLevel';
 
 interface RectGraphics extends PIXI.Graphics {
   rectType: BgLayoutItemType;
@@ -207,6 +208,19 @@ const createGame = () => {
     }
   };
 
+  const randomCreated = () => {
+    const [list, _, endPosition] = createdLevel(25);
+    bgLayout.current = list;
+    console.log('random', list);
+    const result = routePlanDijkstra({
+      start: { x: 12, y: 24 },
+      end: endPosition,
+      obstacleAll: list,
+    });
+    console.log(result.length ? '通' : '不通');
+    drawLayout();
+  };
+
   return (
     <div className="relative flex">
       <div className="mr-4 py-4 shadow-lg shadow-#ccc-500/50">
@@ -237,6 +251,12 @@ const createGame = () => {
         ))}
       </div>
       <canvas id="createCanvas"></canvas>
+      <button
+        className="btn btn-active absolute bottom-full mb-4 left-1/3 -translate-x-full"
+        onClick={randomCreated}
+      >
+        随机地图
+      </button>
       <button
         className="btn btn-active absolute bottom-full mb-4 left-1/3"
         onClick={() => setIsOpen(true)}

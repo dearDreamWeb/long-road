@@ -308,7 +308,7 @@ const Index = () => {
   }, [flash]);
 
   const randomDuel = () => {
-    let perNum = 0.002 * globalStore.level;
+    let perNum = 0.0002 * globalStore.level;
     return (
       Math.random() > Math.max(0, 0.98 - roleStore.duelIntervalSteps * perNum)
     );
@@ -382,16 +382,27 @@ const Index = () => {
 
     if (rectType === BgLayoutItemType.backTo) {
       globalStore.status = Status.stop;
-      await message.warning('糟糕，踩到了传送门，回到了原点！');
-      dbStore.addLogger({
-        type: TypeEnum.FindBackTo,
-        content: '糟糕，踩到了传送门，回到了原点！',
-        focus: '传送门',
-      });
       roleStore.duelIntervalSteps = 0;
       globalStore.bgLayout[roleStore.mainPosition.y][roleStore.mainPosition.x] =
         BgLayoutItemType.empty;
-      globalStore.backToLevelOrigin();
+      if (roleStore.purifyCount > 0) {
+        await message.warning('糟糕，踩到了传送门，保护罩抵消！');
+        dbStore.addLogger({
+          type: TypeEnum.FindBackTo,
+          content: '糟糕，踩到了传送门，保护罩抵消！',
+          focus: '传送门',
+        });
+        roleStore.purifyCount--;
+      } else {
+        await message.warning('糟糕，踩到了传送门，回到了原点！');
+        dbStore.addLogger({
+          type: TypeEnum.FindBackTo,
+          content: '糟糕，踩到了传送门，回到了原点！',
+          focus: '传送门',
+        });
+
+        globalStore.backToLevelOrigin();
+      }
       globalStore.status = Status.normal;
     } else if (rectType === BgLayoutItemType.protect) {
       globalStore.status = Status.stop;

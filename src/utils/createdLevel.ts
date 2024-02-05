@@ -1,5 +1,7 @@
 import { BgLayoutItemType } from '@/typings';
 import { randomRange } from '.';
+import { generateMaze } from './randomMap';
+import { GRIDROWS } from '@/const';
 
 export interface Position {
   x: number;
@@ -161,9 +163,9 @@ export const randomTools = (canUserList: Position[], level: number) => {
 };
 
 export const createdLevel = (
-  bgArr: BgLayoutItemType[][],
   level: number
-): [BgLayoutItemType[][], Position] => {
+): [BgLayoutItemType[][], Position, Position] => {
+  const bgArr = generateMaze(GRIDROWS, GRIDROWS);
   let newList: BgLayoutItemType[][] = JSON.parse(JSON.stringify(bgArr));
   let canUserList: Position[] = [];
   let mainP: Position = { x: 0, y: 0 };
@@ -209,5 +211,5 @@ export const createdLevel = (
     newList[item.y][item.x] = item.value;
   });
 
-  return [newList, mainP];
+  return [newList, mainP, endPosition];
 };
