@@ -22,6 +22,7 @@ import level1 from '@/assets/levels/level-1.json';
 import level2 from '@/assets/levels/level-2.json';
 import level3 from '@/assets/levels/level-3.json';
 import level4 from '@/assets/levels/level-4.json';
+import level5 from '@/assets/levels/level-5.json';
 import { randomRange, sleep } from '@/utils';
 import { GlowFilter } from '@pixi/filter-glow';
 import { buyStage } from '@/utils/stage';
@@ -39,11 +40,12 @@ interface Settings {
 
 configure({ enforceActions: 'never' });
 
-const levelMap: any = {
+const levelMap: Record<number, BgLayoutItemType[][]> = {
   1: level1,
   2: level2,
   3: level3,
   4: level4,
+  5: level5,
 };
 
 class GlobalStore {
@@ -95,6 +97,8 @@ class GlobalStore {
   @action
   async init(_app?: PIXI.Application) {
     try {
+      roleStore.direction = 'down';
+      roleStore.mainPosition = { x: 12, y: 24 };
       roleStore.duelIntervalSteps = 0;
       this.status = Status.stop;
       // if (this.level >= Object.keys(levelMap).length) {
@@ -127,7 +131,6 @@ class GlobalStore {
         roleStore.mainPosition = mainP;
         roleStore.mainInitPosition = mainP;
       }
-
       this.bgLayout = dataJson;
       this.status = Status.normal;
       return true;
@@ -421,7 +424,7 @@ class GlobalStore {
   /**游戏过关 */
   @action
   async winGame() {
-    const coins = 50;
+    const coins = Math.min(40 + this.level * 10, 200);
     roleStore.coins += coins;
     await dbStore.addLogger({
       type: TypeEnum.WinLevel,
@@ -430,7 +433,7 @@ class GlobalStore {
     });
     await message.success('恭喜过关', 1200);
     this.level++;
-    if (this.level >= Object.keys(levelMap).length && this.weeks === 1) {
+    if (this.level > Object.keys(levelMap).length && this.weeks === 1) {
       this.weeks++;
       this.level = 1;
     }

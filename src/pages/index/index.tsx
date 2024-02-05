@@ -39,6 +39,7 @@ import BgComponent from '@/components/bgComponent/bgComponent';
 import dbStore from '@/store/dbStore';
 import { TypeEnum } from '@/db/db';
 import modalStore from '@/store/modalStore';
+import seedrandom from 'seedrandom';
 
 interface RectGraphics extends PIXI.Graphics {
   rectType: BgLayoutItemType;
@@ -206,7 +207,7 @@ const Index = () => {
       // BgLayoutItemType.end,
       BgLayoutItemType.protect,
     ];
-    console.log('roleStore.isRoad', roleStore.isRoad);
+
     if (!roleStore.isRoad) {
       disabledShowColorList.push(BgLayoutItemType.route);
     }
@@ -308,10 +309,9 @@ const Index = () => {
   }, [flash]);
 
   const randomDuel = () => {
+    const random = seedrandom();
     let perNum = 0.0002 * globalStore.level;
-    return (
-      Math.random() > Math.max(0, 0.98 - roleStore.duelIntervalSteps * perNum)
-    );
+    return random() > Math.max(0, 0.98 - roleStore.duelIntervalSteps * perNum);
   };
 
   /**

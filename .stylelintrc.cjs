@@ -11,7 +11,7 @@ module.exports = {
   rules: {
     'selector-class-pattern': [null, 'kebab-case'],
     // 颜色指定大写
-    'color-hex-case': 'upper',
+    'color-hex-case': null,
     // 禁止空块
     'block-no-empty': true,
     // 颜色6位长度

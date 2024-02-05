@@ -17,11 +17,11 @@ export function generateMaze(
   startX: number,
   startY: number
 ) {
-  const random = seedrandom(Math.random().toString());
+  const random = seedrandom();
   // 创建一个二维数组表示迷宫
   const maze = (new Array(rows) as any)
     .fill(null)
-    .map(() => (new Array(columns) as any).fill(1));
+    .map(() => (new Array(columns) as any).fill(BgLayoutItemType.obstacle));
 
   function generate(x: number, y: number) {
     const directions = [
@@ -32,23 +32,23 @@ export function generateMaze(
     ]; // 上下左右四个方向
     directions.sort(() => random() - 0.5); // 随机打乱方向数组
 
-    maze[x][y] = 0; // 将当前节点标记为已访问
+    maze[x][y] = BgLayoutItemType.empty; // 将当前节点标记为已访问
 
     for (let direction of directions) {
       const [dx, dy] = direction;
       const newX = x + 2 * dx;
       const newY = y + 2 * dy;
 
-      if (
-        newX >= 0 &&
-        newX < rows &&
-        newY >= 0 &&
-        newY < columns &&
-        maze[newX][newY] === 1
-      ) {
-        maze[newX][newY] = 0; // 将当前节点与下一个节点之间的墙打通
-        maze[x + dx][y + dy] = 0; // 将中间节点标记为已访问
-        generate(newX, newY); // 递归生成下一个节点
+      if (newX >= 0 && newX < rows && newY >= 0 && newY < columns) {
+        if (maze[newX][newY] === BgLayoutItemType.obstacle) {
+          maze[newX][newY] = BgLayoutItemType.empty; // 将当前节点与下一个节点之间的墙打通
+          maze[x + dx][y + dy] = BgLayoutItemType.empty; // 将中间节点标记为已访问
+          generate(newX, newY); // 递归生成下一个节点
+        } else if (maze[newX][newY] === BgLayoutItemType.empty) {
+          if (random() > 0.98) {
+            maze[x + dx][y + dy] = BgLayoutItemType.empty;
+          }
+        }
       }
     }
   }
