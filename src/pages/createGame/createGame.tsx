@@ -252,7 +252,7 @@ const createGame = () => {
       </div>
       <canvas id="createCanvas"></canvas>
       <button
-        className="btn btn-active absolute bottom-full mb-4 left-1/3 -translate-x-full"
+        className="btn btn-active absolute bottom-full mb-4 left-0"
         onClick={randomCreated}
       >
         随机地图

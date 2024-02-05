@@ -165,7 +165,12 @@ export const randomTools = (canUserList: Position[], level: number) => {
 export const createdLevel = (
   level: number
 ): [BgLayoutItemType[][], Position, Position] => {
-  const bgArr = generateMaze(GRIDROWS, GRIDROWS);
+  const bgArr = generateMaze(
+    GRIDROWS,
+    GRIDROWS,
+    GRIDROWS - 1,
+    Math.floor(GRIDROWS / 2)
+  );
   let newList: BgLayoutItemType[][] = JSON.parse(JSON.stringify(bgArr));
   let canUserList: Position[] = [];
   let mainP: Position = { x: 0, y: 0 };

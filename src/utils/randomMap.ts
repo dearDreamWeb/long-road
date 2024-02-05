@@ -1,3 +1,4 @@
+import { BgLayoutItemType } from '@/typings';
 import seedrandom from 'seedrandom';
 
 /**
@@ -6,12 +7,16 @@ import seedrandom from 'seedrandom';
  * 随机选择一个相邻的未访问的节点，并将其与当前节点之间的墙打通，然后将该节点标记为已访问。
  * 重复上述步骤，直到所有的节点都被访问过。
  * 如果在访问过程中遇到已访问的节点，则回溯到上一个未访问的节点，并继续随机选择相邻的未访问节点。
- * 最终得到的迷宫就是一个随机生成的迷宫。
  * @param rows
  * @param columns
  * @returns
  */
-export function generateMaze(rows: number, columns: number) {
+export function generateMaze(
+  rows: number,
+  columns: number,
+  startX: number,
+  startY: number
+) {
   const random = seedrandom(Math.random().toString());
   // 创建一个二维数组表示迷宫
   const maze = (new Array(rows) as any)
@@ -48,7 +53,7 @@ export function generateMaze(rows: number, columns: number) {
     }
   }
 
-  generate(24, 12); // 从随机起点开始生成迷宫
-  maze[24][12] = 2;
+  generate(startX, startY); // 从随机起点开始生成迷宫
+  maze[startX][startY] = BgLayoutItemType.main;
   return maze;
 }
