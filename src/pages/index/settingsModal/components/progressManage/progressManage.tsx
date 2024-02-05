@@ -239,6 +239,7 @@ function ProgressManage({ onClose }: { onClose: () => void }) {
                 onClick={async () => {
                   const newId = await dbStore.addProgress(void 0, {
                     ...DEDAULTVALUES,
+                    weeks: 1,
                     level: 1,
                     loggerList: [],
                   });

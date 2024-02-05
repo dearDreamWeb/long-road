@@ -103,7 +103,10 @@ class DbStore {
       weeks: config.weeks || globalStore.weeks,
       level: config.level || globalStore.level,
       coins: config.coins || roleStore.coins,
-      purifyCount: config.purifyCount || roleStore.purifyCount,
+      purifyCount:
+        typeof config.purifyCount === 'number'
+          ? config.purifyCount
+          : roleStore.purifyCount,
       isReverse: config.isReverse || roleStore.isReverse,
       viewDistance: config.viewDistance || roleStore.viewDistance,
       createdAt: nowDate,

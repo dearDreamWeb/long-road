@@ -8,6 +8,7 @@ import Typewriter from '../typewriter/typewriter';
 import globalStore from '@/store/store';
 import { GameResultStatus } from '@/typings';
 import CloseIcon from '@/components/closeIcon/closeIcon';
+import { RATE } from '@/const';
 
 interface BlackjackGamProps {
   isOpen: boolean;
@@ -58,10 +59,15 @@ const BlackjackGame = (props: BlackjackGamProps) => {
     <Modal
       isOpen={isOpen}
       className={styles.modalBox}
-      width={700}
+      width={700 * RATE}
       mainAnimation
     >
-      <div className={classNames(styles.blackjackGameBox, 'flex flex-col')}>
+      <div
+        className={classNames(
+          styles.blackjackGameBox,
+          'flex flex-col px-2 pt-4 pb-16'
+        )}
+      >
         <h1 className="title-1 text-shadow">决斗吧，骚年--《21点》</h1>
         <p className="nes-text">规则：</p>
         <Typewriter text="游戏的目标是在不超过总分21的情况下获得高于庄家的得分。每张牌的分值在1-10之间。"></Typewriter>
@@ -143,7 +149,7 @@ const BlackjackGame = (props: BlackjackGamProps) => {
         </div>
         {isOver && (
           <button
-            className="nes-btn px-8 text-xl m-auto mt-4 flex items-center"
+            className="nes-btn px-8 !py-0 text-xl m-auto mt-4 flex items-center absolute bottom-2 left-1/2 -translate-x-1/2"
             onClick={() => onChange(false)}
           >
             关闭
