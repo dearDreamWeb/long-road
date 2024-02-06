@@ -5,7 +5,7 @@ import Typewriter from '../typewriter/typewriter';
 import classNames from 'classnames';
 import CloseIcon from '../closeIcon/closeIcon';
 import globalStore from '@/store/store';
-import { GameResultStatus } from '@/typings';
+import { GameResultStatus, Status } from '@/typings';
 import styles from './slotMachineGame.module.less';
 import viewImg from '@/assets/images/view.png';
 import purifyImg from '@/assets/images/purify.png';
@@ -22,28 +22,10 @@ interface SlotMachineGameProps {
   isOpen: boolean;
   onChange(value: boolean): void;
 }
-interface ResultListItem {
-  result: number | null;
-  right: boolean;
-}
-
-interface ImgItem {
-  key: string;
-  url: string;
-}
-
-const imgList: ImgItem[] = [
-  { key: 'view', url: viewImg },
-  { key: 'purify', url: purifyImg },
-  { key: 'coin', url: coinImg },
-];
 
 const SlotMachineGame = (props: SlotMachineGameProps) => {
   const { isOpen, onChange } = props;
   const luckyCanvasRef = useRef<HTMLDivElement>(null);
-  const [listData, setListData] = useState<ImgItem[][]>(
-    new Array(3).fill(imgList)
-  );
   const [myLucky, setMyLucky] = useState<SlotMachine>();
   const [stating, setStating] = useState(false);
   const random = seedrandom();
@@ -52,11 +34,11 @@ const SlotMachineGame = (props: SlotMachineGameProps) => {
 
   useEffect(() => {
     const myLucky = new SlotMachine('#my-lucky' as any, {
-      width: '30rem',
-      height: '18rem',
+      width: '500px',
+      height: '300px',
       blocks: [
-        { padding: '2rem', background: '#869cfa' },
-        { padding: '1rem', background: '#e9e8fe' },
+        { padding: '20px', background: '#869cfa' },
+        { padding: '40px', background: '#e9e8fe' },
       ],
       slots: [{ speed: 8 }, { speed: 12 }, { speed: 20 }],
       prizes: [
@@ -208,7 +190,13 @@ const SlotMachineGame = (props: SlotMachineGameProps) => {
               'nes-btn flex items-center',
               isRunning ? 'is-disabled' : '',
             ])}
-            onClick={() => !isRunning && onChange(false)}
+            onClick={() => {
+              if (isRunning) {
+                return;
+              }
+              onChange(false);
+              globalStore.status = Status.normal;
+            }}
           >
             关闭
             <CloseIcon />
