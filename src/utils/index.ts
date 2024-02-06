@@ -221,3 +221,21 @@ export function dispatchBtnClickEvent() {
   const btnClickEvent = new Event('btnClick');
   document.dispatchEvent(btnClickEvent);
 }
+
+/**加减金币 */
+export function rangeCoins(min = 40, max = 200) {
+  const random = Math.random();
+  let coinsRate = 1;
+  if (random < 0.65) {
+    coinsRate = 0;
+  } else if (random < 0.8) {
+    coinsRate = 0.3;
+  } else if (random < 0.9) {
+    coinsRate = 0.5;
+  } else if (random < 0.95) {
+    coinsRate = 0.8;
+  } else {
+    return max;
+  }
+  return Math.floor((max - min) * coinsRate + min);
+}

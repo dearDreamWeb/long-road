@@ -23,7 +23,7 @@ import level2 from '@/assets/levels/level-2.json';
 import level3 from '@/assets/levels/level-3.json';
 import level4 from '@/assets/levels/level-4.json';
 import level5 from '@/assets/levels/level-5.json';
-import { randomRange, sleep } from '@/utils';
+import { randomRange, rangeCoins, sleep } from '@/utils';
 import { GlowFilter } from '@pixi/filter-glow';
 import { buyStage } from '@/utils/stage';
 import dbStore from './dbStore';
@@ -253,24 +253,6 @@ class GlobalStore {
     return typeof type === 'number' && type !== BgLayoutItemType.obstacle;
   };
 
-  /**加减金币 */
-  rangeCoins(min = 40, max = 200) {
-    const random = Math.random();
-    let coinsRate = 1;
-    if (random < 0.65) {
-      coinsRate = 0;
-    } else if (random < 0.8) {
-      coinsRate = 0.3;
-    } else if (random < 0.9) {
-      coinsRate = 0.5;
-    } else if (random < 0.95) {
-      coinsRate = 0.8;
-    } else {
-      return max;
-    }
-    return Math.floor((max - min) * coinsRate + min);
-  }
-
   /**失败处理 */
   failHandler() {
     if (roleStore.purifyCount) {
@@ -336,7 +318,7 @@ class GlobalStore {
       });
     } else if (value === PunishEnum.reduceCoins) {
       const coins =
-        roleStore.coins <= 30 ? roleStore.coins : this.rangeCoins(30, 80);
+        roleStore.coins <= 30 ? roleStore.coins : rangeCoins(30, 80);
       message.warning(`扣除 ${coins} 金币`);
       roleStore.coins = roleStore.coins - coins;
       dbStore.addLogger({
@@ -390,7 +372,7 @@ class GlobalStore {
         focus: `保护罩`,
       });
     } else if (value === AwardEnum.addCoins) {
-      const coins = this.rangeCoins();
+      const coins = rangeCoins();
       message.warning(`增加 ${coins} 金币`);
       roleStore.coins += coins;
       dbStore.addLogger({
