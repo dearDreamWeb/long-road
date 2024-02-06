@@ -211,7 +211,7 @@ const Index = () => {
     if (!roleStore.isRoad) {
       disabledShowColorList.push(BgLayoutItemType.route);
     }
-    if (import.meta.env.MODE !== 'development') {
+    if (import.meta.env.MODE === 'development') {
       if (type === BgLayoutItemType.route) {
         rectangle.beginFill(colorMap[BgLayoutItemType.empty]);
       } else {
