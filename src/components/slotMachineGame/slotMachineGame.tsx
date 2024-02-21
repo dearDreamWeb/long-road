@@ -107,6 +107,10 @@ const SlotMachineGame = (props: SlotMachineGameProps) => {
           });
         } else {
           message.info('很遗憾，未中奖，再接再厉');
+          dbStore.addLogger({
+            type: TypeEnum.Info,
+            content: `很遗憾，未中奖，再接再厉`,
+          });
         }
         setIsRunning(false);
       },
@@ -125,6 +129,11 @@ const SlotMachineGame = (props: SlotMachineGameProps) => {
       }
       myLucky?.play();
       roleStore.coins -= speedCoins;
+      dbStore.addLogger({
+        type: TypeEnum.Info,
+        content: `开始抽奖，本次花费${speedCoins}金币`,
+        focus: `${speedCoins}金币`,
+      });
       setSpeedCoins(Math.min(speedCoins + 10, 50));
     } else {
       setIsRunning(true);
@@ -188,10 +197,10 @@ const SlotMachineGame = (props: SlotMachineGameProps) => {
           <button
             className={classNames([
               'nes-btn flex items-center',
-              isRunning ? 'is-disabled' : '',
+              stating || isRunning ? 'is-disabled' : '',
             ])}
             onClick={() => {
-              if (isRunning) {
+              if (stating || isRunning) {
                 return;
               }
               onChange(false);
