@@ -557,7 +557,13 @@ const Index = () => {
               <div className="text-xl">
                 关卡：<span className="text-3xl">{globalStore.level}</span>
               </div>
-              <div className="text-6xl flex-1">漫长之路</div>
+              <div className="text-6xl flex-1 flex justify-center items-end">
+                漫长之路{' '}
+                <i
+                  className="nes-icon github ml-4 diy-hover-cursor"
+                  onClick={() => window.open('https://github.com/dearDreamWeb/long-road')}
+                ></i>
+              </div>
               {/* <button
                 className={classNames('nes-btn is-primary', styles.testBtn)}
                 onClick={() => {
