@@ -420,6 +420,7 @@ class GlobalStore {
       this.level = 1;
     }
     await dbStore.saveProgress();
+    roleStore.isRoad = false;
     this.init();
   }
 
