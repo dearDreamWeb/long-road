@@ -29,6 +29,7 @@ const KnowledgeGame = (props: KnowledgeGameProps) => {
   const [showDetails, setShowDetails] = useState(false);
   const timer = useRef<NodeJS.Timer | null>(null);
   const [seconds, setSeconds] = useState(QUESTTIME);
+  const isGameSettlement = useRef(false);
 
   const getRandomIndex = (selectedList: number[], size: number): number => {
     const random = Math.floor(Math.random() * size);
@@ -77,6 +78,8 @@ const KnowledgeGame = (props: KnowledgeGameProps) => {
       questionsList
     );
     if (currentIndex === questionsList.length - 1) {
+      timer.current && clearInterval(timer.current);
+      timer.current = null;
       setGameOver(true);
       return;
     }
@@ -84,12 +87,14 @@ const KnowledgeGame = (props: KnowledgeGameProps) => {
   };
 
   const isWin = useMemo(() => {
-    if (!gameOver) {
+    if (!gameOver || isGameSettlement.current) {
       return false;
     }
+    console.log('----', gameOver, resultList, questionsList);
     const result =
       resultList.filter((item) => item.right).length >=
       questionsList.length / 2;
+    isGameSettlement.current = true;
     globalStore.gameSettlement(
       result ? GameResultStatus.win : GameResultStatus.loss
     );

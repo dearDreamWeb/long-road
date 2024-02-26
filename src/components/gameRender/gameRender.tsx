@@ -80,9 +80,9 @@ const GameRender = () => {
     if (rate > 0.92 && roleStore.coins >= 20) {
       randomIndex = 3;
     } else {
-      randomIndex = Math.floor(random() * gameList.length);
+      randomIndex = Math.floor(random() * (gameList.length - 1));
     }
-    // randomIndex = 3;
+    // randomIndex = 2;
     console.log('random game', randomIndex, gameList.length);
     setStartGame(true);
     setGameIndex(randomIndex);
