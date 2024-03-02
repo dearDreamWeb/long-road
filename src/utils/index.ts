@@ -239,3 +239,12 @@ export function rangeCoins(min = 40, max = 200) {
   }
   return Math.floor((max - min) * coinsRate + min);
 }
+
+/**随机洗牌 */
+export function shuffleArray(array: any[]) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
+}

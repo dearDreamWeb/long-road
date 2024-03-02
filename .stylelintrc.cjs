@@ -44,7 +44,7 @@ module.exports = {
     // property-no-vendor-prefix
     'property-no-vendor-prefix': true,
     // 禁止小于 1 的小数有一个前导零
-    'number-leading-zero': 'never',
+    'number-leading-zero': null,
     // 禁止空第一行
     'no-empty-first-line': true,
     // 属性的排序
