@@ -23,12 +23,13 @@ import level2 from '@/assets/levels/level-2.json';
 import level3 from '@/assets/levels/level-3.json';
 import level4 from '@/assets/levels/level-4.json';
 import level5 from '@/assets/levels/level-5.json';
-import { randomRange, rangeCoins, sleep } from '@/utils';
+import { encrypt, getUserId, randomRange, rangeCoins, sleep } from '@/utils';
 import { GlowFilter } from '@pixi/filter-glow';
 import { buyStage } from '@/utils/stage';
 import dbStore from './dbStore';
 import { TypeEnum } from '@/db/db';
 import { createdLevel } from '@/utils/createdLevel';
+import { digital } from '@/api/api';
 
 export type AudioResources = Record<keyof Audios, Sound>;
 interface Settings {
@@ -133,6 +134,15 @@ class GlobalStore {
       }
       this.bgLayout = dataJson;
       this.status = Status.normal;
+
+      const userId = getUserId();
+      digital({
+        gameName: 'longRoad',
+        subName: 'all',
+        score: encrypt(`${this.weeks}${this.level}`),
+        userId: userId,
+        nickName: userId,
+      });
       return true;
     } catch (e) {
       this.status = Status.stop;

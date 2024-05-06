@@ -17,6 +17,7 @@ import classnames from 'classnames';
 import { HashRouter } from 'react-router-dom';
 import titleLogo from '@/assets/images/title-logo2.png';
 import modalStore from '@/store/modalStore';
+import { getUserId, randomHash } from './utils';
 
 function App() {
   const [isRender, setIsRender] = useState(false);
@@ -43,6 +44,7 @@ function App() {
   };
 
   useEffect(() => {
+    getUserId();
     document.addEventListener('click', buttonClick as any);
     document.addEventListener('btnClick', buttonClick as any);
     setRootRem();

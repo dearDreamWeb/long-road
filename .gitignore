@@ -24,3 +24,4 @@ dist-ssr
 stats.html
 
 .stylelintcache
+*.env

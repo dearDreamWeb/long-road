@@ -561,7 +561,9 @@ const Index = () => {
                 漫长之路{' '}
                 <i
                   className="nes-icon github ml-4 diy-hover-cursor"
-                  onClick={() => window.open('https://github.com/dearDreamWeb/long-road')}
+                  onClick={() =>
+                    window.open('https://github.com/dearDreamWeb/long-road')
+                  }
                 ></i>
               </div>
               {/* <button

@@ -1,5 +1,6 @@
 import * as PIXI from 'pixi.js';
 import { WIDTH, HEIGHT, GRIDROWS, GRIDWIDTH, GRIDHEIGHT, RATE } from '@/const';
+import JSEncrypt from 'jsencrypt';
 
 interface CreateLine {
   moveToX: number;
@@ -248,3 +249,19 @@ export function shuffleArray(array: any[]) {
   }
   return array;
 }
+
+export const encrypt = (text: string) => {
+  const PUB_KEY = import.meta.env.VITE_PUBLIC_KEY || '';
+  let encrypt = new JSEncrypt();
+  encrypt.setPublicKey(PUB_KEY);
+  return encrypt.encrypt(text);
+};
+
+export const getUserId = () => {
+  let userId = localStorage.getItem('userId');
+  if (!userId) {
+    userId = randomHash();
+    localStorage.setItem('userId', userId);
+  }
+  return userId;
+};
