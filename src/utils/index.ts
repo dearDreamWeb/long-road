@@ -256,12 +256,3 @@ export const encrypt = (text: string) => {
   encrypt.setPublicKey(PUB_KEY);
   return encrypt.encrypt(text);
 };
-
-export const getUserId = () => {
-  let userId = localStorage.getItem('userId');
-  if (!userId) {
-    userId = randomHash();
-    localStorage.setItem('userId', userId);
-  }
-  return userId;
-};

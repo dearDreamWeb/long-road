@@ -81,7 +81,7 @@ const Index = () => {
       });
       loaderShopResources();
       globalStore.gameApp = _app;
-      await globalStore.init(_app);
+      await globalStore.init(_app, true);
       setApp(_app);
       loaderResources();
       rectContainer.current.filters = [new PIXI.filters.NoiseFilter(0.3)];

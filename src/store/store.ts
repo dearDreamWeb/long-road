@@ -23,13 +23,14 @@ import level2 from '@/assets/levels/level-2.json';
 import level3 from '@/assets/levels/level-3.json';
 import level4 from '@/assets/levels/level-4.json';
 import level5 from '@/assets/levels/level-5.json';
-import { encrypt, getUserId, randomRange, rangeCoins, sleep } from '@/utils';
+import { encrypt, randomRange, rangeCoins, sleep } from '@/utils';
 import { GlowFilter } from '@pixi/filter-glow';
 import { buyStage } from '@/utils/stage';
 import dbStore from './dbStore';
 import { TypeEnum } from '@/db/db';
 import { createdLevel } from '@/utils/createdLevel';
 import { digital } from '@/api/api';
+import FingerprintJS from '@fingerprintjs/fingerprintjs';
 
 export type AudioResources = Record<keyof Audios, Sound>;
 interface Settings {
@@ -81,6 +82,8 @@ class GlobalStore {
   };
   // 主画布
   gameApp: PIXI.Application | null = null;
+  // userId
+  userId = '';
 
   constructor() {
     makeAutoObservable(this);
@@ -94,9 +97,16 @@ class GlobalStore {
     localStorage.setItem('settings', JSON.stringify(value || {}));
   }
 
+  @action
+  async initUserId() {
+    const fp = await FingerprintJS.load();
+    const result = await fp.get();
+    this.userId = result.visitorId;
+  }
+
   /**初始化游戏场景 */
   @action
-  async init(_app?: PIXI.Application) {
+  async init(_app?: PIXI.Application, isStart?: boolean) {
     try {
       roleStore.direction = 'down';
       roleStore.mainPosition = { x: 12, y: 24 };
@@ -135,14 +145,16 @@ class GlobalStore {
       this.bgLayout = dataJson;
       this.status = Status.normal;
 
-      const userId = getUserId();
-      digital({
-        gameName: 'longRoad',
-        subName: 'all',
-        score: encrypt(`${this.weeks}${this.level}`),
-        userId: userId,
-        nickName: userId,
-      });
+      if (isStart) {
+        digital({
+          gameName: 'longRoad',
+          subName: 'all',
+          score: encrypt(`${this.weeks}${this.level}`),
+          userId: this.userId,
+          nickName: this.userId,
+        });
+      }
+
       return true;
     } catch (e) {
       this.status = Status.stop;
@@ -431,7 +443,7 @@ class GlobalStore {
     }
     await dbStore.saveProgress();
     roleStore.isRoad = false;
-    this.init();
+    this.init(void 0, true);
   }
 
   /**回到原点，清除走过的路径 */

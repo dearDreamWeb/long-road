@@ -14,6 +14,7 @@
     "lint:style-fix": "stylelint \"src/**/*.(less|scss|css)\" --cache --fix"
   },
   "dependencies": {
+    "@fingerprintjs/fingerprintjs": "^4.3.0",
     "@pixi/filter-glow": "4.1.5",
     "@pixi/filter-shockwave": "4.1.5",
     "axios": "^1.6.8",
