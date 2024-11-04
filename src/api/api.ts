@@ -6,6 +6,8 @@ import request from './request';
 export const digital = (data: any) => {
   return request('/game/addGameHistory', {
     method: 'post',
-    data,
+    data: {
+      data,
+    },
   });
 };

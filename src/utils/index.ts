@@ -254,5 +254,15 @@ export const encrypt = (text: string) => {
   const PUB_KEY = import.meta.env.VITE_PUBLIC_KEY || '';
   let encrypt = new JSEncrypt();
   encrypt.setPublicKey(PUB_KEY);
-  return encrypt.encrypt(text);
+  let maxChunkLength = 20,
+    inOffset = 0;
+  let arr = [];
+  while (inOffset < text.length) {
+    const str = encrypt.encrypt(
+      text.substring(inOffset, inOffset + maxChunkLength)
+    );
+    arr.push(str);
+    inOffset += maxChunkLength;
+  }
+  return JSON.stringify(arr);
 };

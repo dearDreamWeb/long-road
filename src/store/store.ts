@@ -146,13 +146,17 @@ class GlobalStore {
       this.status = Status.normal;
 
       if (isStart) {
-        digital({
-          gameName: 'longRoad',
-          subName: 'all',
-          score: encrypt(`${this.weeks}${this.level}`),
-          userId: this.userId,
-          nickName: this.userId,
-        });
+        digital(
+          encrypt(
+            JSON.stringify({
+              gameName: 'longRoad',
+              subName: 'all',
+              score: Number(`${this.weeks}${this.level}`),
+              userId: this.userId,
+              nickName: this.userId,
+            })
+          )
+        );
       }
 
       return true;
