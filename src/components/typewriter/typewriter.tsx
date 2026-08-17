@@ -12,7 +12,7 @@ interface TypeWriterProps {
 const TypeWriter = (props: TypeWriterProps) => {
   const { text, time = 100, color, rectColor } = props;
   const [currentText, setCurrentText] = useState('');
-  let timer = useRef<NodeJS.Timer | null>(null);
+  let timer = useRef<ReturnType<typeof setInterval> | null>(null);
   useEffect(() => {
     timer.current && clearInterval(timer.current);
     const len = text.length;

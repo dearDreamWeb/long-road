@@ -199,7 +199,7 @@ export function sleep(duration = 3000) {
 /**防抖 */
 // eslint-disable-next-line @typescript-eslint/ban-types
 export function debounce<T extends Function>(func: T, delay: number): T {
-  let timer: NodeJS.Timeout | null;
+  let timer: ReturnType<typeof setTimeout> | null;
 
   return function (this: unknown, ...args: unknown[]) {
     if (timer) {

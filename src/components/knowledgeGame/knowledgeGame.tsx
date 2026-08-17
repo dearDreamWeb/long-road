@@ -1,4 +1,10 @@
-import React, { useState, useEffect, useMemo, useRef } from 'react';
+import React, {
+  useState,
+  useEffect,
+  useMemo,
+  useRef,
+  useCallback,
+} from 'react';
 import knowledgeQuestions from '@/assets/data/knowledgeQuestions.json';
 import Modal from '../modal/modal';
 import styles from './knowledgeGame.module.less';
@@ -22,14 +28,19 @@ const QUESTTIME = 15;
 
 const KnowledgeGame = (props: KnowledgeGameProps) => {
   const { isOpen, onChange } = props;
-  //   const [questionsList, setQuestionsList] = useState<QuestionItem[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [resultList, setResultList] = useState<ResultListItem[]>([]);
   const [gameOver, setGameOver] = useState(false);
   const [showDetails, setShowDetails] = useState(false);
-  const timer = useRef<NodeJS.Timer | null>(null);
+  const timer = useRef<ReturnType<typeof setInterval> | null>(null);
   const [seconds, setSeconds] = useState(QUESTTIME);
   const isGameSettlement = useRef(false);
+  const currentIndexRef = useRef(currentIndex);
+  const resultListRef = useRef(resultList);
+  const submittingRef = useRef(false);
+
+  currentIndexRef.current = currentIndex;
+  resultListRef.current = resultList;
 
   const getRandomIndex = (selectedList: number[], size: number): number => {
     const random = Math.floor(Math.random() * size);
@@ -47,50 +58,75 @@ const KnowledgeGame = (props: KnowledgeGameProps) => {
     return indexList.map((indexValue) => knowledgeQuestions[indexValue]);
   }, []);
 
-  const currentQuestionInfo = useMemo(() => {
-    if (timer.current) {
-      clearInterval(timer.current);
-      timer.current = null;
-    }
-    let _seconds = QUESTTIME;
-    setSeconds(_seconds);
-    timer.current = setInterval(() => {
-      if (_seconds <= 0) {
-        timer.current && clearInterval(timer.current);
-        timer.current = null;
-        selectedResult(null);
+  const submitAnswer = useCallback(
+    (result: number | null) => {
+      if (submittingRef.current) {
         return;
       }
-      _seconds -= 10 / 1000;
-      setSeconds(_seconds);
-    }, 10);
-    return questionsList[currentIndex];
-  }, [questionsList, currentIndex]);
+      const index = currentIndexRef.current;
+      if (resultListRef.current.length > index) {
+        return;
+      }
+      submittingRef.current = true;
+      const question = questionsList[index];
+      const newItem = {
+        result,
+        right: result === question.result,
+      };
+      const nextResultList = [...resultListRef.current, newItem];
+      resultListRef.current = nextResultList;
+      setResultList(nextResultList);
 
-  const selectedResult = (result: number | null) => {
-    setResultList([
-      ...resultList,
-      { result, right: result === currentQuestionInfo.result },
-    ]);
-    console.log(
-      '-----',
-      [...resultList, { result, right: result === currentQuestionInfo.result }],
-      questionsList
-    );
-    if (currentIndex === questionsList.length - 1) {
-      timer.current && clearInterval(timer.current);
-      timer.current = null;
-      setGameOver(true);
+      if (timer.current) {
+        clearInterval(timer.current);
+        timer.current = null;
+      }
+
+      if (index >= questionsList.length - 1) {
+        setGameOver(true);
+      } else {
+        currentIndexRef.current = index + 1;
+        setCurrentIndex(index + 1);
+      }
+    },
+    [questionsList]
+  );
+
+  const submitAnswerRef = useRef(submitAnswer);
+  submitAnswerRef.current = submitAnswer;
+
+  useEffect(() => {
+    if (gameOver) {
       return;
     }
-    setCurrentIndex(currentIndex + 1);
-  };
+    submittingRef.current = false;
+    setSeconds(QUESTTIME);
+    let remaining = QUESTTIME;
+    timer.current = setInterval(() => {
+      if (remaining <= 0) {
+        if (timer.current) {
+          clearInterval(timer.current);
+          timer.current = null;
+        }
+        submitAnswerRef.current(null);
+        return;
+      }
+      remaining -= 10 / 1000;
+      setSeconds(remaining);
+    }, 10);
+
+    return () => {
+      if (timer.current) {
+        clearInterval(timer.current);
+        timer.current = null;
+      }
+    };
+  }, [currentIndex, gameOver]);
 
   const isWin = useMemo(() => {
     if (!gameOver || isGameSettlement.current) {
       return false;
     }
-    console.log('----', gameOver, resultList, questionsList);
     const result =
       resultList.filter((item) => item.right).length >=
       questionsList.length / 2;
@@ -100,6 +136,8 @@ const KnowledgeGame = (props: KnowledgeGameProps) => {
     );
     return result;
   }, [gameOver, resultList, questionsList]);
+
+  const currentQuestionInfo = questionsList[currentIndex];
 
   return (
     <Modal
@@ -168,7 +206,7 @@ const KnowledgeGame = (props: KnowledgeGameProps) => {
                 <li
                   key={item}
                   className="text-lg pl-2 py-2 hover:bg-primary diy-hover-cursor"
-                  onClick={() => selectedResult(index)}
+                  onClick={() => submitAnswer(index)}
                 >
                   {item}
                 </li>
