@@ -1,11 +1,10 @@
-import React, { useState, useEffect, useMemo, useRef } from 'react';
-import knowledgeQuestions from '@/assets/data/knowledgeQuestions.json';
+import React, { useState, useEffect, useRef } from 'react';
 import Modal from '../modal/modal';
 import Typewriter from '../typewriter/typewriter';
 import classNames from 'classnames';
 import CloseIcon from '../closeIcon/closeIcon';
 import globalStore from '@/store/store';
-import { GameResultStatus, Status } from '@/typings';
+import { Status } from '@/typings';
 import styles from './slotMachineGame.module.less';
 import viewImg from '@/assets/images/view.png';
 import purifyImg from '@/assets/images/purify.png';
@@ -17,6 +16,8 @@ import message from '../message/message';
 import dbStore from '@/store/dbStore';
 import { TypeEnum } from '@/db/db';
 import { rangeCoins } from '@/utils';
+import { RATE } from '@/const';
+import { observer } from 'mobx-react';
 
 interface SlotMachineGameProps {
   isOpen: boolean;
@@ -158,7 +159,7 @@ const SlotMachineGame = (props: SlotMachineGameProps) => {
     <Modal
       isOpen={isOpen}
       className={styles.modalBox}
-      width={700}
+      width={700 * RATE}
       mainAnimation
     >
       <div
@@ -167,9 +168,9 @@ const SlotMachineGame = (props: SlotMachineGameProps) => {
           'flex flex-col relative'
         )}
       >
-        <h1 className="title-1 text-shadow">决斗吧，骚年--《老虎机抽奖》</h1>
-        <p className="nes-text">规则：</p>
-        <Typewriter text="按下开始按钮即可进行抽奖"></Typewriter>
+        <h1 className="title-1 text-shadow">幸运抽奖</h1>
+        <p className="nes-text">说明：</p>
+        <Typewriter text="这是可选的金币抽奖，不参与决斗胜负。花费金币转动老虎机，或直接关闭离开，没有任何惩罚。"></Typewriter>
         <div className="nes-diy-border inline-flex flex-col items-center !mt-8 bg-slate-50 p-4">
           <div className="nes-diy-border pb-4">
             <h1 className=" text-2xl font-bold mb-4 flex items-center justify-center relative">
@@ -216,4 +217,4 @@ const SlotMachineGame = (props: SlotMachineGameProps) => {
   );
 };
 
-export default SlotMachineGame;
+export default observer(SlotMachineGame);

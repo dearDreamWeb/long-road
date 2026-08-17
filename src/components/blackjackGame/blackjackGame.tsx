@@ -8,7 +8,7 @@ import Typewriter from '../typewriter/typewriter';
 import globalStore from '@/store/store';
 import { GameResultStatus } from '@/typings';
 import CloseIcon from '@/components/closeIcon/closeIcon';
-import { RATE } from '@/const';
+import { RATE, DUEL_AUTO_CLOSE_MS } from '@/const';
 
 interface BlackjackGamProps {
   isOpen: boolean;
@@ -29,6 +29,14 @@ const BlackjackGame = (props: BlackjackGamProps) => {
     }
     blackjackGameStore.resetData();
   }, [isOpen]);
+
+  useEffect(() => {
+    if (!isOver || !isOpen) {
+      return;
+    }
+    const timer = setTimeout(() => onChange(false), DUEL_AUTO_CLOSE_MS);
+    return () => clearTimeout(timer);
+  }, [isOver, isOpen, onChange]);
 
   const playerAdd = () => {
     if (isOver) {
@@ -152,7 +160,7 @@ const BlackjackGame = (props: BlackjackGamProps) => {
             className="nes-btn px-8 !py-0 text-xl m-auto mt-4 flex items-center absolute bottom-2 left-1/2 -translate-x-1/2"
             onClick={() => onChange(false)}
           >
-            关闭
+            关闭（{Math.ceil(DUEL_AUTO_CLOSE_MS / 1000)}s 后自动继续）
             <CloseIcon />
           </button>
         )}

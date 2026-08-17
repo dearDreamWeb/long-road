@@ -1,5 +1,5 @@
 import globalStore from '@/store/store';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import BlackjackGame from '../blackjackGame/blackjackGame';
 import RockGame from '../rockGame/rockGame';
 import KnowledgeGame from '../knowledgeGame/knowledgeGame';
@@ -9,6 +9,9 @@ import dbStore from '@/store/dbStore';
 import { TypeEnum } from '@/db/db';
 import seedrandom from 'seedrandom';
 import roleStore from '@/store/roleStore';
+
+const DUEL_GAME_COUNT = 3;
+const SLOT_MACHINE_INDEX = 3;
 
 const GameRender = () => {
   const [startGame, setStartGame] = useState(false);
@@ -52,7 +55,7 @@ const GameRender = () => {
       },
       {
         key: 'slotMachine',
-        name: '老虎机',
+        name: '幸运抽奖',
         componentRender: () => (
           <SlotMachineGame
             key="slotMachine"
@@ -68,6 +71,7 @@ const GameRender = () => {
     if (!globalStore.showGameModal) {
       setStartGame(false);
       setGameIndex(null);
+      globalStore.isEnd = false;
     }
   }, [globalStore.showGameModal]);
 
@@ -75,20 +79,19 @@ const GameRender = () => {
     if (!globalStore.showGameModal || startGame) {
       return;
     }
-    let randomIndex = 0;
     const rate = random();
-    if (rate > 0.92 && roleStore.coins >= 20) {
-      randomIndex = 3;
-    } else {
-      randomIndex = Math.floor(random() * (gameList.length - 1));
-    }
-    // randomIndex = 2;
-    console.log('random game', randomIndex, gameList.length);
+    const isSlotMachine = rate > 0.92 && roleStore.coins >= 20;
+    const randomIndex = isSlotMachine
+      ? SLOT_MACHINE_INDEX
+      : Math.floor(random() * DUEL_GAME_COUNT);
+
     setStartGame(true);
     setGameIndex(randomIndex);
     dbStore.addLogger({
       type: TypeEnum.Info,
-      content: `决斗游戏名：${gameList[randomIndex].name}`,
+      content: isSlotMachine
+        ? '路遇幸运抽奖机，可花费金币抽奖（无惩罚）'
+        : `决斗游戏名：${gameList[randomIndex].name}`,
       focus: gameList[randomIndex].name,
     });
   }, [gameList, globalStore.showGameModal, startGame, gameIndex]);

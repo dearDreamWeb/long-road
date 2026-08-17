@@ -14,3 +14,9 @@ export const GRIDHEIGHT = HEIGHT / GRIDROWS;
 export const MINVIEWDISTANCE = 1;
 /**最大视野范围 */
 export const MAXEWDISTANCE = 10;
+/**特殊地块在迷雾中的显示透明度 */
+export const HIDDEN_TILE_ALPHA = 0.45;
+/**决斗结束后自动关闭弹窗（毫秒） */
+export const DUEL_AUTO_CLOSE_MS = 2500;
+/**知识竞赛结束后自动关闭（毫秒） */
+export const KNOWLEDGE_AUTO_CLOSE_MS = 4000;

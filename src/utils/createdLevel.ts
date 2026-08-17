@@ -110,9 +110,9 @@ export const routePlanDijkstra = ({
       if (neighbor_cell.visited || neighbor_cell.is_obstacle) {
         continue;
       }
-      const distance = curr_cell.distance;
-      if (distance < neighbor_cell.distance) {
-        neighbor_cell.distance = distance;
+      const newDistance = curr_cell.distance + 1;
+      if (newDistance < neighbor_cell.distance) {
+        neighbor_cell.distance = newDistance;
         neighbor_cell.prev_cell = curr_cell;
         pq.push(neighbor_cell);
         pq.sort((a, b) => a.compareTo(b));
@@ -135,11 +135,11 @@ export const randomEnd = (
     obstacleAll: bgArr,
   });
   if (!result.length) {
-    return randomEnd(
-      bgArr,
-      JSON.parse(JSON.stringify(canUserList.splice(randomPosition, 1))),
-      mainP
-    );
+    const remaining = canUserList.filter((_, i) => i !== randomPosition);
+    if (!remaining.length) {
+      return canUserList[0];
+    }
+    return randomEnd(bgArr, remaining, mainP);
   }
   return canUserList[randomPosition];
 };

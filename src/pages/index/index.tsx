@@ -20,7 +20,15 @@ import { observer } from 'mobx-react';
 import classNames from 'classnames';
 import { BgLayoutItemType, Status, TextureCacheObj } from '@/typings';
 import message from '@/components/message/message';
-import { WIDTH, HEIGHT, GRIDROWS, GRIDWIDTH, GRIDHEIGHT, RATE } from '@/const';
+import {
+  WIDTH,
+  HEIGHT,
+  GRIDROWS,
+  GRIDWIDTH,
+  GRIDHEIGHT,
+  RATE,
+  HIDDEN_TILE_ALPHA,
+} from '@/const';
 import heroImg from '@/assets/images/hero.png';
 import viewImg from '@/assets/images/view.png';
 import roadImg from '@/assets/images/road.png';
@@ -56,6 +64,46 @@ const colorMap = {
   [BgLayoutItemType.obstacle]: 0xcccccc,
   [BgLayoutItemType.protect]: 0xf28260,
   [BgLayoutItemType.route]: 0xe6a23c,
+};
+
+const HIDDEN_TILE_TYPES = [
+  BgLayoutItemType.backTo,
+  BgLayoutItemType.duel,
+  BgLayoutItemType.protect,
+];
+
+const getRectFill = (
+  type: BgLayoutItemType,
+  gridX: number,
+  gridY: number
+): { color: number; alpha: number } => {
+  const empty = colorMap[BgLayoutItemType.empty];
+  const { x: mainX, y: mainY } = roleStore.mainPosition;
+  const chebyshev = Math.max(Math.abs(gridX - mainX), Math.abs(gridY - mainY));
+
+  if (type === BgLayoutItemType.route && !roleStore.isRoad) {
+    return { color: empty, alpha: 1 };
+  }
+
+  if (import.meta.env.MODE === 'development') {
+    if (type === BgLayoutItemType.route) {
+      return { color: empty, alpha: 1 };
+    }
+    return { color: colorMap[type] ?? empty, alpha: 1 };
+  }
+
+  if (type === BgLayoutItemType.end) {
+    if (chebyshev <= roleStore.viewDistance) {
+      return { color: colorMap[type], alpha: 1 };
+    }
+    return { color: empty, alpha: 1 };
+  }
+
+  if (HIDDEN_TILE_TYPES.includes(type)) {
+    return { color: colorMap[type], alpha: HIDDEN_TILE_ALPHA };
+  }
+
+  return { color: colorMap[type] ?? empty, alpha: 1 };
 };
 
 const Index = () => {
@@ -193,46 +241,19 @@ const Index = () => {
   const createRect = ({
     position,
     type = BgLayoutItemType.obstacle,
+    gridX,
+    gridY,
   }: {
     position: { x: number; y: number };
     type?: BgLayoutItemType;
+    gridX: number;
+    gridY: number;
   }) => {
     const { x, y } = position;
     let rectangle = new PIXI.Graphics() as RectGraphics;
     rectangle.lineStyle(1, 0x000000, 1);
-    // 这部分颜色显示空
-    const disabledShowColorList = [
-      BgLayoutItemType.backTo,
-      BgLayoutItemType.duel,
-      // BgLayoutItemType.end,
-      BgLayoutItemType.protect,
-    ];
-
-    if (!roleStore.isRoad) {
-      disabledShowColorList.push(BgLayoutItemType.route);
-    }
-    if (import.meta.env.MODE === 'development') {
-      if (type === BgLayoutItemType.route) {
-        rectangle.beginFill(colorMap[BgLayoutItemType.empty]);
-      } else {
-        rectangle.beginFill(colorMap[type]);
-      }
-    } else {
-      if (disabledShowColorList.includes(type)) {
-        rectangle.beginFill(colorMap[BgLayoutItemType.empty]);
-      } else if (type === BgLayoutItemType.end) {
-        // 角色在终点周围一格的范围内显示
-        const xPow = Math.pow(x / GRIDWIDTH - roleStore.mainPosition.x, 2);
-        const yPow = Math.pow(y / GRIDHEIGHT - roleStore.mainPosition.y, 2);
-        if (Math.sqrt(xPow + yPow) < 2) {
-          rectangle.beginFill(colorMap[type]);
-        } else {
-          rectangle.beginFill(colorMap[BgLayoutItemType.empty]);
-        }
-      } else {
-        rectangle.beginFill(colorMap[type]);
-      }
-    }
+    const { color, alpha } = getRectFill(type, gridX, gridY);
+    rectangle.beginFill(color, alpha);
     rectangle.drawRect(
       x - (x % GRIDWIDTH),
       y - (y % GRIDHEIGHT),
@@ -286,6 +307,8 @@ const Index = () => {
             columns: x,
           }),
           type,
+          gridX: x,
+          gridY: y,
         });
       } else {
         createRect({
@@ -297,6 +320,8 @@ const Index = () => {
             columns: x,
           }),
           type: BgLayoutItemType.empty,
+          gridX: x,
+          gridY: y,
         });
       }
     });

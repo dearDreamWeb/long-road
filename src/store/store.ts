@@ -426,7 +426,6 @@ class GlobalStore {
       });
     }
     this.isEnd = true;
-    // this.showGameModal = false;
     this.status = Status.normal;
   }
 

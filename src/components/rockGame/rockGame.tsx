@@ -12,6 +12,7 @@ import rock2 from '@/assets/images/rock-game-2.png';
 import rock3 from '@/assets/images/rock-game-3.png';
 import message from '../message/message';
 import { shuffleArray } from '@/utils';
+import { DUEL_AUTO_CLOSE_MS } from '@/const';
 
 interface RockListItem {
   key: string;
@@ -164,6 +165,14 @@ const RockGame = (props: RockGameProps) => {
     }
     init();
   }, [isOpen]);
+
+  useEffect(() => {
+    if (!isOpen || roleSelectedList.length < 3) {
+      return;
+    }
+    const timer = setTimeout(() => onChange(false), DUEL_AUTO_CLOSE_MS);
+    return () => clearTimeout(timer);
+  }, [isOpen, roleSelectedList.length, onChange]);
 
   const init = () => {
     setSelectedList([]);
@@ -442,7 +451,7 @@ const RockGame = (props: RockGameProps) => {
                   className="nes-btn text-xl mt-4 flex"
                   onClick={() => onChange(false)}
                 >
-                  关闭
+                  关闭（{Math.ceil(DUEL_AUTO_CLOSE_MS / 1000)}s 后自动继续）
                   <CloseIcon />
                 </button>
               )}

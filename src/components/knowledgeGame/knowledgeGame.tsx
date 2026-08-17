@@ -13,6 +13,7 @@ import classNames from 'classnames';
 import CloseIcon from '../closeIcon/closeIcon';
 import globalStore from '@/store/store';
 import { GameResultStatus } from '@/typings';
+import { KNOWLEDGE_AUTO_CLOSE_MS, RATE } from '@/const';
 
 interface KnowledgeGameProps {
   isOpen: boolean;
@@ -123,6 +124,14 @@ const KnowledgeGame = (props: KnowledgeGameProps) => {
     };
   }, [currentIndex, gameOver]);
 
+  useEffect(() => {
+    if (!gameOver || !isOpen || showDetails) {
+      return;
+    }
+    const timer = setTimeout(() => onChange(false), KNOWLEDGE_AUTO_CLOSE_MS);
+    return () => clearTimeout(timer);
+  }, [gameOver, isOpen, showDetails, onChange]);
+
   const isWin = useMemo(() => {
     if (!gameOver || isGameSettlement.current) {
       return false;
@@ -143,7 +152,7 @@ const KnowledgeGame = (props: KnowledgeGameProps) => {
     <Modal
       isOpen={isOpen}
       className={styles.modalBox}
-      width={700}
+      width={700 * RATE}
       height={700}
       mainAnimation
     >
@@ -240,7 +249,7 @@ const KnowledgeGame = (props: KnowledgeGameProps) => {
               className="nes-btn px-8 text-xl m-auto mt-4  flex items-center"
               onClick={() => onChange(false)}
             >
-              关闭
+              关闭（{Math.ceil(KNOWLEDGE_AUTO_CLOSE_MS / 1000)}s 后自动继续）
               <CloseIcon />
             </button>
           </div>
