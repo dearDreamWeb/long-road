@@ -216,7 +216,7 @@ class GlobalStore {
 
   /**加载音频资源 */
   loadAudioResources() {
-    // https://resource.blogwxb.cn/longLoad/audios/%E8%BF%B7%E5%AE%AB%E4%B9%8B%E6%A2%A6_%E7%88%B1%E7%BB%99%E7%BD%91_aigei_com.mp3
+    // https://blogwxb.oss-cn-hangzhou.aliyuncs.com/longLoad/audios/%E8%BF%B7%E5%AE%AB%E4%B9%8B%E6%A2%A6_%E7%88%B1%E7%BB%99%E7%BD%91_aigei_com.mp3
     const len = Object.keys(config.audios).length;
     let loadedIndex = 0;
     return new Promise((resolve) => {

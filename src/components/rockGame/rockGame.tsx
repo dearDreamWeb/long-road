@@ -93,17 +93,20 @@ const resultMap = {
   win: {
     text: '你赢了，算你走运。',
     imgClass: 'text-success',
-    imgUrl: 'https://resource.blogwxb.cn/longLoad/game-win.gif',
+    imgUrl:
+      'https://blogwxb.oss-cn-hangzhou.aliyuncs.com/longLoad/game-win.gif',
   },
   loss: {
     text: '你输喽，辣鸡！',
     imgClass: 'text-error',
-    imgUrl: 'https://resource.blogwxb.cn/longLoad/game-loss.gif',
+    imgUrl:
+      'https://blogwxb.oss-cn-hangzhou.aliyuncs.com/longLoad/game-loss.gif',
   },
   tie: {
     text: '什么，居然平手了？',
     imgClass: 'text-warning',
-    imgUrl: 'https://resource.blogwxb.cn/longLoad/game-level.gif',
+    imgUrl:
+      'https://blogwxb.oss-cn-hangzhou.aliyuncs.com/longLoad/game-level.gif',
   },
 };
 
