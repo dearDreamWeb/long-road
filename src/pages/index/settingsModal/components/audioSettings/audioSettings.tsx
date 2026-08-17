@@ -3,7 +3,6 @@ import globalStore from '@/store/store';
 import classNames from 'classnames';
 import { useObserver } from 'mobx-react';
 import styles from './audioSettings.module.less';
-import { Audios } from '@/config';
 
 function AudioSettings({ onClose }: { onClose: () => void }) {
   const switchAudio = useObserver(() => globalStore.settings.switchAudio);
@@ -16,15 +15,6 @@ function AudioSettings({ onClose }: { onClose: () => void }) {
     type?: 'bg' | 'click'
   ) => {
     const volumeValue = Number((Number(e.target.value) / 100).toFixed(2));
-    for (let key in globalStore.audioResources) {
-      if (type === 'bg' && key === 'bgAudio') {
-        globalStore.audioResources[key as keyof Audios].volume = volumeValue;
-      }
-      if (type === 'click' && key !== 'bgAudio') {
-        console.log(key);
-        globalStore.audioResources[key as keyof Audios].volume = volumeValue;
-      }
-    }
     globalStore.setSettings({
       ...globalStore.settings,
       [type === 'bg' ? 'bgVolume' : 'clickVolume']: volumeValue,

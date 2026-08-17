@@ -95,6 +95,26 @@ class GlobalStore {
   setSettings(value: Settings) {
     this.settings = value;
     localStorage.setItem('settings', JSON.stringify(value || {}));
+    this.applyAudioVolumes();
+  }
+
+  /**将本地音量配置同步到已加载的音频实例 */
+  applyAudioVolumes() {
+    const resources = this.audioResources;
+    if (!resources?.bgAudio) {
+      return;
+    }
+    resources.bgAudio.volume = this.settings.bgVolume;
+    const effectKeys: (keyof Omit<Audios, 'bgAudio'>)[] = [
+      'collectAudio',
+      'buttonClickAudio',
+      'duelAudio',
+    ];
+    effectKeys.forEach((key) => {
+      if (resources[key]) {
+        resources[key].volume = this.settings.clickVolume;
+      }
+    });
   }
 
   @action
@@ -173,6 +193,22 @@ class GlobalStore {
   initConfig() {
     const settingsLocal = JSON.parse(localStorage.getItem('settings') || '{}');
     this.settings = { ...this.settings, ...settingsLocal };
+    this.normalizeVolumeSettings();
+  }
+
+  /**校正音量值，兼容旧数据（0-100）及越界值 */
+  normalizeVolumeSettings() {
+    const clamp = (value: number) => Math.min(1, Math.max(0, value));
+    (['bgVolume', 'clickVolume'] as const).forEach((key) => {
+      let volume = this.settings[key];
+      if (typeof volume !== 'number' || Number.isNaN(volume)) {
+        return;
+      }
+      if (volume > 1) {
+        volume = volume / 100;
+      }
+      this.settings[key] = clamp(volume);
+    });
   }
 
   /**加载资源文件 */
@@ -225,20 +261,15 @@ class GlobalStore {
         autoPlay: false,
         preload: true,
         loaded: (err, sound) => {
-          console.log(loadedIndex, sound);
-          // 背景音乐
-          if (sound?.url === config.audios.bgAudio) {
-            sound.volume = this.settings.bgVolume;
-            sound.loop = true;
-            if (this.settings.switchAudio) {
-              sound?.play();
-            }
-          } else if (sound?.url === config.audios.buttonClickAudio) {
-            sound.volume = this.settings.clickVolume;
-          }
           loadedIndex++;
           if (loadedIndex === len) {
-            console.log('audio loaded');
+            this.applyAudioVolumes();
+            if (this.audioResources.bgAudio) {
+              this.audioResources.bgAudio.loop = true;
+              if (this.settings.switchAudio) {
+                this.audioResources.bgAudio.play();
+              }
+            }
             resolve(null);
           }
         },
